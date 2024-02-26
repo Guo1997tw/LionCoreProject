@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using prjLionMVC.Models.Entity;
+
 namespace prjLionMVC
 {
     public class Program
@@ -8,6 +11,12 @@ namespace prjLionMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add LionHW Connection String
+            builder.Services.AddDbContext<LionHwContext>(option =>
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString("LionHW"));
+            });
 
             var app = builder.Build();
 
