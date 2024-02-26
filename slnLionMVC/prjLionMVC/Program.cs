@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
@@ -27,6 +28,9 @@ namespace prjLionMVC
             // Interface DI
             builder.Services.AddScoped<ILion, Lion>();
 
+            // Authentication DI
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option => { option.LogoutPath = "/Lion/Login"; option.AccessDeniedPath = "/Lion/Error"; });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -48,6 +52,9 @@ namespace prjLionMVC
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Use UseAuthentication
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -9,5 +9,7 @@ namespace prjLionMVC.Interfaces
         public bool CreateMember(CreateAccountDto createAccountDto);
 
         public bool CheckMember(string account, string password);
+
+        public GetMemberDto GetMemberById(string account);
     }
 }

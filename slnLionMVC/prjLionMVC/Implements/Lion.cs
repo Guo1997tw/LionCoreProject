@@ -58,7 +58,7 @@ namespace prjLionMVC.Implements
                 _lionHwContext.MemberTables.Add(mapper);
                 _lionHwContext.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -76,7 +76,7 @@ namespace prjLionMVC.Implements
         {
             var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
 
-            if(queryResult != null)
+            if (queryResult != null)
             {
                 var HashPasswordTemp = queryResult.HashPassword;
                 var SaltPasswordTemp = queryResult.SaltPassword;
@@ -86,6 +86,23 @@ namespace prjLionMVC.Implements
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 取得單一會員資料
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public GetMemberDto GetMemberById(string account)
+        {
+            var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
+
+            return new GetMemberDto
+            {
+                MemberId = queryResult.MemberId,
+                Account = queryResult.Account
+            };
         }
 
         /// <summary>
