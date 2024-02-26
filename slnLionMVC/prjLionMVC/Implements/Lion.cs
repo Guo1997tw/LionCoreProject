@@ -67,6 +67,28 @@ namespace prjLionMVC.Implements
         }
 
         /// <summary>
+        /// 會員登入
+        /// </summary>
+        /// <param name="loginAccountDto"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public bool CheckMember(string account, string password)
+        {
+            var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
+
+            if(queryResult != null)
+            {
+                var HashPasswordTemp = queryResult.HashPassword;
+                var SaltPasswordTemp = queryResult.SaltPassword;
+                var HashPassword = HashPwdWithHMACSHA256(password, SaltPasswordTemp);
+
+                return HashPassword == HashPasswordTemp;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 亂數產生大小
         /// </summary>
         /// <param name="minNum"></param>

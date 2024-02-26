@@ -43,5 +43,13 @@ namespace prjLionMVC.Controllers.Api
 
             return _lion.CreateMember(mapper) ? true : false;
         }
+
+        [HttpPost]
+        public bool LoginMember(LoginAccountViewModel loginAccountViewModel)
+        {
+            var queryResult = _lion.CheckMember(loginAccountViewModel.Account, loginAccountViewModel.HashPassword);
+
+            return queryResult ? true : false;
+        }
     }
 }
