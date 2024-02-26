@@ -24,6 +24,17 @@
 			}
 		},
 
+		mounted() {
+			let self = this;
+
+			const saveLogAccount = localStorage.getItem("saveLogAccount");
+
+			if (saveLogAccount) {
+				self.member.account = saveLogAccount;
+				self.logAccount = true;
+			}
+		},
+
 		methods: {
 			LoginMemberApi() {
 				let self = this;
@@ -39,9 +50,12 @@
 							console.log("Success", d);
 							
 							alert("登入成功");
-							
+
 							if (self.logAccount) {
-								localStorage.setItem("account", self.member.account);
+								localStorage.setItem("saveLogAccount", self.member.account);
+							}
+							else {
+								localStorage.removeItem("saveLogAccount");
 							}
 
 							window.location.href = "/Lion/MsgList";
