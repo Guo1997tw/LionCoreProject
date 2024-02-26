@@ -7,7 +7,7 @@ using prjLionMVC.Models.ViewModels;
 
 namespace prjLionMVC.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/LionApi/[action]")]
     [ApiController]
     public class LionApiController : ControllerBase
     {
@@ -29,6 +29,19 @@ namespace prjLionMVC.Controllers.Api
                 MessageText = x.MessageText,
                 MessageTime = x.MessageTime,
             }).ToList();
+        }
+
+        [HttpPost]
+        public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
+        {
+            var mapper = new CreateAccountDto
+            {
+                MemberName = createAccountViewModel.MemberName,
+                Account = createAccountViewModel.Account,
+                HashPassword = createAccountViewModel.HashPassword,
+            };
+
+            return _lion.CreateMember(mapper) ? true : false;
         }
     }
 }

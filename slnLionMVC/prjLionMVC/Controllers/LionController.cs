@@ -8,5 +8,10 @@ namespace prjLionMVC.Controllers
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }
