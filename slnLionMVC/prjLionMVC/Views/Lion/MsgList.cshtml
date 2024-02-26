@@ -1,0 +1,49 @@
+﻿<div id="List">
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">編號</th>
+				<th scope="col">姓名</th>
+				<th scope="col">帳號</th>
+				<th scope="col">留言</th>
+				<th scope="col">時間</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="m in msgList">
+				<td>{{m.messageBoardId}}</td>
+				<td>{{m.account}}</td>
+				<td>{{m.memberName}}</td>
+				<td>{{m.messageText}}</td>
+				<td>{{m.messageTime}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+	Vue.createApp({
+		data() {
+			return {
+				msgList: [
+					{
+						messageBoardId: "",
+						account: "",
+						memberName: "",
+						messageText: "",
+						messageTime: ""
+					}
+				]
+			}
+		},
+
+		methods: {
+			GetList() {
+				let self = this;
+
+				fetch("/api/LionApi/GetMsg").then(r => r.json()).then(d => { self.msgList = d });
+			},
+		}
+	}).mount("#List");
+</script>

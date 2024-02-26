@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models;
 using prjLionMVC.Models.Entity;
+using prjLionMVC.Models.ViewModels;
 
 namespace prjLionMVC.Controllers.Api
 {
@@ -18,9 +19,9 @@ namespace prjLionMVC.Controllers.Api
         }
 
         [HttpGet]
-        public IEnumerable<MsgListDto> GetMsg()
+        public IEnumerable<MsgListViewModel> GetMsg()
         {
-            return _lion.GetAllMsg().Select(x => new MsgListDto
+            return _lion.GetAllMsg().Select(x => new MsgListViewModel
             {
                 MessageBoardId = x.MessageBoardId,
                 Account = x.Account,
