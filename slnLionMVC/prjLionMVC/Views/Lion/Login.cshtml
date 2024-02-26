@@ -1,0 +1,56 @@
+﻿<body>
+	<div id="Login">
+		<input type="text" placeholder="請輸入帳號" v-model="member.account">
+		<br>
+		<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		<br>
+		<input type="checkbox" v-model="logAccount">記住帳號
+		<button type="button" @@click="LoginMemberApi()">登入</button>
+		<br>
+		<a href="Register">註冊</a>
+	</div>
+</body>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+	const app = Vue.createApp({
+		data() {
+			return {
+				member: {
+					account: "",
+					hashPassword: ""
+				},
+				logAccount: false
+			}
+		},
+
+		methods: {
+			LoginMemberApi() {
+				let self = this;
+
+				fetch("/api/LionApi/LoginMember", {
+					method: "POST",
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(self.member)
+				})
+					.then(r => { if (!r.ok) { console.log("Fail") } return r.json(); } )
+					.then(d => {
+						if (d == true) {
+							console.log("Success", d);
+							
+							alert("登入成功");
+							
+							if (self.logAccount) {
+								localStorage.setItem("account", self.member.account);
+							}
+
+							// window.location.href = "/Lion/MsgList";
+						}
+						else {
+							alert("登入失敗");
+						}
+					});
+			},
+		},
+	}).mount("#Login");
+</script>
