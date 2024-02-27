@@ -59,8 +59,7 @@ namespace prjLionMVC.Implements
 		/// <summary>
 		/// 清單分頁
 		/// </summary>
-		/// <param name="min"></param>
-		/// <param name="max"></param>
+		/// <param name="choosePage"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
 		public IEnumerable<MsgListDto> GetMsgPage(int choosePage)
