@@ -6,6 +6,8 @@ namespace prjLionMVC.Interfaces
     {
         public IEnumerable<MsgListDto> GetAllMsg();
 
+        public IQueryable<MsgListDto> GetMemberByNameMsg(string userName);
+
         public bool CreateMember(CreateAccountDto createAccountDto);
 
         public bool CheckMember(string account, string password);

@@ -1,5 +1,10 @@
 ﻿<body>
 	<div id="List">
+		<input type="text" v-model="searchUserName">
+		<button type="button" @@click="GetNameSearch()">搜尋</button>
+		<button type="button" @@click="GetNameClear()">清除</button>
+		<br>
+
 		<table class="table">
 			<thead>
 				<tr>
@@ -36,11 +41,12 @@
 						messageText: "",
 						messageTime: ""
 					}
-				]
+				],
+				searchUserName: "",
 			}
 		},
 
-		mounted(){
+		mounted() {
 			this.GetList();
 		},
 
@@ -50,6 +56,21 @@
 
 				fetch("/api/LionApi/GetMsg").then(r => r.json()).then(d => { self.msgList = d });
 			},
-		}
+
+			GetNameSearch() {
+				let self = this;
+
+				fetch(`/api/LionApi/GetMemberOnlyMsg/${self.searchUserName}`)
+					.then(r => r.json())
+					.then(d => { self.msgList = d; });
+			},
+
+			GetNameClear() {
+				let self = this;
+
+				self.searchUserName = "";
+				self.GetList();
+			},
+		},
 	}).mount("#List");
 </script>

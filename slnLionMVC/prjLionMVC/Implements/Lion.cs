@@ -6,183 +6,204 @@ using System.Text;
 
 namespace prjLionMVC.Implements
 {
-    public class Lion : ILion
-    {
-        private readonly LionHwContext _lionHwContext;
+	public class Lion : ILion
+	{
+		private readonly LionHwContext _lionHwContext;
 
-        public Lion(LionHwContext lionHwContext)
-        {
-            _lionHwContext = lionHwContext;
-        }
+		public Lion(LionHwContext lionHwContext)
+		{
+			_lionHwContext = lionHwContext;
+		}
 
-        /// <summary>
-        /// 留言版清單
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<MsgListDto> GetAllMsg()
-        {
-            return _lionHwContext.MessageBoardTables.Join(
-                _lionHwContext.MemberTables,
-                mb => mb.MemberId,
-                m => m.MemberId,
-                (mb, m) => new MsgListDto
-                {
-                    MessageBoardId = mb.MemberId,
-                    MemberName = m.MemberName,
-                    Account = m.Account,
-                    MessageText = mb.MessageText,
-                    MessageTime = mb.MessageTime,
-                });
-        }
+		/// <summary>
+		/// 留言版清單
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<MsgListDto> GetAllMsg()
+		{
+			return _lionHwContext.MessageBoardTables.Join(
+				_lionHwContext.MemberTables,
+				mb => mb.MemberId,
+				m => m.MemberId,
+				(mb, m) => new MsgListDto
+				{
+					MessageBoardId = mb.MemberId,
+					MemberName = m.MemberName,
+					Account = m.Account,
+					MessageText = mb.MessageText,
+					MessageTime = mb.MessageTime,
+				});
+		}
 
-        /// <summary>
-        /// 建立帳號
-        /// </summary>
-        /// <param name="createAccountDto"></param>
-        /// <returns></returns>
-        public bool CreateMember(CreateAccountDto createAccountDto)
-        {
-            var salt = RandomSalt();
-            var hasPwd = HashPwdWithHMACSHA256(createAccountDto.HashPassword, salt);
+		/// <summary>
+		/// 搜尋單一使用者
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public IQueryable<MsgListDto> GetMemberByNameMsg(string userName)
+		{
+			return _lionHwContext.MessageBoardTables.Join(
+				_lionHwContext.MemberTables,
+				mb => mb.MemberId,
+				m => m.MemberId,
+				(mb, m) => new MsgListDto
+				{
+					MessageBoardId = mb.MemberId,
+					MemberName = m.MemberName,
+					Account = m.Account,
+					MessageText = mb.MessageText,
+					MessageTime = mb.MessageTime,
+				}).Where(m => m.MemberName == userName);
+		}
 
-            var mapper = new MemberTable
-            {
-                MemberName = createAccountDto.MemberName,
-                Account = createAccountDto.Account,
-                HashPassword = hasPwd,
-                SaltPassword = salt
-            };
+		/// <summary>
+		/// 建立帳號
+		/// </summary>
+		/// <param name="createAccountDto"></param>
+		/// <returns></returns>
+		public bool CreateMember(CreateAccountDto createAccountDto)
+		{
+			var salt = RandomSalt();
+			var hasPwd = HashPwdWithHMACSHA256(createAccountDto.HashPassword, salt);
 
-            try
-            {
-                _lionHwContext.MemberTables.Add(mapper);
-                _lionHwContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+			var mapper = new MemberTable
+			{
+				MemberName = createAccountDto.MemberName,
+				Account = createAccountDto.Account,
+				HashPassword = hasPwd,
+				SaltPassword = salt
+			};
 
-            return true;
-        }
+			try
+			{
+				_lionHwContext.MemberTables.Add(mapper);
+				_lionHwContext.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
 
-        /// <summary>
-        /// 會員登入
-        /// </summary>
-        /// <param name="loginAccountDto"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public bool CheckMember(string account, string password)
-        {
-            var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
+			return true;
+		}
 
-            if (queryResult != null)
-            {
-                var HashPasswordTemp = queryResult.HashPassword;
-                var SaltPasswordTemp = queryResult.SaltPassword;
-                var HashPassword = HashPwdWithHMACSHA256(password, SaltPasswordTemp);
+		/// <summary>
+		/// 會員登入
+		/// </summary>
+		/// <param name="loginAccountDto"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public bool CheckMember(string account, string password)
+		{
+			var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
 
-                return HashPassword == HashPasswordTemp;
-            }
+			if (queryResult != null)
+			{
+				var HashPasswordTemp = queryResult.HashPassword;
+				var SaltPasswordTemp = queryResult.SaltPassword;
+				var HashPassword = HashPwdWithHMACSHA256(password, SaltPasswordTemp);
 
-            return false;
-        }
+				return HashPassword == HashPasswordTemp;
+			}
 
-        /// <summary>
-        /// 取得單一會員資料
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public GetMemberDto GetMemberById(string account)
-        {
-            var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
+			return false;
+		}
 
-            return new GetMemberDto
-            {
-                MemberId = queryResult.MemberId,
-                Account = queryResult.Account
-            };
-        }
+		/// <summary>
+		/// 取得單一會員資料
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public GetMemberDto GetMemberById(string account)
+		{
+			var queryResult = _lionHwContext.MemberTables.FirstOrDefault(m => m.Account == account);
 
-        /// <summary>
-        /// 留言版新增
-        /// </summary>
-        /// <param name="createMsgDto"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public bool InsertMsg(CreateMsgDto createMsgDto)
-        {
-            var mapper = new MessageBoardTable
-            {
-                MemberId = createMsgDto.MemberId,
-                MessageText = createMsgDto.MessageText,
-                MessageTime = DateTime.UtcNow
-            };
+			return new GetMemberDto
+			{
+				MemberId = queryResult.MemberId,
+				Account = queryResult.Account
+			};
+		}
 
-            try
-            {
-                _lionHwContext.MessageBoardTables.Add(mapper);
-                _lionHwContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+		/// <summary>
+		/// 留言版新增
+		/// </summary>
+		/// <param name="createMsgDto"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public bool InsertMsg(CreateMsgDto createMsgDto)
+		{
+			var mapper = new MessageBoardTable
+			{
+				MemberId = createMsgDto.MemberId,
+				MessageText = createMsgDto.MessageText,
+				MessageTime = DateTime.UtcNow
+			};
 
-            return true;
-        }
+			try
+			{
+				_lionHwContext.MessageBoardTables.Add(mapper);
+				_lionHwContext.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
 
-        /// <summary>
-        /// 亂數產生大小
-        /// </summary>
-        /// <param name="minNum"></param>
-        /// <param name="maxNum"></param>
-        /// <returns></returns>
-        private int RandomNumberSize(int minNum, int maxNum)
-        {
-            byte[] intBytes = new byte[4];
+			return true;
+		}
 
-            RandomNumberGenerator.Fill(intBytes);
+		/// <summary>
+		/// 亂數產生大小
+		/// </summary>
+		/// <param name="minNum"></param>
+		/// <param name="maxNum"></param>
+		/// <returns></returns>
+		private int RandomNumberSize(int minNum, int maxNum)
+		{
+			byte[] intBytes = new byte[4];
 
-            int randomInt = BitConverter.ToInt32(intBytes, 0);
+			RandomNumberGenerator.Fill(intBytes);
 
-            return Math.Abs(randomInt % (maxNum - minNum)) + minNum;
-        }
+			int randomInt = BitConverter.ToInt32(intBytes, 0);
 
-        /// <summary>
-        /// 亂數產生鹽值
-        /// </summary>
-        /// <param name="minNum"></param>
-        /// <param name="maxNum"></param>
-        /// <returns></returns>
-        private string RandomSalt(int minNum = 8, int maxNum = 256)
-        {
-            int size = RandomNumberSize(minNum, maxNum);
-            var buffer = new byte[size];
+			return Math.Abs(randomInt % (maxNum - minNum)) + minNum;
+		}
 
-            RandomNumberGenerator.Fill(buffer);
+		/// <summary>
+		/// 亂數產生鹽值
+		/// </summary>
+		/// <param name="minNum"></param>
+		/// <param name="maxNum"></param>
+		/// <returns></returns>
+		private string RandomSalt(int minNum = 8, int maxNum = 256)
+		{
+			int size = RandomNumberSize(minNum, maxNum);
+			var buffer = new byte[size];
 
-            return Convert.ToBase64String(buffer);
-        }
+			RandomNumberGenerator.Fill(buffer);
 
-        /// <summary>
-        /// 密碼雜湊 & 鹽值
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="salt"></param>
-        /// <returns></returns>
-        private string HashPwdWithHMACSHA256(string password, string salt)
-        {
-            var saltBytes = Convert.FromBase64String(salt);
+			return Convert.ToBase64String(buffer);
+		}
 
-            using (var hmac = new HMACSHA256(saltBytes))
-            {
-                var pwdBytes = Encoding.UTF8.GetBytes(password);
-                var hash = hmac.ComputeHash(pwdBytes);
+		/// <summary>
+		/// 密碼雜湊 & 鹽值
+		/// </summary>
+		/// <param name="password"></param>
+		/// <param name="salt"></param>
+		/// <returns></returns>
+		private string HashPwdWithHMACSHA256(string password, string salt)
+		{
+			var saltBytes = Convert.FromBase64String(salt);
 
-                return Convert.ToBase64String(hash);
-            }
-        }
-    }
+			using (var hmac = new HMACSHA256(saltBytes))
+			{
+				var pwdBytes = Encoding.UTF8.GetBytes(password);
+				var hash = hmac.ComputeHash(pwdBytes);
+
+				return Convert.ToBase64String(hash);
+			}
+		}
+	}
 }

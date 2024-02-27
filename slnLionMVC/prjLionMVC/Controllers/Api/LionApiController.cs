@@ -34,6 +34,19 @@ namespace prjLionMVC.Controllers.Api
             }).ToList();
         }
 
+        [HttpGet("{userName}")]
+        public IQueryable<MsgListViewModel> GetMemberOnlyMsg(string userName)
+        {
+            return _lion.GetMemberByNameMsg(userName).Select(x => new MsgListViewModel
+            {
+                MessageBoardId = x.MessageBoardId,
+                Account = x.Account,
+                MemberName = x.MemberName,
+                MessageText = x.MessageText,
+                MessageTime = x.MessageTime,
+            });
+        }
+
         [HttpPost]
         public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
         {
