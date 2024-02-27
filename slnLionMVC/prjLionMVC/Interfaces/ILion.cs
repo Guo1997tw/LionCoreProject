@@ -11,5 +11,7 @@ namespace prjLionMVC.Interfaces
         public bool CheckMember(string account, string password);
 
         public GetMemberDto GetMemberById(string account);
+
+        public bool InsertMsg(CreateMsgDto createMsgDto);
     }
 }

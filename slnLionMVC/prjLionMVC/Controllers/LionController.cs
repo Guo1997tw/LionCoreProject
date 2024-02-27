@@ -1,11 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using prjLionMVC.Interfaces;
 
 namespace prjLionMVC.Controllers
 {
     public class LionController : Controller
     {
+		private readonly IUserAuthentication _userAuthentication;
+
+		public LionController(IUserAuthentication userAuthentication)
+        {
+			_userAuthentication = userAuthentication;
+		}
+
         public IActionResult MsgList()
         {
             return View();
@@ -30,6 +38,13 @@ namespace prjLionMVC.Controllers
 
         public IActionResult Error()
         {
+            return View();
+        }
+
+        public IActionResult UseMsg()
+        {
+            ViewBag.MemberId = _userAuthentication.GetUserCertificate();
+
             return View();
         }
     }

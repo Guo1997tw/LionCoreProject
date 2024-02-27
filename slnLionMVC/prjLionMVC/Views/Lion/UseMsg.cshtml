@@ -1,0 +1,54 @@
+﻿@{
+	int memberId = ViewBag.MemberId;
+}
+
+<body>
+	<div id="UseMsg">
+		<input type="hidden" v-model="messageBoard.memberId">
+		<br>
+		留言
+		<br>
+		<input type="text" v-model="messageBoard.messageText">
+		<br>
+		<button type="button" @@click="InsertMsgApi">送出</button>
+	</div>
+</body>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+	const app = Vue.createApp({
+		data() {
+			return {
+				messageBoard: {
+					memberId: @memberId,
+					MessageText: ""
+				}
+			}
+		},
+
+		methods: {
+			InsertMsgApi() {
+				let self = this;
+
+				fetch("/api/LionApi/CreateMsg", {
+					method: "POST",
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(self.messageBoard)
+				})
+					.then(r => r.json())
+					.then(d => {
+						if (d == true) {
+							console.log("Success", d);
+							alert("新增成功");
+
+							window.location.href = "/Lion/MsgList";
+						}
+						else {
+							console.log("Fail", d);
+							alert("新增失敗");
+						}
+					});
+			},
+		},
+	}).mount("#UseMsg");
+</script>

@@ -106,6 +106,34 @@ namespace prjLionMVC.Implements
         }
 
         /// <summary>
+        /// 留言版新增
+        /// </summary>
+        /// <param name="createMsgDto"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public bool InsertMsg(CreateMsgDto createMsgDto)
+        {
+            var mapper = new MessageBoardTable
+            {
+                MemberId = createMsgDto.MemberId,
+                MessageText = createMsgDto.MessageText,
+                MessageTime = DateTime.UtcNow
+            };
+
+            try
+            {
+                _lionHwContext.MessageBoardTables.Add(mapper);
+                _lionHwContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// 亂數產生大小
         /// </summary>
         /// <param name="minNum"></param>

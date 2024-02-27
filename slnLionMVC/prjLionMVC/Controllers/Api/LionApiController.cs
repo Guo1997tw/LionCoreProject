@@ -81,5 +81,18 @@ namespace prjLionMVC.Controllers.Api
                 Account = queryResult.Account,
             };
         }
+
+        [HttpPost]
+        public bool CreateMsg(CreateMsgViewModel createMsgViewModel)
+        {
+            var mapper = new CreateMsgDto
+            {
+                MemberId = createMsgViewModel.MemberId,
+                MessageText = createMsgViewModel.MessageText,
+                MessageTime = createMsgViewModel.MessageTime,
+            };
+
+            return _lion.InsertMsg(mapper) ? true : false;
+        }
     }
 }
