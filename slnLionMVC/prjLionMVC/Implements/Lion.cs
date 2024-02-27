@@ -27,7 +27,7 @@ namespace prjLionMVC.Implements
 				m => m.MemberId,
 				(mb, m) => new MsgListDto
 				{
-					MessageBoardId = mb.MemberId,
+					MessageBoardId = mb.MessageBoardId,
 					MemberName = m.MemberName,
 					Account = m.Account,
 					MessageText = mb.MessageText,
@@ -48,12 +48,43 @@ namespace prjLionMVC.Implements
 				m => m.MemberId,
 				(mb, m) => new MsgListDto
 				{
-					MessageBoardId = mb.MemberId,
+					MessageBoardId = mb.MessageBoardId,
 					MemberName = m.MemberName,
 					Account = m.Account,
 					MessageText = mb.MessageText,
 					MessageTime = mb.MessageTime,
 				}).Where(m => m.MemberName == userName);
+		}
+
+		/// <summary>
+		/// 清單分頁
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public IEnumerable<MsgListDto> GetMsgPage(int choosePage)
+		{
+			int pageNow = 0;
+			int pageSize = 5;
+
+			if (choosePage > 0)
+			{
+				pageNow = (choosePage - 1) * pageSize;
+			}
+
+			return _lionHwContext.MessageBoardTables.Join(
+				_lionHwContext.MemberTables,
+				mb => mb.MemberId,
+				m => m.MemberId,
+				(mb, m) => new MsgListDto
+				{
+					MessageBoardId = mb.MessageBoardId,
+					MemberName = m.MemberName,
+					Account = m.Account,
+					MessageText = mb.MessageText,
+					MessageTime = mb.MessageTime,
+				}).Skip(pageNow).Take(pageSize);
 		}
 
 		/// <summary>

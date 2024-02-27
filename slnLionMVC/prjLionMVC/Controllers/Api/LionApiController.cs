@@ -47,7 +47,20 @@ namespace prjLionMVC.Controllers.Api
             });
         }
 
-        [HttpPost]
+        [HttpGet("{page}")]
+        public IEnumerable<MsgListViewModel> GetChoosePageView(int page)
+        {
+            return _lion.GetMsgPage(page).Select(mv => new MsgListViewModel
+            {
+				MessageBoardId = mv.MessageBoardId,
+				Account = mv.Account,
+				MemberName = mv.MemberName,
+				MessageText = mv.MessageText,
+				MessageTime = mv.MessageTime,
+			}).ToList();
+		}
+
+		[HttpPost]
         public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
         {
             var mapper = new CreateAccountDto
