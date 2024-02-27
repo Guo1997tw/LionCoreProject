@@ -25,6 +25,10 @@
 				</tr>
 			</tbody>
 		</table>
+		<br>
+		<button type="button" @@click="ChangePage(nowPage - 1)">上一頁</button>
+		<span>{{nowPage}}</span>
+		<button type="button" @@click="ChangePage(nowPage + 1)">下一頁</button>
 	</div>
 </body>
 
@@ -43,11 +47,15 @@
 					}
 				],
 				searchUserName: "",
+				nowPage: 1,
+				sizePage: 5,
 			}
 		},
-
+		
 		mounted() {
-			this.GetList();
+			let self = this;
+			
+			self.CuttingPage(self.nowPage);
 		},
 
 		methods: {
@@ -69,7 +77,23 @@
 				let self = this;
 
 				self.searchUserName = "";
-				self.GetList();
+				self.CuttingPage(self.nowPage);
+			},
+
+			ChangePage(choosePage) {
+				let self = this;
+
+				self.CuttingPage(choosePage);
+			},
+
+			CuttingPage(choosePage) {
+				let self = this;
+
+				if (choosePage < 1) return;
+
+				self.nowPage = choosePage;
+
+				fetch(`/api/LionApi/GetChoosePageView/${self.nowPage}`).then(r => r.json()).then(d => { self.msgList = d });
 			},
 		},
 	}).mount("#List");
