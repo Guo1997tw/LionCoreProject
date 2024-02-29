@@ -25,9 +25,11 @@ namespace prjLionMVC.Implements
 		{
 			Claim userClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Name);
 
-			if (userClaim != null) return userClaim.Value;
+            if (userClaim != null) { return userClaim.Value; }
 
-			throw new InvalidOperationException("找不到此會員帳號");
+            // throw new InvalidOperationException("找不到此會員帳號");
+
+            return null;
 		}
 	}
 }
