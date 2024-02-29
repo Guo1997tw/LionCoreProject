@@ -15,6 +15,8 @@ public partial class LionHwContext : DbContext
     {
     }
 
+    public virtual DbSet<ErrorLogTable> ErrorLogTables { get; set; }
+
     public virtual DbSet<MemberTable> MemberTables { get; set; }
 
     public virtual DbSet<MessageBoardTable> MessageBoardTables { get; set; }
@@ -25,6 +27,16 @@ public partial class LionHwContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ErrorLogTable>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("ErrorLogTable");
+
+            entity.Property(e => e.DateCreated).HasColumnType("datetime");
+            entity.Property(e => e.ErrorId).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<MemberTable>(entity =>
         {
             entity.HasKey(e => e.MemberId);
