@@ -29,12 +29,11 @@ public partial class LionHwContext : DbContext
     {
         modelBuilder.Entity<ErrorLogTable>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ErrorLogTable");
+            entity.HasKey(e => e.ErrorId);
+
+            entity.ToTable("ErrorLogTable");
 
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
-            entity.Property(e => e.ErrorId).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<MemberTable>(entity =>

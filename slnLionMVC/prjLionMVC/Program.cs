@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
+using prjLionMVC.LogExceptions;
 using prjLionMVC.Models.Entity;
 
 namespace prjLionMVC
@@ -54,6 +55,9 @@ namespace prjLionMVC
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Error write DB
+            app.UseMiddleware<ErrorLogs>();
 
             // Use UseAuthentication
             app.UseAuthentication();
