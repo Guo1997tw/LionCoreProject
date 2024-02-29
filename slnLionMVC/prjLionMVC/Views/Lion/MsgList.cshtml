@@ -1,4 +1,8 @@
-﻿<body>
+﻿@{
+	string loginAccount = ViewBag.LoginAccount;
+}
+
+<body>
 	<div id="List">
 		<input type="text" v-model="searchUserName">
 		<button type="button" @@click="GetNameSearch()">搜尋</button>
@@ -30,9 +34,9 @@
 					</td>
 					<td>{{m.messageTime}}</td>
 					<td>
-						<button type="button" v-if="updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
-						<button type="button" v-else @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
-						<button type="button" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
+						<button type="button" v-if="accountTemp == m.account && updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
+						<button type="button" v-if="accountTemp == m.account" @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
+						<button type="button" v-if="accountTemp == m.account" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
 					</td>
 				</tr>
 			</tbody>
@@ -63,6 +67,7 @@
 				sizePage: 5,
 				updateMsgIdTemp: "",
 				updateMsgTemp: "",
+				accountTemp: "@loginAccount",
 			}
 		},
 

@@ -16,6 +16,8 @@ namespace prjLionMVC.Controllers
 
         public IActionResult MsgList()
         {
+            ViewBag.LoginAccount = _userAuthentication.GetUserName();
+
 			return View();
         }
 

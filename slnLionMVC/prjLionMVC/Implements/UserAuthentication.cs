@@ -20,5 +20,14 @@ namespace prjLionMVC.Implements
 
             throw new InvalidOperationException("找不到此會員ID");
         }
-    }
+
+		public string GetUserName()
+		{
+			Claim userClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Name);
+
+			if (userClaim != null) return userClaim.Value;
+
+			throw new InvalidOperationException("找不到此會員帳號");
+		}
+	}
 }
