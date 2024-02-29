@@ -121,7 +121,7 @@ namespace prjLionMVC.Controllers.Api
             return _lion.InsertMsg(mapper) ? true : false;
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public bool UpdateMsg(int id, EditMsgViewModel editMsgViewModel)
         {
             var mapper = new EditMsgDto
@@ -133,7 +133,7 @@ namespace prjLionMVC.Controllers.Api
 			return _lion.EditMsg(id, mapper);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public bool RemoveMsg(int id)
         {
             return _lion.DeleteMsg(id);

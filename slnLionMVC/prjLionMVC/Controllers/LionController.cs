@@ -16,7 +16,7 @@ namespace prjLionMVC.Controllers
 
         public IActionResult MsgList()
         {
-            return View();
+			return View();
         }
 
         public IActionResult Register()

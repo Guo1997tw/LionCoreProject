@@ -13,6 +13,7 @@
 					<th scope="col">帳號</th>
 					<th scope="col">留言</th>
 					<th scope="col">時間</th>
+					<th scope="col">功能</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -22,6 +23,10 @@
 					<td>{{m.memberName}}</td>
 					<td>{{m.messageText}}</td>
 					<td>{{m.messageTime}}</td>
+					<td>
+						<button type="button" @@click="">編輯</button>
+						<button type="button" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -34,7 +39,7 @@
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
-	Vue.createApp({
+	const app = Vue.createApp({
 		data() {
 			return {
 				msgList: [
@@ -78,6 +83,28 @@
 
 				self.searchUserName = "";
 				self.CuttingPage(self.nowPage);
+			},
+
+			RemoveMsgApi(messageBoardId) {
+				let self = this;
+
+				fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`,
+					{
+						method: "Delete",
+						headers: { 'Content-Text': 'application/json' },
+					})
+					.then(r => r.json())
+					.then(d => {
+						if (d == true) {
+							console.log("Success", d);
+							alert("刪除成功");
+							self.CuttingPage(self.nowPage);
+						}
+						else {
+							console.log("Fail", d);
+							alert("刪除失敗");
+						}
+					});
 			},
 
 			ChangePage(choosePage) {
