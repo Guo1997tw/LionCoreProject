@@ -21,10 +21,17 @@
 					<td>{{m.messageBoardId}}</td>
 					<td>{{m.account}}</td>
 					<td>{{m.memberName}}</td>
-					<td>{{m.messageText}}</td>
+					@* <td>{{m.messageText}}</td> *@
+					<td>
+						<div v-if="updateMsgIdTemp == m.messageBoardId">
+							<input type="text" v-model="updateMsgTemp" />
+						</div>
+						<div v-else="">{{m.messageText}}</div>
+					</td>
 					<td>{{m.messageTime}}</td>
 					<td>
-						<button type="button" @@click="">編輯</button>
+						<button type="button" v-if="updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
+						<button type="button" v-else @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
 						<button type="button" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
 					</td>
 				</tr>
@@ -54,6 +61,8 @@
 				searchUserName: "",
 				nowPage: 1,
 				sizePage: 5,
+				updateMsgIdTemp: "",
+				updateMsgTemp: "",
 			}
 		},
 
@@ -85,13 +94,44 @@
 				self.CuttingPage(self.nowPage);
 			},
 
+			UpdateMsg(messageBoardId, messageText) {
+				let self = this;
+
+				self.updateMsgIdTemp = messageBoardId;
+				self.updateMsgTemp = messageText;
+			},
+
+			SaveUpdateMsgApi(messageBoardId) {
+				let self = this;
+
+				fetch(`/api/LionApi/UpdateMsg/${messageBoardId}`, {
+					method: "PUT",
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ messageText: self.updateMsgTemp })
+				})
+					.then(r => r.json())
+					.then(d => {
+						if (d == true) {
+							console.log("Success", d);
+							alert("修改成功");
+							updateMsgIdTemp = "";
+							self.updateMsgTemp = "";
+							//self.CuttingPage(self.nowPage);
+						}
+						else {
+							console.log("Fail", d);
+							alert("修改失敗");
+						}
+					});
+			},
+
 			RemoveMsgApi(messageBoardId) {
 				let self = this;
 
 				fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`,
 					{
-						method: "Delete",
-						headers: { 'Content-Text': 'application/json' },
+						method: "DELETE",
+						headers: { 'Content-Type': 'application/json' }
 					})
 					.then(r => r.json())
 					.then(d => {
