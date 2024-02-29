@@ -23,8 +23,8 @@
 			<tbody>
 				<tr v-for="m in msgList">
 					<td>{{m.messageBoardId}}</td>
-					<td>{{m.account}}</td>
 					<td>{{m.memberName}}</td>
+					<td>{{m.account}}</td>
 					@* <td>{{m.messageText}}</td> *@
 					<td>
 						<div v-if="updateMsgIdTemp == m.messageBoardId">
