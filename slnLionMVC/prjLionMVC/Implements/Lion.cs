@@ -185,6 +185,46 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
+		/// 留言版編輯
+		/// </summary>
+		/// <param name="editMsgDto"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public bool EditMsg(int id, EditMsgDto editMsgDto)
+		{
+			var queryResult = _lionHwContext.MessageBoardTables.FirstOrDefault(mb => mb.MessageBoardId == id);
+
+			if (queryResult != null)
+			{
+				queryResult.MessageText = editMsgDto.MessageText;
+				queryResult.MessageTime = DateTime.UtcNow;
+
+				_lionHwContext.SaveChanges();
+
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 留言版刪除
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public bool DeleteMsg(int id)
+		{
+			var queryResult = _lionHwContext.MessageBoardTables.FirstOrDefault(mb => mb.MessageBoardId == id);
+
+			if (queryResult == null) return false;
+
+			_lionHwContext.Remove(queryResult);
+			_lionHwContext.SaveChanges();
+
+			return true;
+		}
+
+		/// <summary>
 		/// 亂數產生大小
 		/// </summary>
 		/// <param name="minNum"></param>
