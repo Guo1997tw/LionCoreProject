@@ -66,7 +66,7 @@ namespace prjLionMVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Lion}/{action=MsgList}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
