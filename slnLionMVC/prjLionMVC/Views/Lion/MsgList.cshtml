@@ -172,15 +172,15 @@
 					});
 			},
 
-			// 分筆數 (頁)
-			Pagination(itemNum) {
+			// 取得第幾頁
+			Pagination(pageNum) {
 				let self = this;
 
-				if (itemNum < 1) return;
+				if (pageNum < 1) return;
 
-				self.currentShowPage = itemNum;
+				self.currentShowPage = pageNum;
 
-				fetch(`/api/LionApi/GetChoosePageView/${self.currentShowPage}`)
+				fetch(`/api/LionApi/GetPageNum/${self.currentShowPage}`)
 					.then(r => r.json())
 					.then(d => { self.msgList = d });
 			},

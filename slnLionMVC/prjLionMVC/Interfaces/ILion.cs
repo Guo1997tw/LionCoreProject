@@ -6,7 +6,12 @@ namespace prjLionMVC.Interfaces
     {
         public IQueryable<MsgListDto> GetMemberByNameMsg(string userName);
 
-        public IEnumerable<MsgListDto> GetMsgPage(int choosePage);
+        /// <summary>
+        /// 取得第幾頁
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        public IEnumerable<MsgListDto> GetMsgPageNum(int pageNum);
 
         public bool CreateMember(CreateAccountDto createAccountDto);
 

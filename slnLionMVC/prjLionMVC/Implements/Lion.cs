@@ -37,20 +37,17 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 清單分頁
+		/// 取得第幾頁
 		/// </summary>
-		/// <param name="choosePage"></param>
+		/// <param name="pageNum"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-		public IEnumerable<MsgListDto> GetMsgPage(int choosePage)
+		public IEnumerable<MsgListDto> GetMsgPageNum(int pageNum)
 		{
 			int pageNow = 0;
 			int pageSize = 5;
 
-			if (choosePage > 0)
-			{
-				pageNow = (choosePage - 1) * pageSize;
-			}
+			if (pageNum > 0) { pageNow = (pageNum - 1) * pageSize; }
 
 			return _lionHwContext.MessageBoardTables.Join(
 				_lionHwContext.MemberTables,

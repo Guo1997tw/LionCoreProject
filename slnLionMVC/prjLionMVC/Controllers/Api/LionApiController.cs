@@ -34,10 +34,15 @@ namespace prjLionMVC.Controllers.Api
 			});
 		}
 
-		[HttpGet("{page}")]
-		public IEnumerable<MsgListViewModel> GetChoosePageView(int page)
+		/// <summary>
+		/// 取得第幾頁
+		/// </summary>
+		/// <param name="pageNum"></param>
+		/// <returns></returns>
+		[HttpGet("{pageNum}")]
+		public IEnumerable<MsgListViewModel> GetPageNum(int pageNum)
 		{
-			return _lion.GetMsgPage(page).Select(mv => new MsgListViewModel
+			return _lion.GetMsgPageNum(pageNum).Select(mv => new MsgListViewModel
 			{
 				MessageBoardId = mv.MessageBoardId,
 				Account = mv.Account,
