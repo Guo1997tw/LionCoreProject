@@ -52,6 +52,16 @@ namespace prjLionMVC.Controllers.Api
 			}).ToList();
 		}
 
+		/// <summary>
+		/// 取得總筆數
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		public int GetPageCount()
+		{
+			return _lion.GetMsgPageCount();
+		}
+
 		[HttpPost]
 		public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
 		{

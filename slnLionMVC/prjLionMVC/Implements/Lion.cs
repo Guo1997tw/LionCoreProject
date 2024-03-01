@@ -64,6 +64,15 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
+		/// 取得總筆數
+		/// </summary>
+		/// <returns></returns>
+		public int GetMsgPageCount()
+		{
+			return _lionHwContext.MessageBoardTables.Count();
+		}
+
+		/// <summary>
 		/// 建立帳號
 		/// </summary>
 		/// <param name="createAccountDto"></param>

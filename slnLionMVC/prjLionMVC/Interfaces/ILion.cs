@@ -13,6 +13,12 @@ namespace prjLionMVC.Interfaces
         /// <returns></returns>
         public IEnumerable<MsgListDto> GetMsgPageNum(int pageNum);
 
+		/// <summary>
+		/// 取得總筆數
+		/// </summary>
+		/// <returns></returns>
+		public int GetMsgPageCount();
+
         public bool CreateMember(CreateAccountDto createAccountDto);
 
         public bool CheckMember(string account, string password);
