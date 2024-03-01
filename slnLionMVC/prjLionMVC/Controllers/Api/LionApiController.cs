@@ -21,19 +21,6 @@ namespace prjLionMVC.Controllers.Api
 			_lion = lion;
 		}
 
-		[HttpGet]
-		public IEnumerable<MsgListViewModel> GetMsg()
-		{
-			return _lion.GetAllMsg().Select(x => new MsgListViewModel
-			{
-				MessageBoardId = x.MessageBoardId,
-				Account = x.Account,
-				MemberName = x.MemberName,
-				MessageText = x.MessageText,
-				MessageTime = x.MessageTime,
-			}).ToList();
-		}
-
 		[HttpGet("{userName}")]
 		public IQueryable<MsgListViewModel> GetMemberOnlyMsg(string userName)
 		{

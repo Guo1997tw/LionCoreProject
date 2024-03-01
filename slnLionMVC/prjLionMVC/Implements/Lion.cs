@@ -16,26 +16,6 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 留言版清單
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerable<MsgListDto> GetAllMsg()
-		{
-			return _lionHwContext.MessageBoardTables.Join(
-				_lionHwContext.MemberTables,
-				mb => mb.MemberId,
-				m => m.MemberId,
-				(mb, m) => new MsgListDto
-				{
-					MessageBoardId = mb.MessageBoardId,
-					MemberName = m.MemberName,
-					Account = m.Account,
-					MessageText = mb.MessageText,
-					MessageTime = mb.MessageTime,
-				});
-		}
-
-		/// <summary>
 		/// 搜尋單一使用者
 		/// </summary>
 		/// <returns></returns>

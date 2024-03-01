@@ -3,7 +3,7 @@
 }
 
 <body>
-	<div id="List">
+	<div id="MsgList">
 		<input type="text" v-model="searchUserName">
 		<button type="button" @@click="GetNameSearch()">搜尋</button>
 		<button type="button" @@click="GetNameClear()">清除</button>
@@ -42,15 +42,17 @@
 			</tbody>
 		</table>
 		<br>
-		<button type="button" @@click="ChangePage(nowPage - 1)">上一頁</button>
-		<span>{{nowPage}}</span>
-		<button type="button" @@click="ChangePage(nowPage + 1)">下一頁</button>
+		<button type="button" @@click="Pagination(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
+		<span v-for="cp in currentPageTotal" :key="cp">
+			<button type="button" @@click="Pagination(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
+		</span>
+		<button type="button" @@click="Pagination(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
 	</div>
 </body>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
-	const app = Vue.createApp({
+	const magApp = Vue.createApp({
 		data() {
 			return {
 				msgList: [
@@ -63,27 +65,46 @@
 					}
 				],
 				searchUserName: "",
-				nowPage: 1,
-				sizePage: 5,
 				updateMsgIdTemp: "",
 				updateMsgTemp: "",
 				accountTemp: "@loginAccount",
+
+				// 目前顯示頁碼
+				currentShowPage: 1,
+				// 目前頁面筆數
+				currentPageSize: 5,
+				// 目前頁面總數 (假設，待修改成動態API)
+				currentPageTotal: 10,
 			}
 		},
 
 		mounted() {
 			let self = this;
 
-			self.CuttingPage(self.nowPage);
+			self.Pagination(self.currentShowPage);
+		},
+
+		computed: {
+			// 計算顯示頁碼
+			CalculatePage() {
+				let self = this;
+				let totalPage = [];
+				let startPage = Math.max(self.currentShowPage - Math.floor(self.currentPageSize / 2), 1);
+				let ednPage = Math.min(startPage + self.currentPageSize - 1, currentPageTotal);
+
+				if ((endPage - startPage + 1) < self.currentPageTotal) {
+					startPage = Max.max(endPage - self.currentPageTotal + 1, 1);
+				}
+
+				for (let i = startPage; i < ednPage; i++) {
+					totalPage.push(i);
+				}
+
+				return totalPage;
+			}
 		},
 
 		methods: {
-			GetList() {
-				let self = this;
-
-				fetch("/api/LionApi/GetMsg").then(r => r.json()).then(d => { self.msgList = d });
-			},
-
 			GetNameSearch() {
 				let self = this;
 
@@ -96,7 +117,7 @@
 				let self = this;
 
 				self.searchUserName = "";
-				self.CuttingPage(self.nowPage);
+				self.Pagination(self.currentShowPage);
 			},
 
 			UpdateMsg(messageBoardId, messageText) {
@@ -121,7 +142,7 @@
 							alert("修改成功");
 							self.updateMsgIdTemp = "";
 							self.updateMsgTemp = "";
-							self.CuttingPage(self.nowPage);
+							self.Pagination(self.currentShowPage);
 						}
 						else {
 							console.log("Fail", d);
@@ -133,17 +154,16 @@
 			RemoveMsgApi(messageBoardId) {
 				let self = this;
 
-				fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`,
-					{
-						method: "DELETE",
-						headers: { 'Content-Type': 'application/json' }
-					})
+				fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`, {
+					method: "DELETE",
+					headers: { 'Content-Type': 'application/json' }
+				})
 					.then(r => r.json())
 					.then(d => {
 						if (d == true) {
 							console.log("Success", d);
 							alert("刪除成功");
-							self.CuttingPage(self.nowPage);
+							self.Pagination(self.currentShowPage);
 						}
 						else {
 							console.log("Fail", d);
@@ -152,21 +172,18 @@
 					});
 			},
 
-			ChangePage(choosePage) {
+			// 分筆數 (頁)
+			Pagination(itemNum) {
 				let self = this;
 
-				self.CuttingPage(choosePage);
-			},
+				if (itemNum < 1) return;
 
-			CuttingPage(choosePage) {
-				let self = this;
+				self.currentShowPage = itemNum;
 
-				if (choosePage < 1) return;
-
-				self.nowPage = choosePage;
-
-				fetch(`/api/LionApi/GetChoosePageView/${self.nowPage}`).then(r => r.json()).then(d => { self.msgList = d });
+				fetch(`/api/LionApi/GetChoosePageView/${self.currentShowPage}`)
+					.then(r => r.json())
+					.then(d => { self.msgList = d });
 			},
 		},
-	}).mount("#List");
+	}).mount("#MsgList");
 </script>

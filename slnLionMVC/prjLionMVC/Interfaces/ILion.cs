@@ -4,8 +4,6 @@ namespace prjLionMVC.Interfaces
 {
     public interface ILion
     {
-        public IEnumerable<MsgListDto> GetAllMsg();
-
         public IQueryable<MsgListDto> GetMemberByNameMsg(string userName);
 
         public IEnumerable<MsgListDto> GetMsgPage(int choosePage);
