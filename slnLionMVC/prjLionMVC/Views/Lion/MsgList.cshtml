@@ -1,193 +1,209 @@
 ﻿@{
-	string loginAccount = ViewBag.LoginAccount;
+    string loginAccount = ViewBag.LoginAccount;
 }
 
 <body>
-	<div id="MsgList">
-		<input type="text" v-model="searchUserName">
-		<button type="button" @@click="GetNameSearch()">搜尋</button>
-		<button type="button" @@click="GetNameClear()">清除</button>
-		<br>
+    <div id="MsgList">
+        <input type="text" v-model="searchUserName">
+        <button type="button" @@click="GetNameSearch()">搜尋</button>
+        <button type="button" @@click="GetNameClear()">清除</button>
+        <br>
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">編號</th>
-					<th scope="col">姓名</th>
-					<th scope="col">帳號</th>
-					<th scope="col">留言</th>
-					<th scope="col">時間</th>
-					<th scope="col">功能</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="m in msgList">
-					<td>{{m.messageBoardId}}</td>
-					<td>{{m.memberName}}</td>
-					<td>{{m.account}}</td>
-					@* <td>{{m.messageText}}</td> *@
-					<td>
-						<div v-if="updateMsgIdTemp == m.messageBoardId">
-							<input type="text" v-model="updateMsgTemp" />
-						</div>
-						<div v-else="">{{m.messageText}}</div>
-					</td>
-					<td>{{m.messageTime}}</td>
-					<td>
-						<button type="button" v-if="accountTemp == m.account && updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
-						<button type="button" v-if="accountTemp == m.account" @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
-						<button type="button" v-if="accountTemp == m.account" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		<button type="button" @@click="Pagination(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
-		<span v-for="cp in currentPageTotal" :key="cp">
-			<button type="button" @@click="Pagination(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
-		</span>
-		<button type="button" @@click="Pagination(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
-	</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">編號</th>
+                    <th scope="col">姓名</th>
+                    <th scope="col">帳號</th>
+                    <th scope="col">留言</th>
+                    <th scope="col">時間</th>
+                    <th scope="col">功能</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="m in msgList">
+                    <td>{{m.messageBoardId}}</td>
+                    <td>{{m.memberName}}</td>
+                    <td>{{m.account}}</td>
+                    @* <td>{{m.messageText}}</td> *@
+                    <td>
+                        <div v-if="updateMsgIdTemp == m.messageBoardId">
+                            <input type="text" v-model="updateMsgTemp" />
+                        </div>
+                        <div v-else="">{{m.messageText}}</div>
+                    </td>
+                    <td>{{GetDateTime(m.messageTime)}}</td>
+                    <td>
+                        <button type="button" v-if="accountTemp == m.account && updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
+                        <button type="button" v-if="accountTemp == m.account" @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
+                        <button type="button" v-if="accountTemp == m.account" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <button type="button" @@click="Pagination(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
+        <span v-for="cp in currentPageTotal" :key="cp">
+            <button type="button" @@click="Pagination(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
+        </span>
+        <button type="button" @@click="Pagination(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
+    </div>
 </body>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
-	const magApp = Vue.createApp({
-		data() {
-			return {
-				msgList: [
-					{
-						messageBoardId: "",
-						account: "",
-						memberName: "",
-						messageText: "",
-						messageTime: ""
-					}
-				],
-				searchUserName: "",
-				updateMsgIdTemp: "",
-				updateMsgTemp: "",
-				accountTemp: "@loginAccount",
+    const magApp = Vue.createApp({
+        data() {
+            return {
+                msgList: [
+                    {
+                        messageBoardId: "",
+                        account: "",
+                        memberName: "",
+                        messageText: "",
+                        messageTime: ""
+                    }
+                ],
+                searchUserName: "",
+                updateMsgIdTemp: "",
+                updateMsgTemp: "",
+                accountTemp: "@loginAccount",
 
-				// 目前顯示頁碼
-				currentShowPage: 1,
-				// 目前頁面筆數
-				currentPageSize: 5,
-				// 目前頁面總數 (假設，待修改成動態API)
-				currentPageTotal: "",
-			}
-		},
+                // 目前顯示頁碼
+                currentShowPage: 1,
+                // 目前頁面筆數
+                currentPageSize: 5,
+                // 目前頁面總數 (假設，待修改成動態API)
+                currentPageTotal: "",
+            }
+        },
 
-		mounted() {
-			let self = this;
+        mounted() {
+            let self = this;
 
-			self.Pagination(self.currentShowPage);
-		},
+            self.Pagination(self.currentShowPage);
+        },
 
-		computed: {
-			// 計算顯示頁碼
-			CalculatePage() {
-				let self = this;
-				let totalPage = [];
-				let startPage = Math.max(self.currentShowPage - Math.floor(self.currentPageSize / 2), 1);
-				let ednPage = Math.min(startPage + self.currentPageSize - 1, currentPageTotal);
+        computed: {
+            // 計算顯示頁碼
+            CalculatePage() {
+                let self = this;
+                let totalPage = [];
+                let startPage = Math.max(self.currentShowPage - Math.floor(self.currentPageSize / 2), 1);
+                let ednPage = Math.min(startPage + self.currentPageSize - 1, currentPageTotal);
 
-				if ((endPage - startPage + 1) < self.currentPageTotal) {
-					startPage = Max.max(endPage - self.currentPageTotal + 1, 1);
-				}
+                if ((endPage - startPage + 1) < self.currentPageTotal) {
+                    startPage = Max.max(endPage - self.currentPageTotal + 1, 1);
+                }
 
-				for (let i = startPage; i < ednPage; i++) {
-					totalPage.push(i);
-				}
+                for (let i = startPage; i < ednPage; i++) {
+                    totalPage.push(i);
+                }
 
-				return totalPage;
-			}
-		},
+                return totalPage;
+            }
+        },
 
-		methods: {
-			GetNameSearch() {
-				let self = this;
+        methods: {
+            GetNameSearch() {
+                let self = this;
 
-				fetch(`/api/LionApi/GetMemberOnlyMsg/${self.searchUserName}`)
-					.then(r => r.json())
-					.then(d => { self.msgList = d; });
-			},
+                fetch(`/api/LionApi/GetMemberOnlyMsg/${self.searchUserName}`)
+                    .then(r => r.json())
+                    .then(d => { self.msgList = d; });
+            },
 
-			GetNameClear() {
-				let self = this;
+            GetNameClear() {
+                let self = this;
 
-				self.searchUserName = "";
-				self.Pagination(self.currentShowPage);
-			},
+                self.searchUserName = "";
+                self.Pagination(self.currentShowPage);
+            },
 
-			UpdateMsg(messageBoardId, messageText) {
-				let self = this;
+            UpdateMsg(messageBoardId, messageText) {
+                let self = this;
 
-				self.updateMsgIdTemp = messageBoardId;
-				self.updateMsgTemp = messageText;
-			},
+                self.updateMsgIdTemp = messageBoardId;
+                self.updateMsgTemp = messageText;
+            },
 
-			SaveUpdateMsgApi(messageBoardId) {
-				let self = this;
+            SaveUpdateMsgApi(messageBoardId) {
+                let self = this;
 
-				fetch(`/api/LionApi/UpdateMsg/${messageBoardId}`, {
-					method: "PUT",
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ messageText: self.updateMsgTemp })
-				})
-					.then(r => r.json())
-					.then(d => {
-						if (d == true) {
-							console.log("Success", d);
-							alert("修改成功");
-							self.updateMsgIdTemp = "";
-							self.updateMsgTemp = "";
-							self.Pagination(self.currentShowPage);
-						}
-						else {
-							console.log("Fail", d);
-							alert("修改失敗");
-						}
-					});
-			},
+                fetch(`/api/LionApi/UpdateMsg/${messageBoardId}`, {
+                    method: "PUT",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messageText: self.updateMsgTemp })
+                })
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d == true) {
+                            console.log("Success", d);
+                            alert("修改成功");
+                            self.updateMsgIdTemp = "";
+                            self.updateMsgTemp = "";
+                            self.Pagination(self.currentShowPage);
+                        }
+                        else {
+                            console.log("Fail", d);
+                            alert("修改失敗");
+                        }
+                    });
+            },
 
-			RemoveMsgApi(messageBoardId) {
-				let self = this;
+            RemoveMsgApi(messageBoardId) {
+                let self = this;
 
-				fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`, {
-					method: "DELETE",
-					headers: { 'Content-Type': 'application/json' }
-				})
-					.then(r => r.json())
-					.then(d => {
-						if (d == true) {
-							console.log("Success", d);
-							alert("刪除成功");
-							self.Pagination(self.currentShowPage);
-						}
-						else {
-							console.log("Fail", d);
-							alert("刪除失敗");
-						}
-					});
-			},
+                fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`, {
+                    method: "DELETE",
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d == true) {
+                            console.log("Success", d);
+                            alert("刪除成功");
+                            self.Pagination(self.currentShowPage);
+                        }
+                        else {
+                            console.log("Fail", d);
+                            alert("刪除失敗");
+                        }
+                    });
+            },
 
-			// 取得第幾頁 & 資料總筆數
-			Pagination(pageNum) {
-				let self = this;
+            // 取得第幾頁 & 資料總筆數
+            Pagination(pageNum) {
+                let self = this;
 
-				if (pageNum < 1) return;
+                if (pageNum < 1) return;
 
-				self.currentShowPage = pageNum;
+                self.currentShowPage = pageNum;
 
-				fetch("/api/LionApi/GetPageCount")
-					.then(r => r.json())
-					.then(d => { self.currentPageTotal = Math.ceil(d / self.currentPageSize) });
+                fetch("/api/LionApi/GetPageCount")
+                    .then(r => r.json())
+                    .then(d => { self.currentPageTotal = Math.ceil(d / self.currentPageSize) });
 
-				fetch(`/api/LionApi/GetPageNum/${self.currentShowPage}`)
-					.then(r => r.json())
-					.then(d => { self.msgList = d });
-			},
-		},
-	}).mount("#MsgList");
+                fetch(`/api/LionApi/GetPageNum/${self.currentShowPage}`)
+                    .then(r => r.json())
+                    .then(d => { self.msgList = d });
+            },
+
+            // 取得時間
+            GetDateTime(dateTime) {
+                let self = this;
+                const date = new Date(dateTime);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                const hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const seconds = date.getSeconds().toString().padStart(2, '0');
+                const hoursFormat = ((hours + 11) % 12 + 1).toString().padStart(2, '0');
+                const condition = self.hoursFormat < 12 ? "上午" : "下午";
+
+                return `${year}/${month}/${day} ${condition} ${hours}:${minutes}:${seconds}`;
+            },
+        },
+    }).mount("#MsgList");
 </script>
