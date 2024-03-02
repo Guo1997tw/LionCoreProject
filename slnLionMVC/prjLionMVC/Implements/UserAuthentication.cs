@@ -27,7 +27,7 @@ namespace prjLionMVC.Implements
 
             if (userClaim != null) { return userClaim.Value; }
 
-            // throw new InvalidOperationException("找不到此會員帳號");
+            throw new InvalidOperationException("找不到此會員帳號");
 
             return null;
 		}

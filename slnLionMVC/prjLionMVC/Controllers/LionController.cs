@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prjLionMVC.Interfaces;
 
@@ -14,6 +15,7 @@ namespace prjLionMVC.Controllers
 			_userAuthentication = userAuthentication;
 		}
 
+        [Authorize]
         public IActionResult MsgList()
         {
             ViewBag.LoginAccount = _userAuthentication.GetUserName();
