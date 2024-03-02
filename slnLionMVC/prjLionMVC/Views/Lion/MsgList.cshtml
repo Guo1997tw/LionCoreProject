@@ -74,7 +74,7 @@
 				// 目前頁面筆數
 				currentPageSize: 5,
 				// 目前頁面總數 (假設，待修改成動態API)
-				currentPageTotal: 10,
+				currentPageTotal: "",
 			}
 		},
 
@@ -172,13 +172,17 @@
 					});
 			},
 
-			// 取得第幾頁
+			// 取得第幾頁 & 資料總筆數
 			Pagination(pageNum) {
 				let self = this;
 
 				if (pageNum < 1) return;
 
 				self.currentShowPage = pageNum;
+
+				fetch("/api/LionApi/GetPageCount")
+					.then(r => r.json())
+					.then(d => { self.currentPageTotal = Math.ceil(d / self.currentPageSize) });
 
 				fetch(`/api/LionApi/GetPageNum/${self.currentShowPage}`)
 					.then(r => r.json())
