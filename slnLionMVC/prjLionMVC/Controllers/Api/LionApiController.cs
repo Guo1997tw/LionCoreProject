@@ -147,6 +147,18 @@ namespace prjLionMVC.Controllers.Api
 		[HttpPost]
 		public bool CreateMsg(CreateMsgViewModel createMsgViewModel)
 		{
+			var msgRule = new Regex(@"^[a-zA-Z0-9\u4e00-\u9fa5，。、！？]+$");
+
+			if (string.IsNullOrWhiteSpace(createMsgViewModel.MessageText))
+			{
+				throw new Exception("欄位不可為空");
+			}
+
+			if (!msgRule.IsMatch(createMsgViewModel.MessageText))
+			{
+				throw new Exception("留言欄位不允許有特殊字元");
+			}
+
 			var mapper = new CreateMsgDto
 			{
 				MemberId = createMsgViewModel.MemberId,
