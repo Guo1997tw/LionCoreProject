@@ -1,10 +1,10 @@
 ﻿<body>
 	<div id="Register">
-		<input type="text" placeholder="請輸入姓名" v-model="member.memberName">
+		姓名:<input type="text" placeholder="請輸入姓名" v-model="member.memberName">
 		<br>
-		<input type="text" placeholder="請輸入帳號" v-model="member.account">
+		帳號:<input type="text" placeholder="請輸入帳號" v-model="member.account">
 		<br>
-		<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		密碼:<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
 		<br>
 		<button type="submit" @@click="InsertMemberApi()">送出</button>
 	</div>
@@ -26,6 +26,21 @@
 		methods: {
 			InsertMemberApi() {
 				let self = this;
+				var userNameRule = /^[a-zA-Z\u4e00-\u9fa5]+$/;
+				var accountRule = /^[A-Za-z0-9_]+$/;
+				var passwordRule = /^\S+$/;
+
+				if (!userNameRule.test(self.member.memberName)) {
+					return alert("姓名欄位只能有中文、英文以及不允許有空格");
+				}
+
+				if (!accountRule.test(self.member.account)) {
+					return alert("帳號欄位只能有字母、數字、底線");
+				}
+
+				if (!passwordRule.test(self.member.hashPassword)) {
+					return alert("密碼欄位不允許空格");
+				}
 
 				fetch("/api/LionApi/RegisterMember", {
 					method: "POST",
