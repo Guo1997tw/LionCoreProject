@@ -1,8 +1,8 @@
 ﻿<body>
 	<div id="Login">
-		<input type="text" placeholder="請輸入帳號" v-model="member.account">
+		帳號:<input type="text" placeholder="請輸入帳號" v-model="member.account">
 		<br>
-		<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		密碼:<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
 		<br>
 		<input type="checkbox" v-model="logAccount">記住帳號
 		<button type="button" @@click="LoginMemberApi()">登入</button>
@@ -38,6 +38,16 @@
 		methods: {
 			LoginMemberApi() {
 				let self = this;
+				var accountRule = /^[A-Za-z0-9_]+$/;
+				var passwordRule = /^\S+$/;
+
+				if (!accountRule.test(self.member.account)) {
+					return alert("帳號欄位只能有字母、數字、底線");
+				}
+
+				if (!passwordRule.test(self.member.hashPassword)) {
+					return alert("密碼欄位不允許空格");
+				}
 
 				fetch("/api/LionApi/LoginMember", {
 					method: "POST",
