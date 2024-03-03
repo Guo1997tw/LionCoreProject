@@ -7,6 +7,7 @@ using prjLionMVC.Models;
 using prjLionMVC.Models.Entity;
 using prjLionMVC.Models.ViewModels;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace prjLionMVC.Controllers.Api
 {
@@ -65,7 +66,26 @@ namespace prjLionMVC.Controllers.Api
 		[HttpPost]
 		public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
 		{
-			var mapper = new CreateAccountDto
+			var userNameRule = new Regex(@"^[a-zA-Z\u4e00-\u9fa5]+$");
+            var accountRule = new Regex(@"^[A-Za-z0-9_]+$");
+            var passwordRule = new Regex(@"^\S+$");
+
+			if(!userNameRule.IsMatch(createAccountViewModel.MemberName))
+			{
+				throw new Exception("姓名欄位只能有中文、英文以及不允許有空格");
+			}
+
+            if (!accountRule.IsMatch(createAccountViewModel.Account))
+            {
+				throw new Exception("帳號欄位只能有字母、數字、底線");
+            }
+
+            if (!passwordRule.IsMatch(createAccountViewModel.HashPassword))
+            {
+				throw new Exception("密碼欄位不允許空格");
+            }
+
+            var mapper = new CreateAccountDto
 			{
 				MemberName = createAccountViewModel.MemberName,
 				Account = createAccountViewModel.Account,
