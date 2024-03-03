@@ -98,7 +98,20 @@ namespace prjLionMVC.Controllers.Api
 		[HttpPost]
 		public bool LoginMember(LoginAccountViewModel loginAccountViewModel)
 		{
-			if (_lion.CheckMember(loginAccountViewModel.Account, loginAccountViewModel.HashPassword))
+            var accountRule = new Regex(@"^[A-Za-z0-9_]+$");
+            var passwordRule = new Regex(@"^\S+$");
+
+            if (!accountRule.IsMatch(loginAccountViewModel.Account))
+            {
+                throw new Exception("帳號欄位只能有字母、數字、底線");
+            }
+
+            if (!passwordRule.IsMatch(loginAccountViewModel.HashPassword))
+            {
+                throw new Exception("密碼欄位不允許空格");
+            }
+
+            if (_lion.CheckMember(loginAccountViewModel.Account, loginAccountViewModel.HashPassword))
 			{
 				var queryResult = _lion.GetMemberById(loginAccountViewModel.Account);
 
