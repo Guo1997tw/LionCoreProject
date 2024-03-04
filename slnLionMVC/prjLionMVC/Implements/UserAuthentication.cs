@@ -12,7 +12,13 @@ namespace prjLionMVC.Implements
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public int GetUserCertificate()
+		/// <summary>
+		/// 取得使用者識別碼
+		/// 會員編號
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public int GetUserCertificate()
         {
             Claim userClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier);
 
@@ -21,6 +27,12 @@ namespace prjLionMVC.Implements
             throw new InvalidOperationException("找不到此會員ID");
         }
 
+		/// <summary>
+		/// 取得使用者名稱
+		/// 會員帳號
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
 		public string GetUserName()
 		{
 			Claim userClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Name);
@@ -28,8 +40,6 @@ namespace prjLionMVC.Implements
             if (userClaim != null) { return userClaim.Value; }
 
             throw new InvalidOperationException("找不到此會員帳號");
-
-            return null;
 		}
 	}
 }
