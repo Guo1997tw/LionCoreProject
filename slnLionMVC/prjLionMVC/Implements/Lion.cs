@@ -156,7 +156,7 @@ namespace prjLionMVC.Implements
 			{
 				MemberId = createMsgDto.MemberId,
 				MessageText = createMsgDto.MessageText,
-				MessageTime = DateTime.UtcNow
+				MessageTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time"))
 			};
 
 			try
