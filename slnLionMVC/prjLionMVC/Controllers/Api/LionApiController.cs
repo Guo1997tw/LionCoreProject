@@ -209,6 +209,18 @@ namespace prjLionMVC.Controllers.Api
 		[HttpPut("{id}")]
 		public bool UpdateMsg(int id, EditMsgViewModel editMsgViewModel)
 		{
+			var msgRule = new Regex(@"^[a-zA-Z0-9\u4e00-\u9fa5，。、！？]+$");
+
+			if (string.IsNullOrWhiteSpace(editMsgViewModel.MessageText))
+			{
+				throw new Exception("欄位不可為空");
+			}
+
+			if (!msgRule.IsMatch(editMsgViewModel.MessageText))
+			{
+				throw new Exception("留言欄位不允許有特殊字元");
+			}
+
 			var mapper = new EditMsgDto
 			{
 				MessageText = editMsgViewModel.MessageText,
