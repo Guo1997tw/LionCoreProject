@@ -11,6 +11,12 @@ namespace prjLionMVC.LogExceptions
             _requestDelegate = requestDelegate;
         }
 
+        /// <summary>
+        /// 拋出例外 (錯誤) 訊息寫入資料庫存取
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <param name="lionHwContext"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext httpContext, LionHwContext lionHwContext)
         {
             try
