@@ -186,9 +186,10 @@ namespace prjLionMVC.Implements
 			if (queryResult != null)
 			{
 				queryResult.MessageText = editMsgDto.MessageText;
-				queryResult.MessageTime = DateTime.UtcNow;
+				queryResult.MessageTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time"));
 
-				_lionHwContext.SaveChanges();
+
+                _lionHwContext.SaveChanges();
 
 				return true;
 			}
