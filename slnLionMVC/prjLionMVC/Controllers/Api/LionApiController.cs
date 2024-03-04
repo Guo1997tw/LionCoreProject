@@ -21,7 +21,12 @@ namespace prjLionMVC.Controllers.Api
 		{
 			_lion = lion;
 		}
-
+		/// <summary>
+		/// 搜尋單一使用者留言
+		/// 指定使用者姓名
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
 		[HttpGet("{userName}")]
 		public IQueryable<MsgListViewModel> GetMemberOnlyMsg(string userName)
 		{
@@ -37,6 +42,7 @@ namespace prjLionMVC.Controllers.Api
 
 		/// <summary>
 		/// 取得第幾頁
+		/// 指定頁面 (分五筆)
 		/// </summary>
 		/// <param name="pageNum"></param>
 		/// <returns></returns>
@@ -54,7 +60,7 @@ namespace prjLionMVC.Controllers.Api
 		}
 
 		/// <summary>
-		/// 取得總筆數
+		/// 取得留言總筆數
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
@@ -63,6 +69,12 @@ namespace prjLionMVC.Controllers.Api
 			return _lion.GetMsgPageCount();
 		}
 
+		/// <summary>
+		/// 註冊帳號
+		/// </summary>
+		/// <param name="createAccountViewModel"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		[HttpPost]
 		public bool RegisterMember(CreateAccountViewModel createAccountViewModel)
 		{
@@ -95,6 +107,12 @@ namespace prjLionMVC.Controllers.Api
 			return _lion.CreateMember(mapper) ? true : false;
 		}
 
+		/// <summary>
+		/// 登入帳號
+		/// </summary>
+		/// <param name="loginAccountViewModel"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		[HttpPost]
 		public bool LoginMember(LoginAccountViewModel loginAccountViewModel)
 		{
@@ -132,6 +150,12 @@ namespace prjLionMVC.Controllers.Api
 			return false;
 		}
 
+		/// <summary>
+		/// 取得單一使用者資訊
+		/// 指定帳號
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
 		[HttpGet]
 		public GetMemberViewModel GetOneMember(string account)
 		{
@@ -144,6 +168,12 @@ namespace prjLionMVC.Controllers.Api
 			};
 		}
 
+		/// <summary>
+		/// 新增留言
+		/// </summary>
+		/// <param name="createMsgViewModel"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		[HttpPost]
 		public bool CreateMsg(CreateMsgViewModel createMsgViewModel)
 		{
@@ -169,6 +199,13 @@ namespace prjLionMVC.Controllers.Api
 			return _lion.InsertMsg(mapper) ? true : false;
 		}
 
+		/// <summary>
+		/// 修改留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="editMsgViewModel"></param>
+		/// <returns></returns>
 		[HttpPut("{id}")]
 		public bool UpdateMsg(int id, EditMsgViewModel editMsgViewModel)
 		{
@@ -181,6 +218,12 @@ namespace prjLionMVC.Controllers.Api
 			return _lion.EditMsg(id, mapper);
 		}
 
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		[HttpDelete("{id}")]
 		public bool RemoveMsg(int id)
 		{
