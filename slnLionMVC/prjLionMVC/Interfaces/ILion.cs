@@ -4,31 +4,73 @@ namespace prjLionMVC.Interfaces
 {
     public interface ILion
     {
-        public IQueryable<MsgListDto> GetMemberByNameMsg(string userName);
-
-        /// <summary>
-        /// 取得第幾頁
-        /// </summary>
-        /// <param name="pageNum"></param>
-        /// <returns></returns>
-        public IEnumerable<MsgListDto> GetMsgPageNum(int pageNum);
+		/// <summary>
+		/// 搜尋單一使用者留言
+		/// 指定使用者姓名
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
+		public IQueryable<MsgListDto> GetMemberByNameMsg(string userName);
 
 		/// <summary>
-		/// 取得總筆數
+		/// 取得第幾頁
+		/// 指定頁面 (分五筆)
+		/// </summary>
+		/// <param name="pageNum"></param>
+		/// <returns></returns>
+		public IEnumerable<MsgListDto> GetMsgPageNum(int pageNum);
+
+		/// <summary>
+		/// 取得留言總筆數
 		/// </summary>
 		/// <returns></returns>
 		public int GetMsgPageCount();
 
-        public bool CreateMember(CreateAccountDto createAccountDto);
+		/// <summary>
+		/// 註冊帳號
+		/// </summary>
+		/// <param name="createAccountDto"></param>
+		/// <returns></returns>
+		public bool CreateMember(CreateAccountDto createAccountDto);
 
-        public bool CheckMember(string account, string password);
+		/// <summary>
+		/// 登入帳號
+		/// </summary>
+		/// <param name="account"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		public bool CheckMember(string account, string password);
 
-        public GetMemberDto GetMemberById(string account);
+		/// <summary>
+		/// 取得單一使用者資訊
+		/// 指定帳號
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		public GetMemberDto GetMemberById(string account);
 
-        public bool InsertMsg(CreateMsgDto createMsgDto);
+		/// <summary>
+		/// 新增留言
+		/// </summary>
+		/// <param name="createMsgDto"></param>
+		/// <returns></returns>
+		public bool InsertMsg(CreateMsgDto createMsgDto);
 
-        public bool EditMsg(int id, EditMsgDto editMsgDto);
+		/// <summary>
+		/// 修改留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="editMsgDto"></param>
+		/// <returns></returns>
+		public bool EditMsg(int id, EditMsgDto editMsgDto);
 
-        public bool DeleteMsg(int id);
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public bool DeleteMsg(int id);
     }
 }

@@ -16,7 +16,8 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 搜尋單一使用者
+		/// 搜尋單一使用者留言
+		/// 指定使用者姓名
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
@@ -38,6 +39,7 @@ namespace prjLionMVC.Implements
 
 		/// <summary>
 		/// 取得第幾頁
+		/// 指定頁面 (分五筆)
 		/// </summary>
 		/// <param name="pageNum"></param>
 		/// <returns></returns>
@@ -64,7 +66,7 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 取得總筆數
+		/// 取得留言總筆數
 		/// </summary>
 		/// <returns></returns>
 		public int GetMsgPageCount()
@@ -73,7 +75,7 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 建立帳號
+		/// 註冊帳號
 		/// </summary>
 		/// <param name="createAccountDto"></param>
 		/// <returns></returns>
@@ -104,7 +106,7 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 會員登入
+		/// 登入帳號
 		/// </summary>
 		/// <param name="loginAccountDto"></param>
 		/// <returns></returns>
@@ -143,7 +145,7 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 留言版新增
+		/// 新增留言
 		/// </summary>
 		/// <param name="createMsgDto"></param>
 		/// <returns></returns>
@@ -171,7 +173,8 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 留言版編輯
+		/// 修改留言
+		/// 指定留言編號 (流水號)
 		/// </summary>
 		/// <param name="editMsgDto"></param>
 		/// <returns></returns>
@@ -193,7 +196,8 @@ namespace prjLionMVC.Implements
 		}
 
 		/// <summary>
-		/// 留言版刪除
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
