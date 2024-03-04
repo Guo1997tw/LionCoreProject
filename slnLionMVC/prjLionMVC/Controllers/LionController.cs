@@ -15,7 +15,11 @@ namespace prjLionMVC.Controllers
 			_userAuthentication = userAuthentication;
 		}
 
-        [Authorize]
+		/// <summary>
+		/// 留言清單頁面
+		/// </summary>
+		/// <returns></returns>
+		[Authorize]
         public IActionResult MsgList()
         {
             ViewBag.LoginAccount = _userAuthentication.GetUserName();
@@ -23,29 +27,49 @@ namespace prjLionMVC.Controllers
 			return View();
         }
 
-        public IActionResult Register()
+		/// <summary>
+		/// 註冊帳號頁面
+		/// </summary>
+		/// <returns></returns>
+		public IActionResult Register()
         {
             return View();
         }
 
-        public IActionResult Login()
+		/// <summary>
+		/// 登入帳號頁面
+		/// </summary>
+		/// <returns></returns>
+		public IActionResult Login()
         {
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+		/// <summary>
+		/// 登出帳號頁面
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login", "Lion");
         }
 
+        /// <summary>
+        /// 顯示沒有權限頁面
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Error()
         {
             return View();
         }
 
-        public IActionResult UseMsg()
+		/// <summary>
+		/// 新增留言頁面
+		/// </summary>
+		/// <returns></returns>
+		public IActionResult UseMsg()
         {
             ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
