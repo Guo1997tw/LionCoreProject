@@ -63,6 +63,13 @@ namespace prjLion.Common
             }
         }
 
+        /// <summary>
+        /// 檢核正則表示邏輯
+        /// 輸入帳號、密碼判斷是否符合規則
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <exception cref="Exception"></exception>
         public void isVerifyRuleAP(string account, string password)
         {
             var accountRule = new Regex(@"^[A-Za-z0-9_]+$");
