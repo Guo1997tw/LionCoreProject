@@ -11,4 +11,13 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implements\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\prjLion.Common\prjLion.Common.csproj" />
+  </ItemGroup>
+
 </Project>

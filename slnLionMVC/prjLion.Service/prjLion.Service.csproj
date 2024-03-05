@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\prjLion.Common\prjLion.Common.csproj" />
+    <ProjectReference Include="..\prjLion.Repository\prjLion.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
