@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace prjLion.Repository.Models
 {
-    public class ErrorLogTables
+    public class ErrorLogTable
     {
         public int ErrorId { get; set; }
-        public string Message { get; set; } = null!;
+        public string Message { get; set; }
         public string StackTrace { get; set; } = null!;
         public DateTime? DateCreated { get; set; }
     }

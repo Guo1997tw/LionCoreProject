@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace prjLion.Repository.Models
 {
-    public class MemberTables
+    public class MemberTable
     {
         public int MemberId { get; set; }
         public string MemberName { get; set; } = null!;

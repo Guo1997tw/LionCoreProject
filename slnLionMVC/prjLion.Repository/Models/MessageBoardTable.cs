@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace prjLion.Repository.Models
 {
-    public class MessageBoardTables
+    public class MessageBoardTable
     {
         public int MessageBoardId { get; set; }
         public int MemberId { get; set; }
