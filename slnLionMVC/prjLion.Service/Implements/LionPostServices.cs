@@ -15,21 +15,23 @@ namespace prjLion.Service.Implements
 {
     public class LionPostServices : ILionPostServices
     {
-        private readonly ILionPostRepositorys _lionPostRepositorys;
+		private readonly ILionGetRepositorys _lionGetRepositorys;
+		private readonly ILionPostRepositorys _lionPostRepositorys;
         private readonly IMapper _mapper;
 
-        public LionPostServices(ILionPostRepositorys lionPostRepositorys, IMapper mapper)
+        public LionPostServices(ILionGetRepositorys lionGetRepositorys, ILionPostRepositorys lionPostRepositorys, IMapper mapper)
         {
-            _lionPostRepositorys = lionPostRepositorys;
+			_lionGetRepositorys = lionGetRepositorys;
+			_lionPostRepositorys = lionPostRepositorys;
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// 註冊帳號
-        /// </summary>
-        /// <param name="memberAccountBo"></param>
-        /// <returns></returns>
-        public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
+		/// <summary>
+		/// 註冊帳號
+		/// </summary>
+		/// <param name="memberAccountBo"></param>
+		/// <returns></returns>
+		public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
         {
             var userNameRule = new Regex(@"^[a-zA-Z\u4e00-\u9fa5]+$");
 
@@ -52,5 +54,32 @@ namespace prjLion.Service.Implements
 
             return await _lionPostRepositorys.InsertAccount(mapper);
         }
-    }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+		public async Task<bool> CheckMember(string account, string password)
+		{
+            var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
+			
+            CustomizedMethod customizedMethod = new CustomizedMethod();
+			
+            customizedMethod.isVerifyRuleAP(account, password);
+
+            if (queryResult != null)
+            {
+                var HashPasswordTemp = queryResult.HashPassword;
+                var SaltPasswordTemp = queryResult.SaltPassword;
+                var HashPassword = customizedMethod.HashPwdWithHMACSHA256(password, SaltPasswordTemp);
+
+                return HashPassword == HashPasswordTemp;
+            }
+
+			return false;
+		}
+	}
 }

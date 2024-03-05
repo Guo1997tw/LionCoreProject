@@ -19,14 +19,14 @@ namespace prjLion.Repository.Implements
             _lionConnection = lionConnection;
         }
 
-        /// <summary>
-        /// 搜尋單一使用者留言
+		/// <summary>
+		/// 搜尋單一使用者留言
 		/// 指定使用者姓名
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public async Task<IEnumerable<MessageListDto>?> GetMsgByUserName(string userName)
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public async Task<IEnumerable<MessageListDto>?> GetMsgByUserName(string userName)
         {
             using (var use = _lionConnection.GetLionDb())
             {
@@ -40,5 +40,21 @@ namespace prjLion.Repository.Implements
                 return await use.QueryAsync<MessageListDto>(querySQL, new { MemberName = userName });
             }
         }
-    }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+		public async Task<MemberAccountDto?> GetMemberAccount(string account)
+		{
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var querySQL = @"select * from [dbo].[MemberTable] where [Account] = @account";
+
+				return await use.QueryFirstOrDefaultAsync<MemberAccountDto?>(querySQL, new { Account = account });
+			}
+		}
+	}
 }

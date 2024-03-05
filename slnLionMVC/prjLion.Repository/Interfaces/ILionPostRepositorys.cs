@@ -15,12 +15,5 @@ namespace prjLion.Repository.Interfaces
         /// <param name="memberAccountDto"></param>
         /// <returns></returns>
         public Task<bool> InsertAccount(MemberAccountDto memberAccountDto);
-
-        /// <summary>
-        /// 登入帳號
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Task<MemberAccountDto?> PostMemberData(string account);
     }
 }

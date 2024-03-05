@@ -50,5 +50,17 @@ namespace prjLion.WebAPI.Controllers
 
             return Ok(await _lionPostServices.CreateAccount(mapper));
         }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> LoginMember(string account, string password)
+        {
+            return (await _lionPostServices.CheckMember(account, password)) ? Ok("登入成功") : NotFound("登入失敗");
+        }
     }
 }

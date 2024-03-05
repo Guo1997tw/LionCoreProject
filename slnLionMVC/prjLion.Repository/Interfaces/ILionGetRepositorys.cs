@@ -16,5 +16,12 @@ namespace prjLion.Repository.Interfaces
         /// <param name="userName"></param>
         /// <returns></returns>
         public Task<IEnumerable<MessageListDto>?> GetMsgByUserName(string userName);
-    }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Task<MemberAccountDto?> GetMemberAccount(string account);
+	}
 }

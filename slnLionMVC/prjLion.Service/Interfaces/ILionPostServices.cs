@@ -15,5 +15,13 @@ namespace prjLion.Service.Interfaces
         /// <param name="memberAccountBo"></param>
         /// <returns></returns>
         public Task<bool> CreateAccount(MemberAccountBo memberAccountBo);
-    }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public Task<bool> CheckMember(string account, string password);
+	}
 }
