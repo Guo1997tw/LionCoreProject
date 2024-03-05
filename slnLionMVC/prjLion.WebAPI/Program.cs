@@ -35,6 +35,15 @@ namespace prjLion.WebAPI
             builder.Services.AddScoped<ILionGetRepositorys, LionGetRepositorys>();
             builder.Services.AddScoped<ILionGetServices, LionGetServices>();
 
+            // Add CORS DI
+            builder.Services.AddCors(option =>
+            {
+                option.AddPolicy(name: "AllowSpecificOrigin", builder =>
+                {
+                    builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -46,8 +55,10 @@ namespace prjLion.WebAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            // Use CORS
+            app.UseCors("AllowSpecificOrigin");
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

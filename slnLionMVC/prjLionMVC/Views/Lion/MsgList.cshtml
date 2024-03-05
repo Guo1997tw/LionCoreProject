@@ -107,8 +107,9 @@
         methods: {
             GetNameSearch() {
                 let self = this;
+                let apiHost = "https://localhost:7235";
 
-                fetch(`/api/LionApi/GetMemberOnlyMsg/${self.searchUserName}`)
+                fetch(`${apiHost}/api/LionGet/SearchMsgUserName/${self.searchUserName}`)
                     .then(r => r.json())
                     .then(d => { self.msgList = d; });
             },
