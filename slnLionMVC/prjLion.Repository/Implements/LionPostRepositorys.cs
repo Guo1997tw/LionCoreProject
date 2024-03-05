@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using AutoMapper;
+using Dapper;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Interfaces;
 using prjLion.Repository.Models.Dto;
@@ -14,10 +15,12 @@ namespace prjLion.Repository.Implements
     public class LionPostRepositorys : ILionPostRepositorys
     {
         private readonly ILionConnection _lionConnection;
+        private readonly IMapper _mapper;
 
-        public LionPostRepositorys(ILionConnection lionConnection)
+        public LionPostRepositorys(ILionConnection lionConnection, IMapper mapper)
         {
             _lionConnection = lionConnection;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -43,6 +46,22 @@ namespace prjLion.Repository.Implements
                 await use.ExecuteAsync(actionSQL, parameters);
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 登入帳號
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<MemberAccountDto?> PostMemberData(string account)
+        {
+            using (var use = _lionConnection.GetLionDb())
+            {
+                var querySQL = @"select * from [dbo].[MemberTable] where [Account] = @account";
+
+                return await use.QueryFirstOrDefaultAsync<MemberAccountDto?>(querySQL, new { Account = account });
             }
         }
     }
