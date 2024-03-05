@@ -16,6 +16,9 @@ namespace prjLion.Service.Mapping
             // 搜尋單一使用者留言
             // 指定使用者姓名
             CreateMap<MessageListDto, MessageListBo>();
+
+            // 註冊帳號
+            CreateMap<MemberAccountBo, MemberAccountDto>();
         }
     }
 }

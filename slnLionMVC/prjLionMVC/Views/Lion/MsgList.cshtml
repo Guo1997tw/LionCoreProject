@@ -109,7 +109,7 @@
                 let self = this;
                 let apiHost = "https://localhost:7235";
 
-                fetch(`${apiHost}/api/LionGet/SearchMsgUserName/${self.searchUserName}`)
+                fetch(`${apiHost}/api/Lion/SearchMsgUserName/${self.searchUserName}`)
                     .then(r => r.json())
                     .then(d => { self.msgList = d; });
             },

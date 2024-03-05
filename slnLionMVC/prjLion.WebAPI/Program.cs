@@ -33,7 +33,9 @@ namespace prjLion.WebAPI
             // Add Function DI
             builder.Services.AddScoped<ILionConnection, LionConnection>();
             builder.Services.AddScoped<ILionGetRepositorys, LionGetRepositorys>();
+            builder.Services.AddScoped<ILionPostRepositorys, LionPostRepositorys>();
             builder.Services.AddScoped<ILionGetServices, LionGetServices>();
+            builder.Services.AddScoped<ILionPostServices, LionPostServices>();
 
             // Add CORS DI
             builder.Services.AddCors(option =>

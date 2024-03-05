@@ -11,6 +11,9 @@ namespace prjLion.WebAPI.Mapping
             // 搜尋單一使用者留言
             // 指定使用者姓名
             CreateMap<MessageListBo, MessageListViewModel>();
+
+            // 註冊帳號
+            CreateMap<MemberAccountViewModel, MemberAccountBo>();
         }
     }
 }
