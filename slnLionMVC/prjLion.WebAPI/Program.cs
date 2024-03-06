@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Implements;
 using prjLion.Repository.Interfaces;
@@ -7,6 +9,7 @@ using prjLion.Service.Implements;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Mapping;
 using prjLion.WebAPI.Mapping;
+using System.Text;
 
 namespace prjLion.WebAPI
 {
@@ -36,10 +39,10 @@ namespace prjLion.WebAPI
             builder.Services.AddScoped<ILionConnection, LionConnection>();
             builder.Services.AddScoped<ILionGetRepositorys, LionGetRepositorys>();
             builder.Services.AddScoped<ILionPostRepositorys, LionPostRepositorys>();
-            builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
             builder.Services.AddScoped<ILionGetServices, LionGetServices>();
             builder.Services.AddScoped<ILionPostServices, LionPostServices>();
-            
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
             // Add CORS DI
             builder.Services.AddCors(option =>
             {
@@ -49,12 +52,19 @@ namespace prjLion.WebAPI
                 });
             });
 
-            // Add Authentication DI
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            // Add Authentication JWT DI
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
             {
-                option.LoginPath = "/Lion/Login";
-                option.LogoutPath = "/Lion/Login";
-                option.AccessDeniedPath = "/Lion/Error";
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
             });
 
             var app = builder.Build();
@@ -71,12 +81,21 @@ namespace prjLion.WebAPI
             // Use CORS
             app.UseCors("AllowSpecificOrigin");
 
+            // Use Routing
+            app.UseRouting();
+
             // Use UseAuthentication
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.MapControllers();
+            // Use JWT
+            app.UseEndpoints(option =>
+            {
+                option.MapControllers();
+            });
+
+            // app.MapControllers();
 
             app.Run();
         }

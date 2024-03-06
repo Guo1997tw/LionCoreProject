@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using prjLion.Common;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Models.Bo;
 using prjLion.WebAPI.Models;
@@ -16,12 +17,14 @@ namespace prjLion.WebAPI.Controllers
     {
         private readonly ILionGetServices _lionGetServices;
         private readonly ILionPostServices _lionPostServices;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, IMapper mapper)
+        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, ITokenService tokenService, IMapper mapper)
         {
             _lionGetServices = lionGetServices;
             _lionPostServices = lionPostServices;
+            _tokenService = tokenService;
             _mapper = mapper;
         }
 
@@ -60,29 +63,30 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        [HttpPost ("{key}/{value}")]
+        [HttpPost("{key}/{value}")]
         public async Task<ActionResult> LoginMember(string key, string value)
         {
+            CustomizedMethod customizedMethod = new CustomizedMethod();
+
+            customizedMethod.isVerifyRuleAP(key, value);
+
             if (await _lionPostServices.CheckMember(key, value))
             {
                 var queryResult = await _lionGetServices.GetMemberInfo(key);
 
-                // var mapper = _mapper.Map<MemberAccountInfoViewModel>(queryResult);
-
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.MemberId }"),
-                    new Claim(ClaimTypes.Name, $"{ queryResult.MemberName }")
+                    new Claim(ClaimTypes.NameIdentifier, queryResult.MemberId.ToString()),
+                    new Claim(ClaimTypes.Name, queryResult.MemberName)
                 };
 
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
+                var (Token, Expiration) = _tokenService.CreateToken(claims);
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
-
-                return Ok("登入成功");
+                return Ok(new
+                {
+                    token = Token,
+                    expiration = Expiration
+                });
             }
 
             return NotFound("登入失敗");
