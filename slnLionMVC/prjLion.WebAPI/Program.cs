@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Implements;
@@ -56,7 +57,7 @@ namespace prjLion.WebAPI
 			// Add Authentication DI
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 			{
-                option.LoginPath = PathString.FromUriComponent(new Uri("https://localhost:7073/Lion/Login"));
+				option.LoginPath = PathString.FromUriComponent(new Uri("https://localhost:7073/Lion/Login"));
 				option.AccessDeniedPath = PathString.FromUriComponent(new Uri("https://localhost:7073/Lion/Error"));
 			});
 

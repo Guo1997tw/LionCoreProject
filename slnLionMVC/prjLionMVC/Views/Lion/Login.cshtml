@@ -53,7 +53,7 @@
 
 				// "/api/LionApi/LoginMember"
 				// `${apiHost}/api/Lion/LoginMember/${self.member.account}/${self.member.hashPassword}`
-				await fetch(`${apiHost}/api/Lion/LoginMember`, {
+				await fetch("/Lion/Login", {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(self.member),

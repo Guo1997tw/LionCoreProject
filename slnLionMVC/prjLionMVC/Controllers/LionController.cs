@@ -2,17 +2,21 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using prjLion.Service.Interfaces;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models;
 
 namespace prjLionMVC.Controllers
 {
     public class LionController : Controller
     {
 		private readonly IUserAuthentication _userAuthentication;
+		private readonly IAuthenticationServices _authenticationServices;
 
-		public LionController(IUserAuthentication userAuthentication)
+		public LionController(IUserAuthentication userAuthentication, IAuthenticationServices authenticationServices)
         {
 			_userAuthentication = userAuthentication;
+			_authenticationServices = authenticationServices;
 		}
 
 		/// <summary>
@@ -22,7 +26,9 @@ namespace prjLionMVC.Controllers
 		[Authorize]
         public IActionResult MsgList()
         {
-            ViewBag.LoginAccount = _userAuthentication.GetUserName();
+            // ViewBag.LoginAccount = _userAuthentication.GetUserName();
+
+			ViewBag.LoginAccount = _authenticationServices.GetUserName();
 
 			return View();
         }
@@ -44,6 +50,11 @@ namespace prjLionMVC.Controllers
         {
             return View();
         }
+		[HttpPost]
+		public IActionResult Login(string account, string hashPassword)
+		{
+			return View();
+		}
 
 		/// <summary>
 		/// 登出帳號頁面
@@ -71,9 +82,11 @@ namespace prjLionMVC.Controllers
 		/// <returns></returns>
 		public IActionResult UseMsg()
         {
-            // ViewBag.MemberId = _userAuthentication.GetUserCertificate();
+			// ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
-            return View();
+			ViewBag.MemberId = _authenticationServices.GetUserCertificate();
+
+			return View();
         }
     }
 }

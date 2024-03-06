@@ -1,9 +1,9 @@
-﻿@* @{
+﻿@{
 	int memberId = ViewBag.MemberId;
-} *@
+}
 
 <body>
-	<div id="UseMsg">
+	<div id="UseMsg" data-memberid="@ViewBag.MemberId">
 		<input type="hidden" v-model="messageBoard.memberId">
 		<br>
 		留言
@@ -20,7 +20,7 @@
 		data() {
 			return {
 				messageBoard: {
-					memberId: 1,
+					memberId: @memberId,
 					MessageText: ""
 				}
 			}

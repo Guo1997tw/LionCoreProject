@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using prjLion.Service.Implements;
+using prjLion.Service.Interfaces;
 using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
 using prjLionMVC.LogExceptions;
@@ -30,9 +32,10 @@ namespace prjLionMVC
             builder.Services.AddScoped<ILion, Lion>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
+            builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 
-            // Authentication DI
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+			// Authentication DI
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/Lion/Login";
                 option.LogoutPath = "/Lion/Login";

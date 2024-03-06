@@ -25,4 +25,8 @@
     <Folder Include="Models\Entity\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\prjLion.Service\prjLion.Service.csproj" />
+  </ItemGroup>
+
 </Project>
