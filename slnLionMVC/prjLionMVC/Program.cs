@@ -22,15 +22,11 @@ namespace prjLionMVC
                 option.UseSqlServer(builder.Configuration.GetConnectionString("LionHW"));
             });
 
-            // Add Swagger
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            // Interface DI
-            builder.Services.AddScoped<ILion, Lion>();
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
+			// Interface DI
 			builder.Services.AddHttpClient();
+			builder.Services.AddHttpContextAccessor();
+			builder.Services.AddScoped<ILion, Lion>();
+            builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
 
 			// Authentication DI
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -50,14 +46,8 @@ namespace prjLionMVC
                 app.UseHsts();
             }
 
-            // Use Swagger
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
