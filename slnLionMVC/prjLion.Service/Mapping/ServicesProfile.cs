@@ -18,7 +18,8 @@ namespace prjLion.Service.Mapping
             CreateMap<MessageListDto, MessageListBo>();
 
             // 註冊帳號
-            CreateMap<MemberAccountBo, MemberAccountDto>();
+            // 登入帳號
+            CreateMap<MemberAccountBo, MemberAccountDto>().ReverseMap();
         }
     }
 }

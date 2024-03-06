@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Models.Bo;
 using prjLion.WebAPI.Models;
+using prjLion.WebAPI.Models.HttpClients.Inp;
+using prjLion.WebAPI.Models.HttpClients.Out;
 
 namespace prjLion.WebAPI.Controllers
 {
@@ -58,9 +60,11 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="password"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> LoginMember(string account, string password)
+        public async Task<LoginInfoViewModel> LoginMember([FromBody] LoginMemberViewModel loginMemberHttpViewModel)
         {
-            return (await _lionPostServices.CheckMember(account, password)) ? Ok("登入成功") : NotFound("登入失敗");
+            var result = await _lionPostServices.CheckMember(loginMemberHttpViewModel.account, loginMemberHttpViewModel.hashPassword);
+
+            return _mapper.Map<LoginInfoViewModel>(result);
         }
     }
 }

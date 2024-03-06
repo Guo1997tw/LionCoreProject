@@ -22,6 +22,6 @@ namespace prjLion.Service.Interfaces
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public Task<bool> CheckMember(string account, string password);
+        public Task<MemberAccountBo?> CheckMember(string account, string password);
 	}
 }

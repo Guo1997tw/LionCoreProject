@@ -9,6 +9,11 @@ namespace prjLion.Repository.Models.Dto
     public class MemberAccountDto
     {
         /// <summary>
+        /// 會員編號
+        /// </summary>
+        public int MemberId { get; set; }
+
+        /// <summary>
         /// 會員姓名
         /// </summary>
         public string MemberName { get; set; } = null!;

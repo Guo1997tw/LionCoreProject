@@ -1,17 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models.HttpClients.Inp;
+using prjLionMVC.Models.HttpClients.Out;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 
 namespace prjLionMVC.Controllers
 {
     public class LionController : Controller
     {
+		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IUserAuthentication _userAuthentication;
 
-		public LionController(IUserAuthentication userAuthentication)
+		public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication)
         {
+			_httpClientFactory = httpClientFactory;
 			_userAuthentication = userAuthentication;
 		}
 
@@ -44,6 +54,56 @@ namespace prjLionMVC.Controllers
         {
             return View();
         }
+		[HttpPost]
+		public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
+		{
+			// 建立連線
+			var client = _httpClientFactory.CreateClient();
+
+			// 序列化
+			var json = JsonSerializer.Serialize(loginMemberInputViewModel);
+
+			// 指定ContentType
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var response = await client.PostAsync("https://localhost:7235/api/Lion/LoginMember", content);
+
+				if(response.IsSuccessStatusCode)
+				{
+					// 讀取資料
+					var responseContent = await response.Content.ReadAsStringAsync();
+
+					// 反序列化
+					var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
+
+					var claims = new List<Claim>
+					{
+						new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.MemberId }"),
+						new Claim(ClaimTypes.Name, $"{ queryResult.Account }")
+					};
+
+					var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+					var principal = new ClaimsPrincipal(identity);
+
+					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+						principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
+
+					return Json(true);
+				}
+				else
+				{
+					ModelState.AddModelError(string.Empty, "登入失敗");
+
+					return Json(false);
+				}
+			}
+			catch (HttpRequestException)
+			{
+				return Json(false);
+			}
+		}
 
 		/// <summary>
 		/// 登出帳號頁面

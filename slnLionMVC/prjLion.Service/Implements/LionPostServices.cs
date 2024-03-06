@@ -62,7 +62,7 @@ namespace prjLion.Service.Implements
         /// <param name="password"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-		public async Task<bool> CheckMember(string account, string password)
+		public async Task<MemberAccountBo?> CheckMember(string account, string password)
 		{
             var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
 			
@@ -76,10 +76,10 @@ namespace prjLion.Service.Implements
                 var SaltPasswordTemp = queryResult.SaltPassword;
                 var HashPassword = customizedMethod.HashPwdWithHMACSHA256(password, SaltPasswordTemp);
 
-                return HashPassword == HashPasswordTemp;
+                // return HashPassword == HashPasswordTemp;
             }
 
-			return false;
+            return _mapper.Map<MemberAccountBo>(queryResult);
 		}
 	}
 }

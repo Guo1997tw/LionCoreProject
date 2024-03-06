@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using prjLion.Service.Models.Bo;
 using prjLion.WebAPI.Models;
+using prjLion.WebAPI.Models.HttpClients.Out;
 
 namespace prjLion.WebAPI.Mapping
 {
@@ -14,6 +15,9 @@ namespace prjLion.WebAPI.Mapping
 
             // 註冊帳號
             CreateMap<MemberAccountViewModel, MemberAccountBo>();
+
+            // 登入帳號
+            CreateMap<MemberAccountBo, LoginInfoViewModel>();
         }
     }
 }
