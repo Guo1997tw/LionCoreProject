@@ -18,6 +18,9 @@ namespace prjLion.WebAPI.Mapping
 
             // 登入帳號
             CreateMap<MemberAccountBo, LoginInfoViewModel>();
-        }
+
+			// 新增留言
+			CreateMap<CreateMsgViewModel, CreateMsgBo>();
+		}
     }
 }

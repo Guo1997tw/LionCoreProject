@@ -51,5 +51,30 @@ namespace prjLion.Repository.Implements
 				return true;
 			}
 		}
+
+		/// <summary>
+		/// 新增留言
+		/// </summary>
+		/// <param name="createMsgDto"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public async Task<bool> InsertMsg(CreateMsgDto createMsgDto)
+		{
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var actionSQL = @"insert into [dbo].[MessageBoardTable] ([MemberId], [MessageText], [MessageTime])
+                                  values (@MemberId, @MessageText, @MessageTime)";
+
+				var parameters = new DynamicParameters();
+
+				parameters.Add("MemberId", createMsgDto.MemberId, DbType.Int32);
+				parameters.Add("MessageText", createMsgDto.MessageText, DbType.String);
+				parameters.Add("MessageTime", createMsgDto.MessageTime, DbType.DateTime);
+
+				await use.ExecuteAsync(actionSQL, parameters);
+
+				return true;
+			}
+		}
 	}
 }

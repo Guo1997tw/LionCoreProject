@@ -42,7 +42,7 @@ namespace prjLion.WebAPI
             {
                 option.AddPolicy(name: "AllowSpecificOrigin", builder =>
                 {
-                    builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
 

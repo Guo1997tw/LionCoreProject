@@ -20,6 +20,9 @@ namespace prjLion.Service.Mapping
             // 註冊帳號
             // 登入帳號
             CreateMap<MemberAccountBo, MemberAccountDto>().ReverseMap();
-        }
+
+			// 新增留言
+			CreateMap<CreateMsgBo, CreateMsgDto>();
+		}
     }
 }

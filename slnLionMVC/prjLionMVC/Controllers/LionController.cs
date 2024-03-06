@@ -101,8 +101,8 @@ namespace prjLionMVC.Controllers
 
 					var claims = new List<Claim>
 					{
-						new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.MemberId }"),
-						new Claim(ClaimTypes.Name, $"{ queryResult.Account }")
+						new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.memberId }"),
+						new Claim(ClaimTypes.Name, $"{ queryResult.account }")
 					};
 
 					var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -152,9 +152,29 @@ namespace prjLionMVC.Controllers
 		/// <returns></returns>
 		public IActionResult UseMsg()
         {
-            ViewBag.MemberId = _userAuthentication.GetUserCertificate();
+			ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
-            return View();
+			return View();
         }
-    }
+		[HttpPost]
+		public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
+		{
+			var client = _httpClientFactory.CreateClient();
+
+			var json = JsonSerializer.Serialize(insertMsgViewModel);
+
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var respone = await client.PostAsync("https://localhost:7235/api/Lion/CreateUserMsg", content);
+
+				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+			}
+			catch (HttpRequestException)
+			{
+				return Json(false);
+			}
+		}
+	}
 }

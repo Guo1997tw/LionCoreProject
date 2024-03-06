@@ -81,5 +81,20 @@ namespace prjLion.Service.Implements
 
             return _mapper.Map<MemberAccountBo>(queryResult);
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="createMsgBo"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+		public async Task<bool> CreateMsg(CreateMsgBo createMsgBo)
+		{
+			var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
+
+			await _lionPostRepositorys.InsertMsg(mapper);
+
+			return true;
+		}
 	}
 }

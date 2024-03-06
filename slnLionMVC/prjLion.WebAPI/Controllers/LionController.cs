@@ -66,5 +66,20 @@ namespace prjLion.WebAPI.Controllers
 
             return _mapper.Map<LoginInfoViewModel>(result);
         }
-    }
+
+		/// <summary>
+		/// 新增留言
+		/// </summary>
+		/// <param name="createMsgViewModel"></param>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<bool> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
+		{
+			var mapper = _mapper.Map<CreateMsgViewModel, CreateMsgBo>(createMsgViewModel);
+
+			await _lionPostServices.CreateMsg(mapper);
+
+			return true;
+		}
+	}
 }
