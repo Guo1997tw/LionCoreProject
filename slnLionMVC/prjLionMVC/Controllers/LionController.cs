@@ -71,7 +71,7 @@ namespace prjLionMVC.Controllers
 		/// <returns></returns>
 		public IActionResult UseMsg()
         {
-            ViewBag.MemberId = _userAuthentication.GetUserCertificate();
+            // ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
             return View();
         }

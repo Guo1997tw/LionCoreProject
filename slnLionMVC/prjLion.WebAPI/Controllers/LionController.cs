@@ -114,14 +114,19 @@ namespace prjLion.WebAPI.Controllers
             //return NotFound("登入失敗");
         }
 
+        /// <summary>
+        /// 新增留言
+        /// </summary>
+        /// <param name="createMsgViewModel"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
+        public async Task<bool> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
         {
             var mapper = _mapper.Map<CreateMsgViewModel, CreateMsgBo>(createMsgViewModel);
 
             await _lionPostServices.CreateMsg(mapper);
 
-            return Ok("新增成功");
+            return true;
         }
     }
 }

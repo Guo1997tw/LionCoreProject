@@ -1,6 +1,6 @@
-﻿@{
+﻿@* @{
 	int memberId = ViewBag.MemberId;
-}
+} *@
 
 <body>
 	<div id="UseMsg">
@@ -20,7 +20,7 @@
 		data() {
 			return {
 				messageBoard: {
-					memberId: @memberId,
+					memberId: 1,
 					MessageText: ""
 				}
 			}
@@ -29,8 +29,9 @@
 		methods: {
 			InsertMsgApi() {
 				let self = this;
+				let apiHost = "https://localhost:7235";
 
-				fetch("/api/LionApi/CreateMsg", {
+				fetch(`${apiHost}/api/Lion/CreateUserMsg`, {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(self.messageBoard)
