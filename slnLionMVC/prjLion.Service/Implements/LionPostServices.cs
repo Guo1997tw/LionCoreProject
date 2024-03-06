@@ -81,5 +81,20 @@ namespace prjLion.Service.Implements
 
 			return false;
 		}
+
+        /// <summary>
+        /// 新增留言
+        /// </summary>
+        /// <param name="createMsgBo"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+		public async Task<bool> CreateMsg(CreateMsgBo createMsgBo)
+		{
+            var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
+
+            await _lionPostRepositorys.InsertMsg(mapper);
+
+            return true;
+		}
 	}
 }

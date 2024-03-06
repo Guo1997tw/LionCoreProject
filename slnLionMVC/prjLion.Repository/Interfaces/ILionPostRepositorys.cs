@@ -15,5 +15,13 @@ namespace prjLion.Repository.Interfaces
         /// <param name="memberAccountDto"></param>
         /// <returns></returns>
         public Task<bool> InsertAccount(MemberAccountDto memberAccountDto);
-    }
+
+
+		/// <summary>
+		/// 新增留言
+		/// </summary>
+		/// <param name="createMsgDto"></param>
+		/// <returns></returns>
+		public Task<bool> InsertMsg(CreateMsgDto createMsgDto);
+	}
 }
