@@ -20,7 +20,7 @@
 					account: "",
 					hashPassword: ""
 				},
-				logAccount: false
+				logAccount: false,
 			}
 		},
 
@@ -36,8 +36,10 @@
 		},
 
 		methods: {
-			LoginMemberApi() {
+			async LoginMemberApi() {
 				let self = this;
+				let apiHost = "https://localhost:7235";
+				let returnUrl = new URLSearchParams(window.location.search).get('ReturnUrl');
 				var accountRule = /^[A-Za-z0-9_]+$/;
 				var passwordRule = /^\S+$/;
 
@@ -49,16 +51,21 @@
 					return alert("密碼欄位不允許空格");
 				}
 
-				fetch("/api/LionApi/LoginMember", {
+				// "/api/LionApi/LoginMember"
+				// `${apiHost}/api/Lion/LoginMember/${self.member.account}/${self.member.hashPassword}`
+				await fetch(`${apiHost}/api/Lion/LoginMember`, {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(self.member)
+					body: JSON.stringify(self.member),
+					credentials: 'include'
 				})
 					.then(r => { if (!r.ok) { console.log("Fail") } return r.json(); } )
 					.then(d => {
-						if (d == true) {
+						if (d == true /* d.token */) {
 							console.log("Success", d);
 							
+							// localStorage.setItem("jwtToken", d.token);
+
 							alert("登入成功");
 
 							if (self.logAccount) {

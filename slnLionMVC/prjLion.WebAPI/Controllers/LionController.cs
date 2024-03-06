@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prjLion.Common;
@@ -63,33 +64,54 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        [HttpPost("{key}/{value}")]
-        public async Task<ActionResult> LoginMember(string key, string value)
+        [HttpPost/*("{key}/{value}")*/]
+        public async Task<bool> LoginMember(MemberLoginViewModel memberLoginViewModel)
         {
             CustomizedMethod customizedMethod = new CustomizedMethod();
 
-            customizedMethod.isVerifyRuleAP(key, value);
+            customizedMethod.isVerifyRuleAP(memberLoginViewModel.Account, memberLoginViewModel.HashPassword);
 
-            if (await _lionPostServices.CheckMember(key, value))
+            if(await _lionPostServices.CheckMember(memberLoginViewModel.Account, memberLoginViewModel.HashPassword))
             {
-                var queryResult = await _lionGetServices.GetMemberInfo(key);
+                var queryResult = await _lionGetServices.GetMemberInfo(memberLoginViewModel.Account);
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, queryResult.MemberId.ToString()),
-                    new Claim(ClaimTypes.Name, queryResult.MemberName)
-                };
+				var claims = new List<Claim>
+				{
+					new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.MemberId }"),
+					new Claim(ClaimTypes.Name, $"{ queryResult.Account }")
+				};
 
-                var (Token, Expiration) = _tokenService.CreateToken(claims);
+				var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+				var principal = new ClaimsPrincipal(identity);
 
-                return Ok(new
-                {
-                    token = Token,
-                    expiration = Expiration
-                });
-            }
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+					principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
 
-            return NotFound("登入失敗");
+                return true;
+			}
+
+            return false;
+
+            //if (await _lionPostServices.CheckMember(key, value))
+            //{
+            //    var queryResult = await _lionGetServices.GetMemberInfo(key);
+
+            //    var claims = new List<Claim>
+            //    {
+            //        new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.MemberId }"),
+            //        new Claim(ClaimTypes.Name, $"{ queryResult.MemberName }")
+            //    };
+
+            //    var (Token, Expiration) = _tokenService.CreateToken(claims);
+
+            //    return Ok(new
+            //    {
+            //        token = Token,
+            //        expiration = Expiration
+            //    });
+            //}
+
+            //return NotFound("登入失敗");
         }
     }
 }

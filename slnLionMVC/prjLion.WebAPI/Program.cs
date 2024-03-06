@@ -39,7 +39,8 @@ namespace prjLion.WebAPI
             builder.Services.AddScoped<ILionConnection, LionConnection>();
             builder.Services.AddScoped<ILionGetRepositorys, LionGetRepositorys>();
             builder.Services.AddScoped<ILionPostRepositorys, LionPostRepositorys>();
-            builder.Services.AddScoped<ILionGetServices, LionGetServices>();
+			builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+			builder.Services.AddScoped<ILionGetServices, LionGetServices>();
             builder.Services.AddScoped<ILionPostServices, LionPostServices>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
@@ -48,12 +49,19 @@ namespace prjLion.WebAPI
             {
                 option.AddPolicy(name: "AllowSpecificOrigin", builder =>
                 {
-                    builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
 
-            // Add Authentication JWT DI
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
+			// Add Authentication DI
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+			{
+                option.LoginPath = PathString.FromUriComponent(new Uri("https://localhost:7073/Lion/Login"));
+				option.AccessDeniedPath = PathString.FromUriComponent(new Uri("https://localhost:7073/Lion/Error"));
+			});
+
+			// Add Authentication JWT DI
+			builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
             {
                 option.TokenValidationParameters = new TokenValidationParameters
                 {
