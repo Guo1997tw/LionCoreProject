@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.HttpClients.Out;
@@ -45,6 +46,26 @@ namespace prjLionMVC.Controllers
         {
             return View();
         }
+		[HttpPost]
+		public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
+		{
+			var client = _httpClientFactory.CreateClient();
+
+			var json = JsonSerializer.Serialize(registerMemberViewModel);
+
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var response = await client.PostAsync("https://localhost:7235/api/Lion/RegisterMember", content);
+
+				return (response.IsSuccessStatusCode) ? Json(true) : Json(false);
+			}
+			catch (HttpRequestException)
+			{
+				return Json(false);
+			}
+		}
 
 		/// <summary>
 		/// 登入帳號頁面

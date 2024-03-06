@@ -26,7 +26,6 @@
 		methods: {
 			InsertMemberApi() {
 				let self = this;
-				let apiHost = "https://localhost:7235";
 				var userNameRule = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 				var accountRule = /^[A-Za-z0-9_]+$/;
 				var passwordRule = /^\S+$/;
@@ -43,7 +42,7 @@
 					return alert("密碼欄位不允許空格");
 				}
 
-				fetch(`${apiHost}/api/Lion/RegisterMember`, {
+				fetch('/Lion/RegisterPost', {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(self.member)
