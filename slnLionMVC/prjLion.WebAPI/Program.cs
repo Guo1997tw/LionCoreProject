@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Implements;
 using prjLion.Repository.Interfaces;
@@ -31,12 +32,14 @@ namespace prjLion.WebAPI
             });
 
             // Add Function DI
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<ILionConnection, LionConnection>();
             builder.Services.AddScoped<ILionGetRepositorys, LionGetRepositorys>();
             builder.Services.AddScoped<ILionPostRepositorys, LionPostRepositorys>();
+            builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
             builder.Services.AddScoped<ILionGetServices, LionGetServices>();
             builder.Services.AddScoped<ILionPostServices, LionPostServices>();
-
+            
             // Add CORS DI
             builder.Services.AddCors(option =>
             {
@@ -44,6 +47,14 @@ namespace prjLion.WebAPI
                 {
                     builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod();
                 });
+            });
+
+            // Add Authentication DI
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                option.LoginPath = "/Lion/Login";
+                option.LogoutPath = "/Lion/Login";
+                option.AccessDeniedPath = "/Lion/Error";
             });
 
             var app = builder.Build();
@@ -59,6 +70,9 @@ namespace prjLion.WebAPI
 
             // Use CORS
             app.UseCors("AllowSpecificOrigin");
+
+            // Use UseAuthentication
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

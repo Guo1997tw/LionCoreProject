@@ -1,7 +1,11 @@
 ﻿namespace prjLion.WebAPI.Models
 {
-    public class MemberAccountViewModel
+    public class MemberAccountInfoViewModel
     {
+        /// <summary>
+        /// 會員編號
+        /// </summary>
+        public int MemberId { get; set; }
 
         /// <summary>
         /// 會員姓名
@@ -17,5 +21,11 @@
         /// 登入密碼 (雜湊)
         /// </summary>
         public string HashPassword { get; set; } = null!;
+
+        /// <summary>
+        /// 鹽值
+        /// 亂數產生
+        /// </summary>
+        public string SaltPassword { get; set; } = null!;
     }
 }

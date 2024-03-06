@@ -65,9 +65,9 @@ namespace prjLion.Service.Implements
 		public async Task<bool> CheckMember(string account, string password)
 		{
             var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
-			
+
             CustomizedMethod customizedMethod = new CustomizedMethod();
-			
+
             customizedMethod.isVerifyRuleAP(account, password);
 
             if (queryResult != null)

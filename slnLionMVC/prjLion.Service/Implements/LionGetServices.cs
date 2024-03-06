@@ -23,7 +23,7 @@ namespace prjLion.Service.Implements
 
         /// <summary>
         /// 搜尋單一使用者留言
-		/// 指定使用者姓名
+        /// 指定使用者姓名
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
@@ -35,6 +35,19 @@ namespace prjLion.Service.Implements
             if (queryDto == null) { return null; }
 
             return _mapper.Map<IEnumerable<MessageListBo>?>(queryDto);
+        }
+
+        /// <summary>
+        /// 帳號相關資訊
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<MemberAccountBo?> GetMemberInfo(string account)
+        {
+            var queryDto = await _lionGetRepositorys.GetMemberAccount(account);
+
+            return _mapper.Map<MemberAccountBo?>(queryDto);
         }
     }
 }

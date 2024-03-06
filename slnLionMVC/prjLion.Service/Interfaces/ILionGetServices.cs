@@ -16,5 +16,12 @@ namespace prjLion.Service.Interfaces
         /// <param name="userName"></param>
         /// <returns></returns>
         public Task<IEnumerable<MessageListBo>?> GetMsgByUserName(string userName);
+
+        /// <summary>
+        /// 帳號相關資訊
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Task<MemberAccountBo?> GetMemberInfo(string account);
     }
 }
