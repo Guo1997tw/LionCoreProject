@@ -25,6 +25,8 @@ namespace prjLion.WebAPI.Mapping
             // 修改留言
             CreateMap<EditMsgViewModel, EditMsgBo>();
 
+            // 分頁清單
+            CreateMap<MessageListBo, MessageListViewModel>();
         }
     }
 }

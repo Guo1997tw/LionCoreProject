@@ -36,5 +36,31 @@ namespace prjLion.Service.Implements
 
             return _mapper.Map<IEnumerable<MessageListBo>?>(queryDto);
         }
+
+        /// <summary>
+        /// 分頁功能
+        /// 輸入第幾頁
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<IEnumerable<MessageListBo>> GetMsgPage(int pageNum)
+        {
+            var queryDto = await _lionGetRepositorys.GetMsgPageNum(pageNum);
+
+            return _mapper.Map<IEnumerable<MessageListBo>>(queryDto);
+        }
+
+        /// <summary>
+        /// 取的留言版總筆數
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<int> GetMsgCount()
+        {
+            var queryDto = await _lionGetRepositorys.GetMsgPageCount();
+
+            return _mapper.Map<int>(queryDto);
+        }
     }
 }

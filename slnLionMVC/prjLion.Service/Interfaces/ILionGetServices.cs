@@ -16,5 +16,19 @@ namespace prjLion.Service.Interfaces
         /// <param name="userName"></param>
         /// <returns></returns>
         public Task<IEnumerable<MessageListBo>?> GetMsgByUserName(string userName);
+
+        /// <summary>
+        /// 分頁功能
+        /// 輸入第幾頁
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<MessageListBo>> GetMsgPage(int pageNum);
+
+        /// <summary>
+        /// 取的留言版總筆數
+        /// </summary>
+        /// <returns></returns>
+        public Task<int> GetMsgCount();
     }
 }

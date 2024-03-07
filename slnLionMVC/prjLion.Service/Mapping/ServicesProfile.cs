@@ -26,6 +26,9 @@ namespace prjLion.Service.Mapping
 
             // 修改留言
             CreateMap<EditMsgBo, EditMsgDto>();
+
+            // 分頁清單
+            CreateMap<MessageListDto, MessageListBo>();
         }
     }
 }

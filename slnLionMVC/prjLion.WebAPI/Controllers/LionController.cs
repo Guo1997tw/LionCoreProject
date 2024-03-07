@@ -25,6 +25,32 @@ namespace prjLion.WebAPI.Controllers
         }
 
         /// <summary>
+        /// 分頁功能
+        /// 輸入第幾頁
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<MessageListViewModel>> GetMsgPageAll(int pageNum)
+        {
+            var queryBo = await _lionGetServices.GetMsgPage(pageNum);
+
+            return _mapper.Map<IEnumerable<MessageListViewModel>>(queryBo);
+        }
+
+        /// <summary>
+        /// 取的留言版總筆數
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<int> GetDataCount()
+        {
+            var queryBo = await _lionGetServices.GetMsgCount();
+
+            return _mapper.Map<int>(queryBo);
+        }
+
+        /// <summary>
         /// 搜尋單一使用者留言
 		/// 指定使用者姓名
         /// </summary>
