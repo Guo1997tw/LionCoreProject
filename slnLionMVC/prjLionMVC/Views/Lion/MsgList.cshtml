@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="m in msgList">
+                <tr v-for="m in msgList" :key="m.messageBoardId">
                     <td>{{m.messageBoardId}}</td>
                     <td>{{m.memberName}}</td>
                     <td>{{m.account}}</td>
@@ -73,7 +73,7 @@
                 currentShowPage: 1,
                 // 目前頁面筆數
                 currentPageSize: 5,
-                // 目前頁面總數 (假設，待修改成動態API)
+                // 目前頁面總數
                 currentPageTotal: "",
             }
         },
@@ -107,10 +107,16 @@
         methods: {
             GetNameSearch() {
                 let self = this;
+                let formData = new FormData();
+                formData.append("userName", self.searchUserName);
 
-                fetch(`/api/LionApi/GetMemberOnlyMsg/${self.searchUserName}`)
-                    .then(r => r.json())
-                    .then(d => { self.msgList = d; });
+                fetch("/Lion/SearchMsgUserNameGet", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
+                    .then(d => { self.msgList = d; })
+                    .catch(e => { console.log(e); });
             },
 
             GetNameClear() {
@@ -130,7 +136,7 @@
             SaveUpdateMsgApi(messageBoardId) {
                 let self = this;
 
-                fetch(`/api/LionApi/UpdateMsg/${messageBoardId}`, {
+                fetch(`/Lion/EditMsgPost/${messageBoardId}`, {
                     method: "PUT",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ messageText: self.updateMsgTemp })
@@ -154,9 +160,10 @@
             RemoveMsgApi(messageBoardId) {
                 let self = this;
 
-                fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`, {
+                fetch(`/Lion/RemoveMsgPost/${messageBoardId}`, {
                     method: "DELETE",
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(messageBoardId)
                 })
                     .then(r => r.json())
                     .then(d => {
@@ -177,16 +184,24 @@
                 let self = this;
 
                 if (pageNum < 1) return;
-
                 self.currentShowPage = pageNum;
 
-                fetch("/api/LionApi/GetPageCount")
-                    .then(r => r.json())
-                    .then(d => { self.currentPageTotal = Math.ceil(d / self.currentPageSize) });
+                let formData = new FormData();
+                formData.append("currentShowPage", self.currentShowPage);
 
-                fetch(`/api/LionApi/GetPageNum/${self.currentShowPage}`)
+                fetch("/Lion/GetDataCount")
                     .then(r => r.json())
-                    .then(d => { self.msgList = d });
+                    .then(d => { 
+                        self.currentPageTotal = Math.ceil(d / self.currentPageSize)
+                    });
+
+                fetch("/Lion/GetMsgPageAllPost", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
+                    .then(d => { self.msgList = d })
+                    .catch(error => console.error('Fetch error:', error));
             },
 
             // 取得時間

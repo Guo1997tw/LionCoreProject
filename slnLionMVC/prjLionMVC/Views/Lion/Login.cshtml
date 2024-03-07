@@ -49,7 +49,7 @@
 					return alert("密碼欄位不允許空格");
 				}
 
-				fetch("/api/LionApi/LoginMember", {
+				fetch("/Lion/LoginPost", {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(self.member)
