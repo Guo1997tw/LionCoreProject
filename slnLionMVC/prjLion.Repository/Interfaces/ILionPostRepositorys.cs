@@ -23,12 +23,21 @@ namespace prjLion.Repository.Interfaces
         /// <returns></returns>
 		public Task<bool> InsertMsg(CreateMsgDto createMsgDto);
 
-		/// <summary>
-		/// 刪除留言
+        /// <summary>
+        /// 修改留言
 		/// 指定留言編號 (流水號)
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public Task<bool> DeleteMsg(int id);
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgDto"></param>
+        /// <returns></returns>
+        public Task<bool> UpdateMsg(int id, EditMsgDto editMsgDto);
+
+        /// <summary>
+        /// 刪除留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<bool> DeleteMsg(int id);
 	}
 }

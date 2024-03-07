@@ -96,5 +96,32 @@ namespace prjLion.Repository.Implements
 				return true;
 			}
 		}
-	}
+
+        /// <summary>
+        /// 修改留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgDto"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> UpdateMsg(int id, EditMsgDto editMsgDto)
+        {
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var actionSQL = @"update [dbo].[MessageBoardTable] set MessageText = @MessageText
+							  where MessageBoardId = @MessageBoardId";
+
+                var parameters = new DynamicParameters();
+
+                parameters.Add("MessageBoardId", id, DbType.Int32);
+                parameters.Add("MessageText", editMsgDto.MessageText, DbType.String);
+                parameters.Add("MessageTime", editMsgDto.MessageTime, DbType.DateTime);
+
+				await use.ExecuteAsync(actionSQL, parameters);
+
+				return true;
+            }
+        }
+    }
 }

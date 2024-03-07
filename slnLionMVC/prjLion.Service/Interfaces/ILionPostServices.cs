@@ -31,6 +31,14 @@ namespace prjLion.Service.Interfaces
 		/// <returns></returns>
 		public Task<bool> CreateMsg(CreateMsgBo createMsgBo);
 
+        /// <summary>
+        /// 修改留言
+		/// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="editMsgBo"></param>
+        /// <returns></returns>
+        public Task<bool> EditMsg(int id, EditMsgBo editMsgBo);
+
 		/// <summary>
 		/// 刪除留言
 		/// 指定留言編號 (流水號)

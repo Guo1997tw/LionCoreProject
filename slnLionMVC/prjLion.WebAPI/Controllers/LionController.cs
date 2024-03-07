@@ -82,6 +82,23 @@ namespace prjLion.WebAPI.Controllers
 			return true;
 		}
 
+        /// <summary>
+        /// 修改留言
+		/// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgViewModel"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<bool> UpdateUserMsg(int id, EditMsgViewModel editMsgViewModel)
+        {
+            var mapper = _mapper.Map<EditMsgViewModel, EditMsgBo>(editMsgViewModel);
+
+            await _lionPostServices.EditMsg(id, mapper);
+
+            return true;
+        }
+
 		/// <summary>
 		/// 刪除留言
 		/// 指定留言編號 (流水號)

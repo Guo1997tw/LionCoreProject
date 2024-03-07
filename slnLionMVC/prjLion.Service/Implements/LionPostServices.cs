@@ -97,16 +97,32 @@ namespace prjLion.Service.Implements
 			return true;
 		}
 
-		/// <summary>
-		/// 刪除留言
+        /// <summary>
+        /// 修改留言
 		/// 指定留言編號 (流水號)
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		/// <exception cref="NotImplementedException"></exception>
-		public async Task<bool> DeleteMemberMsg(int id)
+        /// </summary>
+        /// <param name="editMsgBo"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> EditMsg(int id, EditMsgBo editMsgBo)
+        {
+            var mapper = _mapper.Map<EditMsgBo, EditMsgDto>(editMsgBo);
+
+            await _lionPostRepositorys.UpdateMsg(id, mapper);
+
+            return true;
+        }
+
+        /// <summary>
+        /// 刪除留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> DeleteMemberMsg(int id)
 		{
 			return await _lionPostRepositorys.DeleteMsg(id);
 		}
-	}
+    }
 }
