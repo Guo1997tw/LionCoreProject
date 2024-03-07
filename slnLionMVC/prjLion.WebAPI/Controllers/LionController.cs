@@ -81,5 +81,17 @@ namespace prjLion.WebAPI.Controllers
 
 			return true;
 		}
+
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		[HttpDelete("{id}")]
+        public async Task<bool> RemoveMemberMsg(int id)
+        {
+            return await _lionPostServices.DeleteMemberMsg(id);
+        }
 	}
 }

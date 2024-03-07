@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Dapper;
 using prjLion.Common;
 using prjLion.Repository.Helpers;
@@ -72,6 +73,25 @@ namespace prjLion.Repository.Implements
 				parameters.Add("MessageTime", createMsgDto.MessageTime, DbType.DateTime);
 
 				await use.ExecuteAsync(actionSQL, parameters);
+
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public async Task<bool> DeleteMsg(int id)
+		{
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var actionSQL = @"delete from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardTable";
+
+				await use.ExecuteAsync(actionSQL, new { MessageBoardTable = id });
 
 				return true;
 			}

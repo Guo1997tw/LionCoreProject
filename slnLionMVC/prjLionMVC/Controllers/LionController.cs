@@ -15,13 +15,13 @@ using System.Text.Json;
 
 namespace prjLionMVC.Controllers
 {
-    public class LionController : Controller
-    {
+	public class LionController : Controller
+	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IUserAuthentication _userAuthentication;
 
 		public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication)
-        {
+		{
 			_httpClientFactory = httpClientFactory;
 			_userAuthentication = userAuthentication;
 		}
@@ -31,21 +31,21 @@ namespace prjLionMVC.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[Authorize]
-        public IActionResult MsgList()
-        {
-            ViewBag.LoginAccount = _userAuthentication.GetUserName();
+		public IActionResult MsgList()
+		{
+			ViewBag.LoginAccount = _userAuthentication.GetUserName();
 
 			return View();
-        }
+		}
 
 		/// <summary>
 		/// 註冊帳號頁面
 		/// </summary>
 		/// <returns></returns>
 		public IActionResult Register()
-        {
-            return View();
-        }
+		{
+			return View();
+		}
 		[HttpPost]
 		public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
 		{
@@ -72,9 +72,9 @@ namespace prjLionMVC.Controllers
 		/// </summary>
 		/// <returns></returns>
 		public IActionResult Login()
-        {
-            return View();
-        }
+		{
+			return View();
+		}
 		[HttpPost]
 		public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
 		{
@@ -91,7 +91,7 @@ namespace prjLionMVC.Controllers
 			{
 				var response = await client.PostAsync("https://localhost:7235/api/Lion/LoginMember", content);
 
-				if(response.IsSuccessStatusCode)
+				if (response.IsSuccessStatusCode)
 				{
 					// 讀取資料
 					var responseContent = await response.Content.ReadAsStringAsync();
@@ -131,31 +131,31 @@ namespace prjLionMVC.Controllers
 		/// </summary>
 		/// <returns></returns>
 		public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return RedirectToAction("Login", "Lion");
-        }
+			return RedirectToAction("Login", "Lion");
+		}
 
-        /// <summary>
-        /// 顯示沒有權限頁面
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Error()
-        {
-            return View();
-        }
+		/// <summary>
+		/// 顯示沒有權限頁面
+		/// </summary>
+		/// <returns></returns>
+		public IActionResult Error()
+		{
+			return View();
+		}
 
 		/// <summary>
 		/// 新增留言頁面
 		/// </summary>
 		/// <returns></returns>
 		public IActionResult UseMsg()
-        {
+		{
 			ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
 			return View();
-        }
+		}
 		[HttpPost]
 		public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
 		{
@@ -172,6 +172,30 @@ namespace prjLionMVC.Controllers
 				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
 			}
 			catch (HttpRequestException)
+			{
+				return Json(false);
+			}
+		}
+
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <returns></returns>
+		[HttpDelete]
+        public async Task<IActionResult> RemoveMsgPost(int id)
+		{
+			var client = _httpClientFactory.CreateClient();
+
+			var json = JsonSerializer.Serialize(id);
+
+            try
+			{
+				var respone = await client.DeleteAsync($"https://localhost:7235/api/Lion/RemoveMemberMsg/{json}");
+
+				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+			}
+			catch(HttpRequestException)
 			{
 				return Json(false);
 			}

@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="m in msgList">
+                <tr v-for="m in msgList" :key="m.messageBoardId">
                     <td>{{m.messageBoardId}}</td>
                     <td>{{m.memberName}}</td>
                     <td>{{m.account}}</td>
@@ -155,9 +155,10 @@
             RemoveMsgApi(messageBoardId) {
                 let self = this;
 
-                fetch(`/api/LionApi/RemoveMsg/${messageBoardId}`, {
+                fetch(`/Lion/RemoveMsgPost/${messageBoardId}`, {
                     method: "DELETE",
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(messageBoardId)
                 })
                     .then(r => r.json())
                     .then(d => {

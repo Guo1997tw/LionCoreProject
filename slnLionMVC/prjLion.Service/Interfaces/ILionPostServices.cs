@@ -30,5 +30,13 @@ namespace prjLion.Service.Interfaces
 		/// <param name="createMsgBo"></param>
 		/// <returns></returns>
 		public Task<bool> CreateMsg(CreateMsgBo createMsgBo);
+
+		/// <summary>
+		/// 刪除留言
+		/// 指定留言編號 (流水號)
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public Task<bool> DeleteMemberMsg(int id);
 	}
 }
