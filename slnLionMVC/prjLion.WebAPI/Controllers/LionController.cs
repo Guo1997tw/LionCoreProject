@@ -30,7 +30,7 @@ namespace prjLion.WebAPI.Controllers
         /// </summary>
         /// <param name="pageNum"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost("{pageNum}")]
         public async Task<IEnumerable<MessageListViewModel>> GetMsgPageAll(int pageNum)
         {
             var queryBo = await _lionGetServices.GetMsgPage(pageNum);
@@ -39,7 +39,7 @@ namespace prjLion.WebAPI.Controllers
         }
 
         /// <summary>
-        /// 取的留言版總筆數
+        /// 取得留言版總筆數
         /// </summary>
         /// <returns></returns>
         [HttpGet]

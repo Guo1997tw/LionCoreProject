@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Azure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
@@ -38,11 +39,74 @@ namespace prjLionMVC.Controllers
 			return View();
 		}
 
-		/// <summary>
-		/// 註冊帳號頁面
-		/// </summary>
-		/// <returns></returns>
-		public IActionResult Register()
+        /// <summary>
+        /// 分頁功能
+        /// 輸入第幾頁
+        /// </summary>
+        /// <param name="currentShowPage"></param>
+        /// <returns></returns>
+        [HttpPost]
+		public async Task<IActionResult> GetMsgPageAllPost([FromForm] int currentShowPage)
+		{
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgPageAll/{currentShowPage}", null);
+
+                if (respone.IsSuccessStatusCode)
+				{
+                    var content = await respone.Content.ReadAsStringAsync();
+
+                    return Content(content, "application/json");
+                }
+				else
+				{
+					return Json(false);
+				}
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
+
+        /// <summary>
+        /// 取得留言版總筆數
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+		public async Task<IActionResult> GetDataCount()
+		{
+            var client = _httpClientFactory.CreateClient();
+
+			try
+			{
+                var response = await client.GetAsync("https://localhost:7235/api/Lion/GetDataCount");
+
+                if (response.IsSuccessStatusCode)
+				{
+                    var totalCountString = await response.Content.ReadAsStringAsync();
+
+                    if (int.TryParse(totalCountString, out var totalCount))
+                    {
+                        return Json(totalCount);
+                    }
+                }
+
+				return Json(false);
+            }
+			catch(HttpRequestException)
+			{
+                return Json(false);
+            }
+        }
+
+        /// <summary>
+        /// 註冊帳號頁面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Register()
 		{
 			return View();
 		}
@@ -160,7 +224,16 @@ namespace prjLionMVC.Controllers
             {
                 var respone = await client.PostAsync($"https://localhost:7235/api/Lion/SearchMsgUserName/{userName}", null);
 
-                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+                if (respone.IsSuccessStatusCode)
+                {
+                    var content = await respone.Content.ReadAsStringAsync();
+
+                    return Content(content, "application/json");
+                }
+				else
+				{
+					return Json(false);
+				}
             }
             catch (HttpRequestException)
             {
@@ -218,8 +291,8 @@ namespace prjLionMVC.Controllers
 			{
 				var respone = await client.PutAsync($"https://localhost:7235/api/Lion/UpdateUserMsg/{id}", content);
 
-				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-			}
+                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+            }
 			catch(HttpRequestException)
 			{
 				return Json(false);
