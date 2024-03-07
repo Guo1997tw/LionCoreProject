@@ -107,11 +107,16 @@
         methods: {
             GetNameSearch() {
                 let self = this;
-                let apiHost = "https://localhost:7235";
+                let formData = new FormData();
+                formData.append("userName", self.searchUserName);
 
-                fetch(`${apiHost}/api/Lion/SearchMsgUserName/${self.searchUserName}`)
-                    .then(r => r.json())
-                    .then(d => { self.msgList = d; });
+                fetch("/Lion/SearchMsgUserNameGet", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(r => { if (!r.ok) { throw new Error('Not OK');  } })
+                    .then(d => { self.msgList = d; })
+                    .catch(e => { console.log(e); });
             },
 
             GetNameClear() {

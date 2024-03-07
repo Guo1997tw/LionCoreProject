@@ -30,7 +30,7 @@ namespace prjLion.WebAPI.Controllers
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        [HttpGet("{userName}")]
+        [HttpPost("{userName}")]
         public async Task<ActionResult<IEnumerable<MessageListViewModel>?>> SearchMsgUserName(string userName)
         {
             var queryBo = await _lionGetServices.GetMsgByUserName(userName);
@@ -67,12 +67,12 @@ namespace prjLion.WebAPI.Controllers
             return _mapper.Map<LoginInfoViewModel>(result);
         }
 
-		/// <summary>
-		/// 新增留言
-		/// </summary>
-		/// <param name="createMsgViewModel"></param>
-		/// <returns></returns>
-		[HttpPost]
+        /// <summary>
+        /// 新增留言
+        /// </summary>
+        /// <param name="createMsgViewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
 		public async Task<bool> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
 		{
 			var mapper = _mapper.Map<CreateMsgViewModel, CreateMsgBo>(createMsgViewModel);
