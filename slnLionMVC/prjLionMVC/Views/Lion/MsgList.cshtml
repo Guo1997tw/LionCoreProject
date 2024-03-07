@@ -131,7 +131,7 @@
             SaveUpdateMsgApi(messageBoardId) {
                 let self = this;
 
-                fetch(`/api/LionApi/UpdateMsg/${messageBoardId}`, {
+                fetch(`/Lion/EditMsgPost/${messageBoardId}`, {
                     method: "PUT",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ messageText: self.updateMsgTemp })

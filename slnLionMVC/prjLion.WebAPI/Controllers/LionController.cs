@@ -89,8 +89,8 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
-        [HttpPut]
-        public async Task<bool> UpdateUserMsg(int id, EditMsgViewModel editMsgViewModel)
+        [HttpPut("{id}")]
+        public async Task<bool> UpdateUserMsg(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
             var mapper = _mapper.Map<EditMsgViewModel, EditMsgBo>(editMsgViewModel);
 

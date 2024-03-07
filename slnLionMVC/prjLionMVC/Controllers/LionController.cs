@@ -178,11 +178,38 @@ namespace prjLionMVC.Controllers
 		}
 
 		/// <summary>
-		/// 刪除留言
-		/// 指定留言編號 (流水號)
+		/// 編輯留言頁面
 		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="editMsgViewModel"></param>
 		/// <returns></returns>
-		[HttpDelete]
+		[HttpPut]
+		public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+		{
+			var client = _httpClientFactory.CreateClient();
+
+			var json = JsonSerializer.Serialize(editMsgViewModel);
+
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var respone = await client.PutAsync($"https://localhost:7235/api/Lion/UpdateUserMsg/{id}", content);
+
+				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+			}
+			catch(HttpRequestException)
+			{
+				return Json(false);
+			}
+		}
+
+        /// <summary>
+        /// 刪除留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
         public async Task<IActionResult> RemoveMsgPost(int id)
 		{
 			var client = _httpClientFactory.CreateClient();
