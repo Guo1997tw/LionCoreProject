@@ -1,4 +1,5 @@
-﻿using prjLion.Service.Models.Bo;
+﻿using prjLion.Repository.Models.Dto;
+using prjLion.Service.Models.Bo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,12 @@ namespace prjLion.Service.Interfaces
         /// </summary>
         /// <returns></returns>
         public Task<int> GetMsgCount();
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        public Task<PaginationCountBo<MessageListBo>> GetPaginationCountData(int pageNum);
     }
 }

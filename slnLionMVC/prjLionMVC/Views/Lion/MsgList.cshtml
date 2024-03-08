@@ -42,11 +42,11 @@
             </tbody>
         </table>
         <br>
-        <button type="button" @@click="Pagination(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
+        <button type="button" @@click="PaginationCount(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
         <span v-for="cp in currentPageTotal" :key="cp">
-            <button type="button" @@click="Pagination(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
+            <button type="button" @@click="PaginationCount(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
         </span>
-        <button type="button" @@click="Pagination(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
+        <button type="button" @@click="PaginationCount(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
     </div>
 </body>
 
@@ -81,7 +81,7 @@
         mounted() {
             let self = this;
 
-            self.Pagination(self.currentShowPage);
+            self.PaginationCount(self.currentShowPage);
         },
 
         computed: {
@@ -123,7 +123,7 @@
                 let self = this;
 
                 self.searchUserName = "";
-                self.Pagination(self.currentShowPage);
+                self.PaginationCount(self.currentShowPage);
             },
 
             UpdateMsg(messageBoardId, messageText) {
@@ -148,7 +148,7 @@
                             alert("修改成功");
                             self.updateMsgIdTemp = "";
                             self.updateMsgTemp = "";
-                            self.Pagination(self.currentShowPage);
+                            self.PaginationCount(self.currentShowPage);
                         }
                         else {
                             console.log("Fail", d);
@@ -170,7 +170,7 @@
                         if (d == true) {
                             console.log("Success", d);
                             alert("刪除成功");
-                            self.Pagination(self.currentShowPage);
+                            self.PaginationCount(self.currentShowPage);
                         }
                         else {
                             console.log("Fail", d);
@@ -202,6 +202,26 @@
                     .then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
                     .then(d => { self.msgList = d })
                     .catch(error => console.error('Fetch error:', error));
+            },
+
+            // 同時取得資料分頁與總筆數
+            PaginationCount(pageNum) {
+                let self = this;
+
+                if (pageNum < 1) return;
+                self.currentShowPage = pageNum;
+
+                let formData = new FormData();
+                formData.append("currentShowPage", self.currentShowPage);
+
+                fetch("/Lion/GetDataCountAll", {
+                    method: "POST",
+                    body: formData
+                }).then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
+                  .then(d => {
+                      self.currentPageTotal = Math.ceil(d.countData / self.currentPageSize);
+                      self.msgList = d.itemData;
+                    }).catch(error => console.error('Fetch error:', error));;
             },
 
             // 取得時間

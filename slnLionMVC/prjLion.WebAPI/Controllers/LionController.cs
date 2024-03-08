@@ -51,6 +51,19 @@ namespace prjLion.WebAPI.Controllers
         }
 
         /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        [HttpPost("{pageNum}")]
+        public async Task<PaginationCountViewModel<MessageListViewModel>> GetPaginationCountDataAll(int pageNum)
+        {
+            var queryBo = await _lionGetServices.GetPaginationCountData(pageNum);
+
+            return _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+        }
+
+        /// <summary>
         /// 搜尋單一使用者留言
 		/// 指定使用者姓名
         /// </summary>

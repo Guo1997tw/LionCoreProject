@@ -38,5 +38,12 @@ namespace prjLion.Repository.Interfaces
         /// <param name="num"></param>
         /// <returns></returns>
         public Task<int> GetMsgPageCount();
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        public Task<PaginationCountDto<MessageListDto>> GetPaginationCount(int pageNum);
     }
 }

@@ -27,6 +27,9 @@ namespace prjLion.WebAPI.Mapping
 
             // 分頁清單
             CreateMap<MessageListBo, MessageListViewModel>();
+
+            // 分頁清單 (撈取資料、筆數)
+            CreateMap<PaginationCountBo<MessageListBo>, PaginationCountViewModel<MessageListViewModel>>();
         }
     }
 }

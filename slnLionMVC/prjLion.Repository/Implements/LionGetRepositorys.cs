@@ -99,5 +99,38 @@ namespace prjLion.Repository.Implements
                 return dataCount;
             }
         }
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// pageNum -> 輸入第幾頁
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<PaginationCountDto<MessageListDto>> GetPaginationCount(int pageNum)
+        {
+            int pageNow = 0;
+            int pageSize = 5;
+
+            if (pageNum > 0) { pageNow = (pageNum - 1) * pageSize; }
+
+            using (var use = _lionConnection.GetLionDb())
+            {
+                var paginationCountResult = new PaginationCountDto<MessageListDto>();
+
+                var queryDataSQL = @"select mb.MessageBoardId, m.MemberName, m.Account, mb.MessageText, mb.MessageTime
+                             from MessageBoardTable as mb
+                             inner join MemberTable as m on mb.MemberId = m.MemberId
+                             order by mb.MessageTime DESC
+                             offset @PageNow rows fetch next @PageSize rows only;";
+
+                var queryCountSQL = @"select count(*) from MessageBoardTable";
+
+                paginationCountResult.ItemData = await use.QueryAsync<MessageListDto>(queryDataSQL, new { PageNow = pageNow, PageSize = pageSize });
+                paginationCountResult.CountData = await use.ExecuteScalarAsync<int>(queryCountSQL);
+
+                return paginationCountResult;
+            }
+        }
     }
 }

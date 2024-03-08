@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using prjLion.Repository.Interfaces;
+using prjLion.Repository.Models.Dto;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Models.Bo;
 using System;
@@ -61,6 +62,19 @@ namespace prjLion.Service.Implements
             var queryDto = await _lionGetRepositorys.GetMsgPageCount();
 
             return _mapper.Map<int>(queryDto);
+        }
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// </summary>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<PaginationCountBo<MessageListBo>> GetPaginationCountData(int pageNum)
+        {
+            var queryDataDto = await _lionGetRepositorys.GetPaginationCount(pageNum);
+            
+            return _mapper.Map<PaginationCountBo<MessageListBo>>(queryDataDto);
         }
     }
 }

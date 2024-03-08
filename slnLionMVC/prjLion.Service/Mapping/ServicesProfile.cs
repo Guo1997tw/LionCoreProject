@@ -29,6 +29,9 @@ namespace prjLion.Service.Mapping
 
             // 分頁清單
             CreateMap<MessageListDto, MessageListBo>();
+
+            // 分頁清單 (撈取資料、筆數)
+            CreateMap<PaginationCountDto<MessageListDto>, PaginationCountBo<MessageListBo>>();
         }
     }
 }

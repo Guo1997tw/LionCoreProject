@@ -16,28 +16,28 @@ using System.Text.Json;
 
 namespace prjLionMVC.Controllers
 {
-	public class LionController : Controller
-	{
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly IUserAuthentication _userAuthentication;
+    public class LionController : Controller
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IUserAuthentication _userAuthentication;
 
-		public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication)
-		{
-			_httpClientFactory = httpClientFactory;
-			_userAuthentication = userAuthentication;
-		}
+        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication)
+        {
+            _httpClientFactory = httpClientFactory;
+            _userAuthentication = userAuthentication;
+        }
 
-		/// <summary>
-		/// 留言清單頁面
-		/// </summary>
-		/// <returns></returns>
-		[Authorize]
-		public IActionResult MsgList()
-		{
-			ViewBag.LoginAccount = _userAuthentication.GetUserName();
+        /// <summary>
+        /// 留言清單頁面
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        public IActionResult MsgList()
+        {
+            ViewBag.LoginAccount = _userAuthentication.GetUserName();
 
-			return View();
-		}
+            return View();
+        }
 
         /// <summary>
         /// 分頁功能
@@ -46,8 +46,8 @@ namespace prjLionMVC.Controllers
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         [HttpPost]
-		public async Task<IActionResult> GetMsgPageAllPost([FromForm] int currentShowPage)
-		{
+        public async Task<IActionResult> GetMsgPageAllPost([FromForm] int currentShowPage)
+        {
             var client = _httpClientFactory.CreateClient();
 
             try
@@ -55,15 +55,15 @@ namespace prjLionMVC.Controllers
                 var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgPageAll/{currentShowPage}", null);
 
                 if (respone.IsSuccessStatusCode)
-				{
+                {
                     var content = await respone.Content.ReadAsStringAsync();
 
                     return Content(content, "application/json");
                 }
-				else
-				{
-					return Json(false);
-				}
+                else
+                {
+                    return Json(false);
+                }
             }
             catch (HttpRequestException)
             {
@@ -76,16 +76,16 @@ namespace prjLionMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-		public async Task<IActionResult> GetDataCount()
-		{
+        public async Task<IActionResult> GetDataCount()
+        {
             var client = _httpClientFactory.CreateClient();
 
-			try
-			{
+            try
+            {
                 var response = await client.GetAsync("https://localhost:7235/api/Lion/GetDataCount");
 
                 if (response.IsSuccessStatusCode)
-				{
+                {
                     var totalCountString = await response.Content.ReadAsStringAsync();
 
                     if (int.TryParse(totalCountString, out var totalCount))
@@ -94,10 +94,36 @@ namespace prjLionMVC.Controllers
                     }
                 }
 
-				return Json(false);
+                return Json(false);
             }
-			catch(HttpRequestException)
-			{
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDataCountAll([FromForm] int currentShowPage)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
+
+                if (respone.IsSuccessStatusCode)
+                {
+                    var content = await respone.Content.ReadAsStringAsync();
+
+                    return Content(content, "application/json");
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            catch (HttpRequestException)
+            {
                 return Json(false);
             }
         }
@@ -107,114 +133,114 @@ namespace prjLionMVC.Controllers
         /// </summary>
         /// <returns></returns>
         public IActionResult Register()
-		{
-			return View();
-		}
-		[HttpPost]
-		public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
-		{
-			var client = _httpClientFactory.CreateClient();
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
 
-			var json = JsonSerializer.Serialize(registerMemberViewModel);
+            var json = JsonSerializer.Serialize(registerMemberViewModel);
 
-			var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-			try
-			{
-				var response = await client.PostAsync("https://localhost:7235/api/Lion/RegisterMember", content);
+            try
+            {
+                var response = await client.PostAsync("https://localhost:7235/api/Lion/RegisterMember", content);
 
-				return (response.IsSuccessStatusCode) ? Json(true) : Json(false);
-			}
-			catch (HttpRequestException)
-			{
-				return Json(false);
-			}
-		}
+                return (response.IsSuccessStatusCode) ? Json(true) : Json(false);
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
 
-		/// <summary>
-		/// 登入帳號頁面
-		/// </summary>
-		/// <returns></returns>
-		public IActionResult Login()
-		{
-			return View();
-		}
-		[HttpPost]
-		public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
-		{
-			// 建立連線
-			var client = _httpClientFactory.CreateClient();
+        /// <summary>
+        /// 登入帳號頁面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
+        {
+            // 建立連線
+            var client = _httpClientFactory.CreateClient();
 
-			// 序列化
-			var json = JsonSerializer.Serialize(loginMemberInputViewModel);
+            // 序列化
+            var json = JsonSerializer.Serialize(loginMemberInputViewModel);
 
-			// 指定ContentType
-			var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // 指定ContentType
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-			try
-			{
-				var response = await client.PostAsync("https://localhost:7235/api/Lion/LoginMember", content);
+            try
+            {
+                var response = await client.PostAsync("https://localhost:7235/api/Lion/LoginMember", content);
 
-				if (response.IsSuccessStatusCode)
-				{
-					// 讀取資料
-					var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    // 讀取資料
+                    var responseContent = await response.Content.ReadAsStringAsync();
 
-					// 反序列化
-					var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
+                    // 反序列化
+                    var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
 
-					var claims = new List<Claim>
-					{
-						new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.memberId }"),
-						new Claim(ClaimTypes.Name, $"{ queryResult.account }")
-					};
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.memberId }"),
+                        new Claim(ClaimTypes.Name, $"{ queryResult.account }")
+                    };
 
-					var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-					var principal = new ClaimsPrincipal(identity);
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
 
-					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-						principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
 
-					return Json(true);
-				}
-				else
-				{
-					ModelState.AddModelError(string.Empty, "登入失敗");
+                    return Json(true);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "登入失敗");
 
-					return Json(false);
-				}
-			}
-			catch (HttpRequestException)
-			{
-				return Json(false);
-			}
-		}
+                    return Json(false);
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
 
-		/// <summary>
-		/// 登出帳號頁面
-		/// </summary>
-		/// <returns></returns>
-		public async Task<IActionResult> Logout()
-		{
-			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        /// <summary>
+        /// 登出帳號頁面
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-			return RedirectToAction("Login", "Lion");
-		}
+            return RedirectToAction("Login", "Lion");
+        }
 
-		/// <summary>
-		/// 顯示沒有權限頁面
-		/// </summary>
-		/// <returns></returns>
-		public IActionResult Error()
-		{
-			return View();
-		}
+        /// <summary>
+        /// 顯示沒有權限頁面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Error()
+        {
+            return View();
+        }
 
-		/// <summary>
-		/// 使用者搜尋
-		/// </summary>
-		/// <param name="userName"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// 使用者搜尋
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> SearchMsgUserNameGet([FromForm] string userName)
         {
@@ -230,10 +256,10 @@ namespace prjLionMVC.Controllers
 
                     return Content(content, "application/json");
                 }
-				else
-				{
-					return Json(false);
-				}
+                else
+                {
+                    return Json(false);
+                }
             }
             catch (HttpRequestException)
             {
@@ -246,58 +272,58 @@ namespace prjLionMVC.Controllers
         /// </summary>
         /// <returns></returns>
         public IActionResult UseMsg()
-		{
-			ViewBag.MemberId = _userAuthentication.GetUserCertificate();
+        {
+            ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 
-			return View();
-		}
-		[HttpPost]
-		public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
-		{
-			var client = _httpClientFactory.CreateClient();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
 
-			var json = JsonSerializer.Serialize(insertMsgViewModel);
+            var json = JsonSerializer.Serialize(insertMsgViewModel);
 
-			var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-			try
-			{
-				var respone = await client.PostAsync("https://localhost:7235/api/Lion/CreateUserMsg", content);
-
-				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-			}
-			catch (HttpRequestException)
-			{
-				return Json(false);
-			}
-		}
-
-		/// <summary>
-		/// 編輯留言頁面
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="editMsgViewModel"></param>
-		/// <returns></returns>
-		[HttpPut]
-		public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
-		{
-			var client = _httpClientFactory.CreateClient();
-
-			var json = JsonSerializer.Serialize(editMsgViewModel);
-
-			var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-			try
-			{
-				var respone = await client.PutAsync($"https://localhost:7235/api/Lion/UpdateUserMsg/{id}", content);
+            try
+            {
+                var respone = await client.PostAsync("https://localhost:7235/api/Lion/CreateUserMsg", content);
 
                 return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
             }
-			catch(HttpRequestException)
-			{
-				return Json(false);
-			}
-		}
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
+
+        /// <summary>
+        /// 編輯留言頁面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgViewModel"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var json = JsonSerializer.Serialize(editMsgViewModel);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var respone = await client.PutAsync($"https://localhost:7235/api/Lion/UpdateUserMsg/{id}", content);
+
+                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
 
         /// <summary>
         /// 刪除留言
@@ -306,21 +332,21 @@ namespace prjLionMVC.Controllers
         /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> RemoveMsgPost(int id)
-		{
-			var client = _httpClientFactory.CreateClient();
+        {
+            var client = _httpClientFactory.CreateClient();
 
-			var json = JsonSerializer.Serialize(id);
+            var json = JsonSerializer.Serialize(id);
 
             try
-			{
-				var respone = await client.DeleteAsync($"https://localhost:7235/api/Lion/RemoveMemberMsg/{json}");
+            {
+                var respone = await client.DeleteAsync($"https://localhost:7235/api/Lion/RemoveMemberMsg/{json}");
 
-				return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-			}
-			catch(HttpRequestException)
-			{
-				return Json(false);
-			}
-		}
-	}
+                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
+    }
 }
