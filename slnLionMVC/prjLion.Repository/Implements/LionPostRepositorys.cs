@@ -109,7 +109,7 @@ namespace prjLion.Repository.Implements
         {
 			using (var use = _lionConnection.GetLionDb())
 			{
-				var actionSQL = @"update [dbo].[MessageBoardTable] set MessageText = @MessageText
+				var actionSQL = @"update [dbo].[MessageBoardTable] set MessageText = @MessageText, MessageTime = @MessageTime
 							  where MessageBoardId = @MessageBoardId";
 
                 var parameters = new DynamicParameters();
