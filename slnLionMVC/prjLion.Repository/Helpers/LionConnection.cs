@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,9 +18,19 @@ namespace prjLion.Repository.Helpers
         /// 取得application.json DB連線字串
         /// </summary>
         /// <param name="configuration"></param>
-        public LionConnection(IConfiguration configuration)
+        //public LionConnection(IConfiguration configuration)
+        //{
+        //    _connectionString = configuration.GetConnectionString("LionHW");
+        //}
+
+
+        /// <summary>
+        /// 使用Options方式取得DB連線字串
+        /// </summary>
+        /// <param name="options"></param>
+        public LionConnection(IOptions<ConnectionStringOptionsModel> options)
         {
-            _connectionString = configuration.GetConnectionString("LionHW");
+            _connectionString = options.Value.LionHW ?? throw new ArgumentNullException(nameof(options.Value.LionHW), "LionHW connection string is not configured.");
         }
 
         /// <summary>
