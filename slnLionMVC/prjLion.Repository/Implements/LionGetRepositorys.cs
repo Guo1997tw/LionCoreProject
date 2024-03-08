@@ -132,5 +132,42 @@ namespace prjLion.Repository.Implements
                 return paginationCountResult;
             }
         }
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數、搜尋單一使用者留言
+        /// 指定使用者姓名、指定頁數
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="pageNum"></param>
+        /// <returns></returns>
+        public async Task<PaginationCountDto<MessageListDto>> GetMsgByUserNamePaginationCount(string userName, int pageNum)
+        {
+            int pageNow = 0;
+            int pageSize = 5;
+
+            if (pageNum > 0) { pageNow = (pageNum - 1) * pageSize; }
+
+            using (var use = _lionConnection.GetLionDb())
+            {
+                var paginationCountResult = new PaginationCountDto<MessageListDto>();
+
+                var queryDataSQL = @"select mb.MessageBoardId, m.MemberName, m.Account, mb.MessageText, mb.MessageTime
+                                     from MessageBoardTable as mb
+                                     inner join MemberTable as m on mb.MemberId = m.MemberId
+				                     where m.MemberName = @MemberName
+                                     order by mb.MessageTime DESC
+                                     offset @PageNow rows fetch next @PageSize rows only;";
+
+                var queryCountSQL = @"select count(*)
+                                      from MessageBoardTable as mb
+                                      inner join MemberTable as m on mb.MemberId = m.MemberId
+                                      where m.MemberName = @MemberName";
+
+                paginationCountResult.ItemData = await use.QueryAsync<MessageListDto>(queryDataSQL, new { MemberName = userName, PageNow = pageNow, PageSize = pageSize });
+                paginationCountResult.CountData = await use.ExecuteScalarAsync<int>(queryCountSQL, new { MemberName = userName });
+
+                return paginationCountResult;
+            }
+        }
     }
 }

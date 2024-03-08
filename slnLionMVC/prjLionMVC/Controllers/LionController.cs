@@ -102,6 +102,12 @@ namespace prjLionMVC.Controllers
             }
         }
 
+        /// <summary>
+        /// 同時取得資料分頁與總筆數
+        /// 指定頁數
+        /// </summary>
+        /// <param name="currentShowPage"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> GetDataCountAll([FromForm] int currentShowPage)
         {
@@ -110,6 +116,38 @@ namespace prjLionMVC.Controllers
             try
             {
                 var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
+
+                if (respone.IsSuccessStatusCode)
+                {
+                    var content = await respone.Content.ReadAsStringAsync();
+
+                    return Content(content, "application/json");
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return Json(false);
+            }
+        }
+
+        /// <summary>
+        /// 同時取得資料分頁與總筆數、搜尋單一使用者留言
+        /// 指定使用者姓名、指定頁數
+        /// </summary>
+        /// <param name="currentShowPage"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
 
                 if (respone.IsSuccessStatusCode)
                 {
