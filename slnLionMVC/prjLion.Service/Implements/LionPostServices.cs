@@ -113,7 +113,11 @@ namespace prjLion.Service.Implements
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> EditMsg(int id, EditMsgBo editMsgBo)
         {
-            var mapper = _mapper.Map<EditMsgBo, EditMsgDto>(editMsgBo);
+			CustomizedMethod customizedMethod = new CustomizedMethod();
+
+			customizedMethod.isVerifyRuleMsg(editMsgBo.MessageText);
+
+			var mapper = _mapper.Map<EditMsgBo, EditMsgDto>(editMsgBo);
 
             await _lionPostRepositorys.UpdateMsg(id, mapper);
 
