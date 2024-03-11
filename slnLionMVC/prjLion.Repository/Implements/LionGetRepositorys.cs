@@ -98,5 +98,20 @@ namespace prjLion.Repository.Implements
                 return paginationCountResult;
             }
         }
-    }
+
+		/// <summary>
+		/// 是否有這筆資料
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public async Task<GetMsgDto?> GetMsgData(int id)
+		{
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var querySQL = @"select * from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardTable";
+
+				return await use.QueryFirstOrDefaultAsync<GetMsgDto?>(querySQL, new { MessageBoardTable = id });
+			}
+		}
+	}
 }

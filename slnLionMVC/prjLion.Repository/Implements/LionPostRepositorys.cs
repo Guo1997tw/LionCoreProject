@@ -89,9 +89,9 @@ namespace prjLion.Repository.Implements
 		{
 			using (var use = _lionConnection.GetLionDb())
 			{
-				var actionSQL = @"delete from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardTable";
+				var actionSQL = @"delete from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardId";
 
-				await use.ExecuteAsync(actionSQL, new { MessageBoardTable = id });
+				await use.ExecuteAsync(actionSQL, new { MessageBoardId = id });
 
 				return true;
 			}

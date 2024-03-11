@@ -133,6 +133,10 @@ namespace prjLion.Service.Implements
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> DeleteMemberMsg(int id)
         {
+            var queryDto =  await _lionGetRepositorys.GetMsgData(id);
+
+            if (queryDto == null) return false;
+            
             return await _lionPostRepositorys.DeleteMsg(id);
         }
     }

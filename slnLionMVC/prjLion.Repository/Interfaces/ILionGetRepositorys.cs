@@ -27,5 +27,12 @@ namespace prjLion.Repository.Interfaces
         /// <param name="pageNum"></param>
         /// <returns></returns>
         public Task<PaginationCountDto<MessageListDto>?> GetMsgByUserNamePaginationCount(string userName, int pageNum);
+
+        /// <summary>
+        /// 是否有這筆資料
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<GetMsgDto?> GetMsgData(int id);
     }
 }

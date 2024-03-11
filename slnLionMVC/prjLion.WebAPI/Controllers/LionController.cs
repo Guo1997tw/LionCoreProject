@@ -158,9 +158,11 @@ namespace prjLion.WebAPI.Controllers
 		[HttpDelete("{id}")]
         public async Task<ActionResult> RemoveMemberMsg(int id)
         {
-            await _lionPostServices.DeleteMemberMsg(id);
+            var result = await _lionPostServices.DeleteMemberMsg(id);
 
-            return Ok(new ResultViewModel
+            if (result == false) return NotFound($"無此資料: {id}");
+
+			return Ok(new ResultViewModel
             {
                 Success = true,
                 Message = "刪除成功",
