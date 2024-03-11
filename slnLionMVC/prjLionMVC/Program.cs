@@ -27,9 +27,10 @@ namespace prjLionMVC
 			builder.Services.AddHttpContextAccessor();
 			builder.Services.AddScoped<ILion, Lion>();
             builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
+            builder.Services.AddScoped<IHttpClients, HttpClients>();
 
-			// Authentication DI
-			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            // Authentication DI
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/Lion/Login";
                 option.LogoutPath = "/Lion/Login";

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjLionMVC.Interfaces;
-using prjLionMVC.Models.infrastructure;
 using System.Net.Http;
 
 namespace prjLionMVC.Implements
@@ -20,7 +19,7 @@ namespace prjLionMVC.Implements
 
             try
             {
-                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgPageAll/{currentShowPage}", null);
+                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
 
                 if (respone.IsSuccessStatusCode)
                 {
