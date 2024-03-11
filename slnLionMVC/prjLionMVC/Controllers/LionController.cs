@@ -20,11 +20,13 @@ namespace prjLionMVC.Controllers
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserAuthentication _userAuthentication;
+        private readonly IHttpClients _httpClients;
 
-        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication)
+        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
+            _httpClients = httpClients;
         }
 
         /// <summary>
@@ -48,27 +50,9 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> GetMsgPageAllPost([FromForm] int currentShowPage)
         {
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.MsgPageAllPostAsync(currentShowPage);
 
-            try
-            {
-                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgPageAll/{currentShowPage}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return Content(content, "application/json");
-                }
-                else
-                {
-                    return Json(false);
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>
