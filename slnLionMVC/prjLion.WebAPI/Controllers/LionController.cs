@@ -75,7 +75,13 @@ namespace prjLion.WebAPI.Controllers
         {
             var mapper = _mapper.Map<MemberAccountViewModel, MemberAccountBo>(memberAccountViewModel);
 
-            return Ok(await _lionPostServices.CreateAccount(mapper));
+            await _lionPostServices.CreateAccount(mapper);
+
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "註冊成功",
+            });
         }
 
         /// <summary>
@@ -85,11 +91,17 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="password"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<LoginInfoViewModel> LoginMember([FromBody] LoginMemberViewModel loginMemberHttpViewModel)
+        public async Task<ActionResult> LoginMember([FromBody] LoginMemberViewModel loginMemberHttpViewModel)
         {
             var result = await _lionPostServices.CheckMember(loginMemberHttpViewModel.account, loginMemberHttpViewModel.hashPassword);
 
-            return _mapper.Map<LoginInfoViewModel>(result);
+            var mapper = _mapper.Map<LoginInfoViewModel>(result);
+
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "登入成功",
+            });
         }
 
         /// <summary>
@@ -98,13 +110,18 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="createMsgViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-		public async Task<bool> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
+		public async Task<ActionResult> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
 		{
 			var mapper = _mapper.Map<CreateMsgViewModel, CreateMsgBo>(createMsgViewModel);
 
 			await _lionPostServices.CreateMsg(mapper);
 
-			return true;
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "新增成功",
+                Data = mapper
+            });
 		}
 
         /// <summary>
@@ -115,13 +132,18 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<bool> UpdateUserMsg(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+        public async Task<ActionResult> UpdateUserMsg(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
             var mapper = _mapper.Map<EditMsgViewModel, EditMsgBo>(editMsgViewModel);
 
             await _lionPostServices.EditMsg(id, mapper);
 
-            return true;
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "修改成功",
+                Data = mapper
+            });
         }
 
 		/// <summary>
@@ -131,9 +153,16 @@ namespace prjLion.WebAPI.Controllers
 		/// <param name="id"></param>
 		/// <returns></returns>
 		[HttpDelete("{id}")]
-        public async Task<bool> RemoveMemberMsg(int id)
+        public async Task<ActionResult> RemoveMemberMsg(int id)
         {
-            return await _lionPostServices.DeleteMemberMsg(id);
+            await _lionPostServices.DeleteMemberMsg(id);
+
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "刪除成功",
+                Data = id
+            });
         }
 	}
 }
