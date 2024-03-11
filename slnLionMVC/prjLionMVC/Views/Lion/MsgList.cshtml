@@ -149,6 +149,12 @@
             SaveUpdateMsgApi(messageBoardId) {
                 let self = this;
 
+                var msgRule = /^[0-9a-zA-Z\u4e00-\u9fa5]+$/;
+
+                if (!msgRule.test(self.updateMsgTemp)) {
+                    return alert("留言欄位只允許中文、英文、數字");
+                }
+
                 fetch(`/Lion/EditMsgPost/${messageBoardId}`, {
                     method: "PUT",
                     headers: { 'Content-Type': 'application/json' },
