@@ -37,7 +37,7 @@ namespace prjLion.Repository.Implements
         /// <param name="pageNum"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<PaginationCountDto<MessageListDto>> GetPaginationCount(int pageNum)
+        public async Task<PaginationCountDto<MessageListDto>?> GetPaginationCount(int pageNum)
         {
             int pageNow = 0, pageSize = 5;
 
@@ -69,7 +69,7 @@ namespace prjLion.Repository.Implements
         /// <param name="userName"></param>
         /// <param name="pageNum"></param>
         /// <returns></returns>
-        public async Task<PaginationCountDto<MessageListDto>> GetMsgByUserNamePaginationCount(string userName, int pageNum)
+        public async Task<PaginationCountDto<MessageListDto>?> GetMsgByUserNamePaginationCount(string userName, int pageNum)
         {
             int pageNow = 0;
             int pageSize = 5;

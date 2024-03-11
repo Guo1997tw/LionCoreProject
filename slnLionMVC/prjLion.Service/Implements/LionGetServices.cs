@@ -39,11 +39,13 @@ namespace prjLion.Service.Implements
         /// <param name="pageNum"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<PaginationCountBo<MessageListBo>> GetMsgByUserNamePaginationCountData(string userName, int pageNum)
+        public async Task<PaginationCountBo<MessageListBo>?> GetMsgByUserNamePaginationCountData(string userName, int pageNum)
         {
             var queryDataDto = await _lionGetRepositorys.GetMsgByUserNamePaginationCount(userName, pageNum);
 
-            return _mapper.Map<PaginationCountBo<MessageListBo>>(queryDataDto);
+            if (queryDataDto.ItemData == null || !queryDataDto.ItemData.Any()) { throw new KeyNotFoundException($"查無{userName}使用者"); }
+
+            return _mapper.Map<PaginationCountBo<MessageListBo>?>(queryDataDto);
         }
     }
 }

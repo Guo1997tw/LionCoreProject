@@ -18,6 +18,6 @@ namespace prjLion.Service.Interfaces
         /// <param name="userName"></param>
         /// <param name="pageNum"></param>
         /// <returns></returns>
-        public Task<PaginationCountBo<MessageListBo>> GetMsgByUserNamePaginationCountData(string userName, int pageNum);
+        public Task<PaginationCountBo<MessageListBo>?> GetMsgByUserNamePaginationCountData(string userName, int pageNum);
     }
 }

@@ -51,11 +51,18 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{userName}/{pageNum}")]
-        public async Task<PaginationCountViewModel<MessageListViewModel>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
+        public async Task<ActionResult<PaginationCountViewModel<MessageListViewModel>>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
         {
             var queryBo = await _lionGetServices.GetMsgByUserNamePaginationCountData(userName, pageNum);
 
-            return _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+            var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "資料加載成功",
+                Data = mapper,
+            });
         }
 
         /// <summary>
