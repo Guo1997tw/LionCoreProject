@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Models.Bo;
@@ -95,12 +96,14 @@ namespace prjLion.WebAPI.Controllers
         {
             var result = await _lionPostServices.CheckMember(loginMemberHttpViewModel.account, loginMemberHttpViewModel.hashPassword);
 
-            if (result == false) { throw new KeyNotFoundException($"無此帳號: {loginMemberHttpViewModel.account}"); }
+            if (result == null) { return NotFound($"無此帳號: {loginMemberHttpViewModel.account}"); }
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultLoginViewModel
             {
                 Success = true,
                 Message = "登入成功",
+                memberId = result.MemberId,
+                account = result.Account,
             });
         }
 
