@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Models.Bo;
@@ -25,42 +24,23 @@ namespace prjLion.WebAPI.Controllers
         }
 
         /// <summary>
-        /// 分頁功能
-        /// 輸入第幾頁
-        /// </summary>
-        /// <param name="pageNum"></param>
-        /// <returns></returns>
-        [HttpPost("{pageNum}")]
-        public async Task<IEnumerable<MessageListViewModel>> GetMsgPageAll(int pageNum)
-        {
-            var queryBo = await _lionGetServices.GetMsgPage(pageNum);
-
-            return _mapper.Map<IEnumerable<MessageListViewModel>>(queryBo);
-        }
-
-        /// <summary>
-        /// 取得留言版總筆數
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<int> GetDataCount()
-        {
-            var queryBo = await _lionGetServices.GetMsgCount();
-
-            return _mapper.Map<int>(queryBo);
-        }
-
-        /// <summary>
         /// 同時取得資料分頁與總筆數
         /// </summary>
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{pageNum}")]
-        public async Task<PaginationCountViewModel<MessageListViewModel>> GetPaginationCountDataAll(int pageNum)
+        public async Task<ActionResult<PaginationCountViewModel<MessageListViewModel>>> GetPaginationCountDataAll(int pageNum)
         {
             var queryBo = await _lionGetServices.GetPaginationCountData(pageNum);
 
-            return _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+            var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+
+            return Ok(new ResultViewModel
+            {
+                Success = true,
+                Message = "資料加載成功",
+                Data = mapper,
+            });
         }
 
         /// <summary>
@@ -76,22 +56,6 @@ namespace prjLion.WebAPI.Controllers
             var queryBo = await _lionGetServices.GetMsgByUserNamePaginationCountData(userName, pageNum);
 
             return _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
-        }
-
-        /// <summary>
-        /// 搜尋單一使用者留言
-		/// 指定使用者姓名
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        [HttpPost("{userName}")]
-        public async Task<ActionResult<IEnumerable<MessageListViewModel>?>> SearchMsgUserName(string userName)
-        {
-            var queryBo = await _lionGetServices.GetMsgByUserName(userName);
-
-            if(queryBo == null || !queryBo.Any()) { return NotFound("無法搜尋到該筆使用者資料"); }
-
-            return Ok(_mapper.Map<IEnumerable<MessageListViewModel>?>(queryBo));
         }
 
         /// <summary>
