@@ -95,7 +95,7 @@ namespace prjLion.WebAPI.Controllers
         {
             var result = await _lionPostServices.CheckMember(loginMemberHttpViewModel.account, loginMemberHttpViewModel.hashPassword);
 
-            var mapper = _mapper.Map<LoginInfoViewModel>(result);
+            if (result == false) { throw new KeyNotFoundException($"無此帳號: {loginMemberHttpViewModel.account}"); }
 
             return Ok(new ResultViewModel
             {

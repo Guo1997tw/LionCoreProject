@@ -15,23 +15,23 @@ namespace prjLion.Service.Implements
 {
     public class LionPostServices : ILionPostServices
     {
-		private readonly ILionGetRepositorys _lionGetRepositorys;
-		private readonly ILionPostRepositorys _lionPostRepositorys;
+        private readonly ILionGetRepositorys _lionGetRepositorys;
+        private readonly ILionPostRepositorys _lionPostRepositorys;
         private readonly IMapper _mapper;
 
         public LionPostServices(ILionGetRepositorys lionGetRepositorys, ILionPostRepositorys lionPostRepositorys, IMapper mapper)
         {
-			_lionGetRepositorys = lionGetRepositorys;
-			_lionPostRepositorys = lionPostRepositorys;
+            _lionGetRepositorys = lionGetRepositorys;
+            _lionPostRepositorys = lionPostRepositorys;
             _mapper = mapper;
         }
 
-		/// <summary>
-		/// 註冊帳號
-		/// </summary>
-		/// <param name="memberAccountBo"></param>
-		/// <returns></returns>
-		public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
+        /// <summary>
+        /// 註冊帳號
+        /// </summary>
+        /// <param name="memberAccountBo"></param>
+        /// <returns></returns>
+        public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
         {
             var userNameRule = new Regex(@"^[a-zA-Z\u4e00-\u9fa5]+$");
 
@@ -62,13 +62,13 @@ namespace prjLion.Service.Implements
         /// <param name="password"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-		public async Task<MemberAccountBo?> CheckMember(string account, string password)
-		{
-            var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
-			
+		public async Task<bool> CheckMember(string account, string password)
+        {
             CustomizedMethod customizedMethod = new CustomizedMethod();
-			
+
             customizedMethod.isVerifyRuleAP(account, password);
+
+            var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
 
             if (queryResult != null)
             {
@@ -76,11 +76,11 @@ namespace prjLion.Service.Implements
                 var SaltPasswordTemp = queryResult.SaltPassword;
                 var HashPassword = customizedMethod.HashPwdWithHMACSHA256(password, SaltPasswordTemp);
 
-                // return HashPassword == HashPasswordTemp;
+                return HashPassword == HashPasswordTemp;
             }
 
-            return _mapper.Map<MemberAccountBo>(queryResult);
-		}
+            return false;
+        }
 
         /// <summary>
         /// 
@@ -89,13 +89,13 @@ namespace prjLion.Service.Implements
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
 		public async Task<bool> CreateMsg(CreateMsgBo createMsgBo)
-		{
-			var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
+        {
+            var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
 
-			await _lionPostRepositorys.InsertMsg(mapper);
+            await _lionPostRepositorys.InsertMsg(mapper);
 
-			return true;
-		}
+            return true;
+        }
 
         /// <summary>
         /// 修改留言
@@ -121,8 +121,8 @@ namespace prjLion.Service.Implements
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> DeleteMemberMsg(int id)
-		{
-			return await _lionPostRepositorys.DeleteMsg(id);
-		}
+        {
+            return await _lionPostRepositorys.DeleteMsg(id);
+        }
     }
 }

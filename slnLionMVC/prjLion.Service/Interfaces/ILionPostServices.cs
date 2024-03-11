@@ -22,7 +22,7 @@ namespace prjLion.Service.Interfaces
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public Task<MemberAccountBo?> CheckMember(string account, string password);
+        public Task<bool> CheckMember(string account, string password);
 
 		/// <summary>
 		/// 新增留言
