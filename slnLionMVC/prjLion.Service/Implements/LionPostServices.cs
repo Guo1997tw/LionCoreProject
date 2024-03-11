@@ -86,13 +86,17 @@ namespace prjLion.Service.Implements
 		}
 
         /// <summary>
-        /// 
+        /// 新增留言
         /// </summary>
         /// <param name="createMsgBo"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
 		public async Task<bool> CreateMsg(CreateMsgBo createMsgBo)
         {
+            CustomizedMethod customizedMethod = new CustomizedMethod();
+
+            customizedMethod.isVerifyRuleMsg(createMsgBo.MessageText);
+
             var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
 
             await _lionPostRepositorys.InsertMsg(mapper);
