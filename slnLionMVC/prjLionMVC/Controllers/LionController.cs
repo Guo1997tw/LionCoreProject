@@ -154,22 +154,9 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.UseMsgPostAsync(insertMsgViewModel);
 
-            var json = JsonSerializer.Serialize(insertMsgViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var respone = await client.PostAsync("https://localhost:7235/api/Lion/CreateUserMsg", content);
-
-                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>

@@ -120,7 +120,6 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public async Task<LoginInfoViewModel?> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
         {
             // 建立連線
@@ -154,6 +153,31 @@ namespace prjLionMVC.Implements
             catch(HttpRequestException)
             {
                 return new LoginInfoViewModel { ErrorMessage = "false" };
+            }
+        }
+
+        /// <summary>
+        /// 新增留言頁面
+        /// </summary>
+        /// <param name="insertMsgViewModel"></param>
+        /// <returns></returns>
+        public async Task<string> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var json = JsonSerializer.Serialize(insertMsgViewModel);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/CreateUserMsg", content);
+
+                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
+            }
+            catch (HttpRequestException)
+            {
+                return ("false");
             }
         }
     }
