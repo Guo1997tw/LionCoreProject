@@ -181,20 +181,9 @@ namespace prjLionMVC.Controllers
         [HttpDelete]
         public async Task<IActionResult> RemoveMsgPost(int id)
         {
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.RemoveMsgPostAsync(id);
 
-            var json = JsonSerializer.Serialize(id);
-
-            try
-            {
-                var respone = await client.DeleteAsync($"https://localhost:7235/api/Lion/RemoveMemberMsg/{json}");
-
-                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
     }
 }

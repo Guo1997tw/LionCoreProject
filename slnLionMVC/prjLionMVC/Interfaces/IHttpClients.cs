@@ -51,5 +51,13 @@ namespace prjLionMVC.Interfaces
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         public Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
+
+        /// <summary>
+        /// 刪除留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<string> RemoveMsgPostAsync(int id);
     }
 }

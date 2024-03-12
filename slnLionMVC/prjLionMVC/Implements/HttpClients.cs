@@ -207,5 +207,29 @@ namespace prjLionMVC.Implements
                 return ("false");
             }
         }
+
+        /// <summary>
+        /// 刪除留言
+        /// 指定留言編號 (流水號)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<string> RemoveMsgPostAsync(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var json = JsonSerializer.Serialize(id);
+
+            try
+            {
+                var respone = await client.DeleteAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{json}");
+
+                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
+            }
+            catch (HttpRequestException)
+            {
+                return ("false");
+            }
+        }
     }
 }
