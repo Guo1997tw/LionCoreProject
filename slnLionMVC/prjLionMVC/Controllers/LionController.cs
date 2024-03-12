@@ -64,27 +64,9 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
         {
-            var client = _httpClientFactory.CreateClient();
+           var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
 
-            try
-            {
-                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return Content(content, "application/json");
-                }
-                else
-                {
-                    return Json(false);
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>

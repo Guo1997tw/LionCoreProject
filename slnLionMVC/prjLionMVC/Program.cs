@@ -4,6 +4,7 @@ using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
 using prjLionMVC.LogExceptions;
 using prjLionMVC.Models.Entity;
+using prjLionMVC.Models.Infrastructures;
 
 namespace prjLionMVC
 {
@@ -21,6 +22,9 @@ namespace prjLionMVC
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("LionHW"));
             });
+
+            // Add Lion API Web Host URL
+            builder.Services.Configure<LionApiSettings>(builder.Configuration.GetSection("LionApiSettings"));
 
 			// Interface DI
 			builder.Services.AddHttpClient();
