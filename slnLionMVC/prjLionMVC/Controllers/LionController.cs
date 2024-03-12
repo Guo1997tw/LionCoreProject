@@ -168,22 +168,9 @@ namespace prjLionMVC.Controllers
         [HttpPut]
         public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
 
-            var json = JsonSerializer.Serialize(editMsgViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var respone = await client.PutAsync($"https://localhost:7235/api/Lion/UpdateUserMsg/{id}", content);
-
-                return (respone.IsSuccessStatusCode) ? Json(true) : Json(false);
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>

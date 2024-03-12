@@ -180,5 +180,32 @@ namespace prjLionMVC.Implements
                 return ("false");
             }
         }
+
+        /// <summary>
+        /// 編輯留言頁面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgViewModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var json = JsonSerializer.Serialize(editMsgViewModel);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var respone = await client.PutAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/UpdateUserMsg/{id}", content);
+
+                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
+            }
+            catch (HttpRequestException)
+            {
+                return ("false");
+            }
+        }
     }
 }

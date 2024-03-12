@@ -42,5 +42,14 @@ namespace prjLionMVC.Interfaces
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
         public Task<string> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
+
+
+        /// <summary>
+        /// 編輯留言頁面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="editMsgViewModel"></param>
+        /// <returns></returns>
+        public Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
     }
 }
