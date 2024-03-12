@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using prjLionMVC.Models.HttpClients.Inp;
 
 namespace prjLionMVC.Interfaces
 {
@@ -19,5 +20,12 @@ namespace prjLionMVC.Interfaces
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         public Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage);
+
+        /// <summary>
+        /// 註冊帳號頁面
+        /// </summary>
+        /// <param name="registerMemberViewModel"></param>
+        /// <returns></returns>
+        public Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
     }
 }

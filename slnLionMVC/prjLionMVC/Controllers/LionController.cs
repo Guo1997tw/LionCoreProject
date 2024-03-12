@@ -80,22 +80,9 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.RegisterPostAsync(registerMemberViewModel);
 
-            var json = JsonSerializer.Serialize(registerMemberViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var response = await client.PostAsync("https://localhost:7235/api/Lion/RegisterMember", content);
-
-                return (response.IsSuccessStatusCode) ? Json(true) : Json(false);
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>

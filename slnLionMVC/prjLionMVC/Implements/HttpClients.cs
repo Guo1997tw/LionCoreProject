@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.Infrastructures;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace prjLionMVC.Implements
 {
@@ -73,6 +76,32 @@ namespace prjLionMVC.Implements
                 {
                     return "false";
                 }
+            }
+            catch (HttpRequestException)
+            {
+                return "false";
+            }
+        }
+
+        /// <summary>
+        /// 註冊帳號頁面
+        /// </summary>
+        /// <param name="registerMemberViewModel"></param>
+        /// <returns></returns>
+
+        public async Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var json = JsonSerializer.Serialize(registerMemberViewModel);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RegisterMember", content);
+
+                return (response.IsSuccessStatusCode) ? ("true") : ("false");
             }
             catch (HttpRequestException)
             {
