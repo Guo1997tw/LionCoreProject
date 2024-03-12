@@ -142,37 +142,6 @@ namespace prjLionMVC.Controllers
         }
 
         /// <summary>
-        /// 使用者搜尋
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> SearchMsgUserNameGet([FromForm] string userName)
-        {
-            var client = _httpClientFactory.CreateClient();
-
-            try
-            {
-                var respone = await client.PostAsync($"https://localhost:7235/api/Lion/SearchMsgUserName/{userName}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return Content(content, "application/json");
-                }
-                else
-                {
-                    return Json(false);
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return Json(false);
-            }
-        }
-
-        /// <summary>
         /// 新增留言頁面
         /// </summary>
         /// <returns></returns>
