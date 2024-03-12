@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Win32;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models.HttpClients.Inp;
@@ -98,7 +99,11 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.LoginPostAsync(loginMemberInputViewModel);
 
-            if (result != null)
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                return Json(false);
+            }
+            else
             {
                 var claims = new List<Claim>
                 {
@@ -113,12 +118,6 @@ namespace prjLionMVC.Controllers
                     principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
 
                 return Json(true);
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "登入失敗");
-
-                return Json(false);
             }
         }
 
