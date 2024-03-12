@@ -22,12 +22,14 @@ namespace prjLionMVC.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserAuthentication _userAuthentication;
         private readonly IHttpClients _httpClients;
+        private readonly IHttpClientlogics _httpClientlogics;
 
-        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1)
+        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1, IHttpClientlogics httpClientlogics)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
             _httpClients = httpClients;
+            _httpClientlogics = httpClientlogics;
         }
 
         /// <summary>
@@ -97,28 +99,9 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
         {
-            var result = await _httpClients.LoginPostAsync(loginMemberInputViewModel);
+            var result = await _httpClientlogics.IsIdentityCheckAsync(loginMemberInputViewModel);
 
-            if (!string.IsNullOrEmpty(result.ErrorMessage))
-            {
-                return Json(false);
-            }
-            else
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, $"{ result.memberId }"),
-                    new Claim(ClaimTypes.Name, $"{ result.account }")
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
-
-                return Json(true);
-            }
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>
