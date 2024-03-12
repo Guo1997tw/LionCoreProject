@@ -89,9 +89,9 @@ namespace prjLion.Repository.Implements
 		{
 			using (var use = _lionConnection.GetLionDb())
 			{
-				var actionSQL = @"delete from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardTable";
+				var actionSQL = @"delete from [dbo].[MessageBoardTable] where [MessageBoardId] = @MessageBoardId";
 
-				await use.ExecuteAsync(actionSQL, new { MessageBoardTable = id });
+				await use.ExecuteAsync(actionSQL, new { MessageBoardId = id });
 
 				return true;
 			}
@@ -109,7 +109,7 @@ namespace prjLion.Repository.Implements
         {
 			using (var use = _lionConnection.GetLionDb())
 			{
-				var actionSQL = @"update [dbo].[MessageBoardTable] set MessageText = @MessageText
+				var actionSQL = @"update [dbo].[MessageBoardTable] set MessageText = @MessageText, MessageTime = @MessageTime
 							  where MessageBoardId = @MessageBoardId";
 
                 var parameters = new DynamicParameters();

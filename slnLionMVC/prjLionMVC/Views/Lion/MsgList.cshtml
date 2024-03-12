@@ -42,11 +42,11 @@
             </tbody>
         </table>
         <br>
-        <button type="button" @@click="Pagination(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
+        <button type="button" @@click="isSearchActive ? GetNameSearch(currentShowPage - 1) : PaginationCount(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
         <span v-for="cp in currentPageTotal" :key="cp">
-            <button type="button" @@click="Pagination(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
+            <button type="button" @@click="isSearchActive ? GetNameSearch(cp) : PaginationCount(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
         </span>
-        <button type="button" @@click="Pagination(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
+        <button type="button" @@click="isSearchActive ? GetNameSearch(currentShowPage + 1) : PaginationCount(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
     </div>
 </body>
 
@@ -67,6 +67,7 @@
                 searchUserName: "",
                 updateMsgIdTemp: "",
                 updateMsgTemp: "",
+                updateMsgTimeTemp: "",
                 accountTemp: "@loginAccount",
 
                 // 目前顯示頁碼
@@ -75,13 +76,16 @@
                 currentPageSize: 5,
                 // 目前頁面總數
                 currentPageTotal: "",
+
+                // 控制分頁清單或是搜尋分頁
+                isSearchActive: false
             }
         },
 
         mounted() {
             let self = this;
 
-            self.Pagination(self.currentShowPage);
+            self.PaginationCount(self.currentShowPage);
         },
 
         computed: {
@@ -105,25 +109,39 @@
         },
 
         methods: {
-            GetNameSearch() {
+            GetNameSearch(pageNum = 1) {
                 let self = this;
+                self.isSearchActive = true;
+
+                if (pageNum < 1) return;
+                self.currentShowPage = pageNum;
+
                 let formData = new FormData();
                 formData.append("userName", self.searchUserName);
+                formData.append("currentShowPage", self.currentShowPage);
 
-                fetch("/Lion/SearchMsgUserNameGet", {
+                fetch("/Lion/SearchMsgUserNameDataCountAll", {
                     method: "POST",
                     body: formData
                 })
                     .then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
-                    .then(d => { self.msgList = d; })
-                    .catch(e => { console.log(e); });
+                    .then(d => {
+                        if (d == true) {
+                            self.currentPageTotal = Math.ceil(d.data.countData / self.currentPageSize);
+                            self.msgList = d.data.itemData;
+                        }
+                        else {
+                            alert("查無使用者");
+                        }
+                    }).catch(error => console.error('Fetch error:', error));
             },
 
             GetNameClear() {
                 let self = this;
-
+                
+                self.isSearchActive = false;
                 self.searchUserName = "";
-                self.Pagination(self.currentShowPage);
+                self.PaginationCount(self.currentShowPage);
             },
 
             UpdateMsg(messageBoardId, messageText) {
@@ -135,6 +153,12 @@
 
             SaveUpdateMsgApi(messageBoardId) {
                 let self = this;
+
+                var msgRule = /^[0-9a-zA-Z\u4e00-\u9fa5]+$/;
+
+                if (!msgRule.test(self.updateMsgTemp)) {
+                    return alert("留言欄位只允許中文、英文、數字");
+                }
 
                 fetch(`/Lion/EditMsgPost/${messageBoardId}`, {
                     method: "PUT",
@@ -148,7 +172,8 @@
                             alert("修改成功");
                             self.updateMsgIdTemp = "";
                             self.updateMsgTemp = "";
-                            self.Pagination(self.currentShowPage);
+                            self.updateMsgTimeTemp = "",
+                            self.PaginationCount(self.currentShowPage);
                         }
                         else {
                             console.log("Fail", d);
@@ -170,7 +195,7 @@
                         if (d == true) {
                             console.log("Success", d);
                             alert("刪除成功");
-                            self.Pagination(self.currentShowPage);
+                            self.PaginationCount(self.currentShowPage);
                         }
                         else {
                             console.log("Fail", d);
@@ -202,6 +227,26 @@
                     .then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
                     .then(d => { self.msgList = d })
                     .catch(error => console.error('Fetch error:', error));
+            },
+
+            // 同時取得資料分頁與總筆數
+            PaginationCount(pageNum) {
+                let self = this;
+
+                if (pageNum < 1) return;
+                self.currentShowPage = pageNum;
+
+                let formData = new FormData();
+                formData.append("currentShowPage", self.currentShowPage);
+
+                fetch("/Lion/GetDataCountAll", {
+                    method: "POST",
+                    body: formData
+                }).then(r => { if (!r.ok) { throw new Error('Not OK'); } return r.json(); })
+                  .then(d => {
+                      self.currentPageTotal = Math.ceil(d.data.countData / self.currentPageSize);
+                      self.msgList = d.data.itemData;
+                    }).catch(error => console.error('Fetch error:', error));
             },
 
             // 取得時間

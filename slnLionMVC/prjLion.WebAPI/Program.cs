@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Implements;
 using prjLion.Repository.Interfaces;
@@ -21,6 +22,9 @@ namespace prjLion.WebAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Add Options Pattern Connection String for DB
+            builder.Services.Configure<ConnectionStringOptionsModel>(builder.Configuration.GetSection("LionOptions"));
 
             // Add AutoMapper DI
             builder.Services.AddAutoMapper(option =>

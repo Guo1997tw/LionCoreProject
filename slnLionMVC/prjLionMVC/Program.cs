@@ -4,6 +4,7 @@ using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
 using prjLionMVC.LogExceptions;
 using prjLionMVC.Models.Entity;
+using prjLionMVC.Models.Infrastructures;
 
 namespace prjLionMVC
 {
@@ -22,14 +23,19 @@ namespace prjLionMVC
                 option.UseSqlServer(builder.Configuration.GetConnectionString("LionHW"));
             });
 
+            // Add Lion API Web Host URL
+            builder.Services.Configure<LionApiSettings>(builder.Configuration.GetSection("LionApiSettings"));
+
 			// Interface DI
 			builder.Services.AddHttpClient();
 			builder.Services.AddHttpContextAccessor();
 			builder.Services.AddScoped<ILion, Lion>();
             builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
+            builder.Services.AddScoped<IHttpClients, HttpClients>();
+            builder.Services.AddScoped<IHttpClientlogics, HttpClientlogics>();
 
-			// Authentication DI
-			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            // Authentication DI
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/Lion/Login";
                 option.LogoutPath = "/Lion/Login";

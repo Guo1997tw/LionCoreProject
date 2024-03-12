@@ -84,6 +84,16 @@ namespace prjLion.Common
             {
                 throw new Exception("密碼欄位不允許空格");
             }
+		}
+
+        public void isVerifyRuleMsg(string messageText)
+        {
+            var textRule = new Regex(@"^[0-9a-zA-Z\u4e00-\u9fa5]+$");
+
+            if(!textRule.IsMatch(messageText))
+            {
+                throw new Exception("留言欄位只允許中文、英文、數字");
+            }
         }
-    }
+	}
 }

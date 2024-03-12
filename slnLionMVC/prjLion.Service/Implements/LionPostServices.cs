@@ -15,23 +15,23 @@ namespace prjLion.Service.Implements
 {
     public class LionPostServices : ILionPostServices
     {
-		private readonly ILionGetRepositorys _lionGetRepositorys;
-		private readonly ILionPostRepositorys _lionPostRepositorys;
+        private readonly ILionGetRepositorys _lionGetRepositorys;
+        private readonly ILionPostRepositorys _lionPostRepositorys;
         private readonly IMapper _mapper;
 
         public LionPostServices(ILionGetRepositorys lionGetRepositorys, ILionPostRepositorys lionPostRepositorys, IMapper mapper)
         {
-			_lionGetRepositorys = lionGetRepositorys;
-			_lionPostRepositorys = lionPostRepositorys;
+            _lionGetRepositorys = lionGetRepositorys;
+            _lionPostRepositorys = lionPostRepositorys;
             _mapper = mapper;
         }
 
-		/// <summary>
-		/// 註冊帳號
-		/// </summary>
-		/// <param name="memberAccountBo"></param>
-		/// <returns></returns>
-		public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
+        /// <summary>
+        /// 註冊帳號
+        /// </summary>
+        /// <param name="memberAccountBo"></param>
+        /// <returns></returns>
+        public async Task<bool> CreateAccount(MemberAccountBo memberAccountBo)
         {
             var userNameRule = new Regex(@"^[a-zA-Z\u4e00-\u9fa5]+$");
 
@@ -63,12 +63,12 @@ namespace prjLion.Service.Implements
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
 		public async Task<MemberAccountBo?> CheckMember(string account, string password)
-		{
-            var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
-			
+        {
             CustomizedMethod customizedMethod = new CustomizedMethod();
-			
+
             customizedMethod.isVerifyRuleAP(account, password);
+
+            var queryResult = await _lionGetRepositorys.GetMemberAccount(account);
 
             if (queryResult != null)
             {
@@ -76,26 +76,33 @@ namespace prjLion.Service.Implements
                 var SaltPasswordTemp = queryResult.SaltPassword;
                 var HashPassword = customizedMethod.HashPwdWithHMACSHA256(password, SaltPasswordTemp);
 
-                // return HashPassword == HashPasswordTemp;
+                if(HashPassword == HashPasswordTemp)
+                {
+					return _mapper.Map<MemberAccountBo>(queryResult);
+				}
             }
 
-            return _mapper.Map<MemberAccountBo>(queryResult);
+            return null;
 		}
 
         /// <summary>
-        /// 
+        /// 新增留言
         /// </summary>
         /// <param name="createMsgBo"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
 		public async Task<bool> CreateMsg(CreateMsgBo createMsgBo)
-		{
-			var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
+        {
+            CustomizedMethod customizedMethod = new CustomizedMethod();
 
-			await _lionPostRepositorys.InsertMsg(mapper);
+            customizedMethod.isVerifyRuleMsg(createMsgBo.MessageText);
 
-			return true;
-		}
+            var mapper = _mapper.Map<CreateMsgBo, CreateMsgDto>(createMsgBo);
+
+            await _lionPostRepositorys.InsertMsg(mapper);
+
+            return true;
+        }
 
         /// <summary>
         /// 修改留言
@@ -106,7 +113,11 @@ namespace prjLion.Service.Implements
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> EditMsg(int id, EditMsgBo editMsgBo)
         {
-            var mapper = _mapper.Map<EditMsgBo, EditMsgDto>(editMsgBo);
+			CustomizedMethod customizedMethod = new CustomizedMethod();
+
+			customizedMethod.isVerifyRuleMsg(editMsgBo.MessageText);
+
+			var mapper = _mapper.Map<EditMsgBo, EditMsgDto>(editMsgBo);
 
             await _lionPostRepositorys.UpdateMsg(id, mapper);
 
@@ -121,8 +132,12 @@ namespace prjLion.Service.Implements
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> DeleteMemberMsg(int id)
-		{
-			return await _lionPostRepositorys.DeleteMsg(id);
-		}
+        {
+            var queryDto =  await _lionGetRepositorys.GetMsgData(id);
+
+            if (queryDto == null) return false;
+            
+            return await _lionPostRepositorys.DeleteMsg(id);
+        }
     }
 }

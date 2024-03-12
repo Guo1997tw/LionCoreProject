@@ -32,6 +32,12 @@
 			InsertMsgApi() {
 				let self = this;
 
+				var msgRule = /^[0-9a-zA-Z\u4e00-\u9fa5]+$/;
+
+				if (!msgRule.test(self.messageBoard.messageText)) {
+					return alert("留言欄位只允許中文、英文、數字");
+				}
+
 				fetch("/Lion/UseMsgPost", {
 					method: "POST",
 					headers: { 'Content-Type': 'application/json' },
