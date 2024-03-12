@@ -64,7 +64,7 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
         {
-           var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
+            var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
 
             return (result != "false") ? Content(result, "application/json") : Json(false);
         }
@@ -96,50 +96,28 @@ namespace prjLionMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)
         {
-            // 建立連線
-            var client = _httpClientFactory.CreateClient();
+            var result = await _httpClients.LoginPostAsync(loginMemberInputViewModel);
 
-            // 序列化
-            var json = JsonSerializer.Serialize(loginMemberInputViewModel);
-
-            // 指定ContentType
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
+            if (result != null)
             {
-                var response = await client.PostAsync("https://localhost:7235/api/Lion/LoginMember", content);
-
-                if (response.IsSuccessStatusCode)
+                var claims = new List<Claim>
                 {
-                    // 讀取資料
-                    var responseContent = await response.Content.ReadAsStringAsync();
+                    new Claim(ClaimTypes.NameIdentifier, $"{ result.memberId }"),
+                    new Claim(ClaimTypes.Name, $"{ result.account }")
+                };
 
-                    // 反序列化
-                    var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
 
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, $"{ queryResult.memberId }"),
-                        new Claim(ClaimTypes.Name, $"{ queryResult.account }")
-                    };
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
 
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
-
-                    return Json(true);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "登入失敗");
-
-                    return Json(false);
-                }
+                return Json(true);
             }
-            catch (HttpRequestException)
+            else
             {
+                ModelState.AddModelError(string.Empty, "登入失敗");
+
                 return Json(false);
             }
         }

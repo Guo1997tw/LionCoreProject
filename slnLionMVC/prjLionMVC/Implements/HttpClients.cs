@@ -6,17 +6,23 @@ using prjLionMVC.Models.Infrastructures;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Security.Claims;
+using prjLionMVC.Models.HttpClients.Out;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace prjLionMVC.Implements
 {
     public class HttpClients : IHttpClients
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IUserAuthentication _userAuthentication;
         private readonly LionApiSettings _lionApiSettings;
 
-        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings)
+        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings, IUserAuthentication userAuthentication)
         {
             _httpClientFactory = httpClientFactory;
+            _userAuthentication = userAuthentication;
             _lionApiSettings = lionApiSettings.Value;
         }
 
@@ -106,6 +112,48 @@ namespace prjLionMVC.Implements
             catch (HttpRequestException)
             {
                 return "false";
+            }
+        }
+
+        /// <summary>
+        /// 登入帳號頁面
+        /// </summary>
+        /// <param name="loginMemberViewModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<LoginInfoViewModel?> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
+        {
+            // 建立連線
+            var client = _httpClientFactory.CreateClient();
+
+            // 序列化
+            var json = JsonSerializer.Serialize(loginMemberViewModel);
+
+            // 指定ContentType
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/LoginMember", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // 讀取資料
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    // 反序列化
+                    var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
+
+                    return queryResult;
+                }
+                else
+                {
+                    return new LoginInfoViewModel { ErrorMessage = "false" };
+                }
+            }
+            catch(HttpRequestException)
+            {
+                return new LoginInfoViewModel { ErrorMessage = "false" };
             }
         }
     }

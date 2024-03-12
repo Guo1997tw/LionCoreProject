@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjLionMVC.Models.HttpClients.Inp;
+using prjLionMVC.Models.HttpClients.Out;
 
 namespace prjLionMVC.Interfaces
 {
@@ -27,5 +28,12 @@ namespace prjLionMVC.Interfaces
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
         public Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
+
+        /// <summary>
+        /// 登入帳號頁面
+        /// </summary>
+        /// <param name="loginMemberViewModel"></param>
+        /// <returns></returns>
+        public Task<LoginInfoViewModel?> LoginPostAsync(LoginMemberViewModel loginMemberViewModel);
     }
 }
