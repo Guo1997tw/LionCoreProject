@@ -30,17 +30,17 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{pageNum}")]
-        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>>> GetPaginationCountDataAll(int pageNum)
+        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel>>> GetPaginationCountDataAll(int pageNum)
         {
             var queryBo = await _lionGetServices.GetPaginationCountData(pageNum);
 
-            var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+            var mapper = _mapper.Map<PaginationCountViewModel>(queryBo);
 
-            return Ok(new ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>
+            return Ok(new ResultTViewModel<PaginationCountViewModel>
             {
                 Success = true,
                 Message = "資料加載成功",
-                Data = new PaginationCountViewModel<MessageListViewModel>
+                Data = new PaginationCountViewModel
                 {
                     ItemData = mapper.ItemData,
                     CountData = mapper.CountData,
@@ -56,17 +56,17 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{userName}/{pageNum}")]
-        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
+        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel>>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
         {
             var queryBo = await _lionGetServices.GetMsgByUserNamePaginationCountData(userName, pageNum);
 
-            var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
+            var mapper = _mapper.Map<PaginationCountViewModel>(queryBo);
 
-            return Ok(new ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>
+            return Ok(new ResultTViewModel<PaginationCountViewModel>
             {
                 Success = true,
                 Message = "資料加載成功",
-                Data = new PaginationCountViewModel<MessageListViewModel>
+                Data = new PaginationCountViewModel
                 {
                     ItemData = mapper.ItemData,
                     CountData = mapper.CountData,

@@ -2,7 +2,7 @@
 
 namespace prjLion.WebAPI.Models
 {
-    public class PaginationCountViewModel<MessageListViewModel>
+    public class PaginationCountViewModel
     {
         /// <summary>
         /// 裝分頁好的資料
