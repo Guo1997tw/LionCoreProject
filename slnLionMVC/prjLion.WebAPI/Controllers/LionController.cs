@@ -30,17 +30,21 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{pageNum}")]
-        public async Task<ActionResult<PaginationCountViewModel<MessageListViewModel>>> GetPaginationCountDataAll(int pageNum)
+        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>>> GetPaginationCountDataAll(int pageNum)
         {
             var queryBo = await _lionGetServices.GetPaginationCountData(pageNum);
 
             var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>
             {
                 Success = true,
                 Message = "資料加載成功",
-                Data = mapper,
+                Data = new PaginationCountViewModel<MessageListViewModel>
+                {
+                    ItemData = mapper.ItemData,
+                    CountData = mapper.CountData,
+                }
             });
         }
 
