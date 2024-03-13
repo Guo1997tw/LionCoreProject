@@ -34,7 +34,7 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        public Task<LoginInfoViewModel?> LoginPostAsync(LoginMemberViewModel loginMemberViewModel);
+        public Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel);
 
         /// <summary>
         /// 新增留言頁面

@@ -120,7 +120,7 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        public async Task<LoginInfoViewModel?> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
+        public async Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
         {
             // 建立連線
             var client = _httpClientFactory.CreateClient();
@@ -141,18 +141,21 @@ namespace prjLionMVC.Implements
                     var responseContent = await response.Content.ReadAsStringAsync();
 
                     // 反序列化
-                    var queryResult = JsonSerializer.Deserialize<LoginInfoViewModel>(responseContent);
+                    var queryResult = JsonSerializer.Deserialize<ResultTLoginInfoViewModel<LoginInfoViewModel>>(responseContent);
 
-                    return queryResult;
+                    return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                    {
+                        data = queryResult.data,
+                    };
                 }
                 else
                 {
-                    return new LoginInfoViewModel { ErrorMessage = "false" };
+                    return new ResultTLoginInfoViewModel<LoginInfoViewModel?> { ErrorMessage = "false" };
                 }
             }
             catch(HttpRequestException)
             {
-                return new LoginInfoViewModel { ErrorMessage = "false" };
+                return new ResultTLoginInfoViewModel<LoginInfoViewModel?> { ErrorMessage = "false" };
             }
         }
 

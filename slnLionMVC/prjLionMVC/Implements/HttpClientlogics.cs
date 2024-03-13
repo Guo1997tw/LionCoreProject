@@ -35,8 +35,8 @@ namespace prjLionMVC.Implements
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, $"{ result.memberId }"),
-                    new Claim(ClaimTypes.Name, $"{ result.account }")
+                    new Claim(ClaimTypes.NameIdentifier, $"{ result.data.memberId }"),
+                    new Claim(ClaimTypes.Name, $"{ result.data.account }")
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

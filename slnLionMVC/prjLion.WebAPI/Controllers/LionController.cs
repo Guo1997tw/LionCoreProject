@@ -52,17 +52,21 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="pageNum"></param>
         /// <returns></returns>
         [HttpPost("{userName}/{pageNum}")]
-        public async Task<ActionResult<PaginationCountViewModel<MessageListViewModel>>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
+        public async Task<ActionResult<ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>>> GetMsgByUserNamePaginationCountDataAll(string userName, int pageNum = 1)
         {
             var queryBo = await _lionGetServices.GetMsgByUserNamePaginationCountData(userName, pageNum);
 
             var mapper = _mapper.Map<PaginationCountViewModel<MessageListViewModel>>(queryBo);
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultTViewModel<PaginationCountViewModel<MessageListViewModel>>
             {
                 Success = true,
                 Message = "資料加載成功",
-                Data = mapper,
+                Data = new PaginationCountViewModel<MessageListViewModel>
+                {
+                    ItemData = mapper.ItemData,
+                    CountData = mapper.CountData,
+                }
             });
         }
 
@@ -72,13 +76,13 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="memberAccountViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> RegisterMember(MemberAccountViewModel memberAccountViewModel)
+        public async Task<ActionResult<object>> RegisterMember(MemberAccountViewModel memberAccountViewModel)
         {
             var mapper = _mapper.Map<MemberAccountViewModel, MemberAccountBo>(memberAccountViewModel);
 
             await _lionPostServices.CreateAccount(mapper);
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultTViewModel<object>
             {
                 Success = true,
                 Message = "註冊成功",
@@ -92,18 +96,21 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="password"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> LoginMember([FromBody] LoginMemberViewModel loginMemberHttpViewModel)
+        public async Task<ActionResult<ResultTViewModel<ResultLoginViewModel>>> LoginMember([FromBody] LoginMemberViewModel loginMemberHttpViewModel)
         {
             var result = await _lionPostServices.CheckMember(loginMemberHttpViewModel.account, loginMemberHttpViewModel.hashPassword);
 
             if (result == null) { return NotFound($"無此帳號: {loginMemberHttpViewModel.account}"); }
 
-            return Ok(new ResultLoginViewModel
+            return Ok(new ResultTViewModel<ResultLoginViewModel>
             {
                 Success = true,
                 Message = "登入成功",
-                memberId = result.MemberId,
-                account = result.Account,
+                Data = new ResultLoginViewModel
+                {
+                    memberId = result.MemberId,
+                    account = result.Account,
+               }
             });
         }
 
@@ -113,13 +120,13 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="createMsgViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-		public async Task<ActionResult> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
+		public async Task<ActionResult<ResultTViewModel<CreateMsgBo>>> CreateUserMsg(CreateMsgViewModel createMsgViewModel)
 		{
 			var mapper = _mapper.Map<CreateMsgViewModel, CreateMsgBo>(createMsgViewModel);
 
 			await _lionPostServices.CreateMsg(mapper);
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultTViewModel<CreateMsgBo>
             {
                 Success = true,
                 Message = "新增成功",
@@ -135,13 +142,13 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUserMsg(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+        public async Task<ActionResult<ResultTViewModel<EditMsgBo>>> UpdateUserMsg(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
             var mapper = _mapper.Map<EditMsgViewModel, EditMsgBo>(editMsgViewModel);
 
             await _lionPostServices.EditMsg(id, mapper);
 
-            return Ok(new ResultViewModel
+            return Ok(new ResultTViewModel<EditMsgBo>
             {
                 Success = true,
                 Message = "修改成功",
@@ -156,13 +163,13 @@ namespace prjLion.WebAPI.Controllers
 		/// <param name="id"></param>
 		/// <returns></returns>
 		[HttpDelete("{id}")]
-        public async Task<ActionResult> RemoveMemberMsg(int id)
+        public async Task<ActionResult<ResultTViewModel<int>>> RemoveMemberMsg(int id)
         {
             var result = await _lionPostServices.DeleteMemberMsg(id);
 
             if (result == false) return NotFound($"無此資料: {id}");
 
-			return Ok(new ResultViewModel
+			return Ok(new ResultTViewModel<int>
             {
                 Success = true,
                 Message = "刪除成功",
