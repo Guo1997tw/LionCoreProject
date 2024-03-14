@@ -41,7 +41,7 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public Task<string> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
+        public Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
 
 
         /// <summary>
