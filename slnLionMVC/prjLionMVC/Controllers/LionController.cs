@@ -139,7 +139,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.UseMsgPostAsync(insertMsgViewModel);
 
-            return (result != "false") ? Ok(Content(result, "application/json")) : BadRequest(false);
+            return (result != "false") ? Content(result, "application/json") : Json(false);
         }
 
         /// <summary>
