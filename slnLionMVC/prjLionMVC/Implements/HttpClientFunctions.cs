@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Azure;
+using Microsoft.Extensions.Options;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models.Infrastructures;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 
 namespace prjLionMVC.Implements
@@ -15,6 +17,31 @@ namespace prjLionMVC.Implements
         {
             _httpClientFactory = httpClientFactory;
             _lionApiSettings = lionApiSettings.Value;
+        }
+
+        public async Task<string> BuilderGetDataListAsync(string apiMethod)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/{apiMethod}", null);
+
+                if(respone.IsSuccessStatusCode)
+                {
+                    var content = await respone.Content.ReadAsStringAsync();
+
+                    return content;
+                }
+                else
+                {
+                    return "false";
+                }
+            }
+            catch(HttpRequestException)
+            {
+                return "false";
+            }
         }
 
         /// <summary>
