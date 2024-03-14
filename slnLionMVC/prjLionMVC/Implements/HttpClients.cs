@@ -48,27 +48,7 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            try
-            {
-                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return content;
-                }
-                else
-                {
-                    return "false";
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return "false";
-            }
+            return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
         }
 
         /// <summary>
