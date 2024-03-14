@@ -68,6 +68,28 @@ namespace prjLionMVC.Implements
         }
 
         /// <summary>
+        /// 編輯動作
+        /// </summary>
+        /// <param name="apiMethod"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public async Task<bool> BuilderPutDataListAsync(string apiMethod, StringContent content)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var response = await client.PutAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/{apiMethod}", content);
+
+                return (response.IsSuccessStatusCode) ? true : false;
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 刪除動作
         /// </summary>
         /// <param name="apiMethod"></param>

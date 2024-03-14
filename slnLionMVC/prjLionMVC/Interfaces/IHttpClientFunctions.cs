@@ -13,8 +13,17 @@
         /// 新增動作
         /// </summary>
         /// <param name="apiMethod"></param>
+        /// <param name="content"></param>
         /// <returns></returns>
         public Task<bool> BuilderPostDataListAsync(string apiMethod, StringContent content);
+
+        /// <summary>
+        /// 編輯動作
+        /// </summary>
+        /// <param name="apiMethod"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public Task<bool> BuilderPutDataListAsync(string apiMethod, StringContent content);
 
         /// <summary>
         /// 刪除動作

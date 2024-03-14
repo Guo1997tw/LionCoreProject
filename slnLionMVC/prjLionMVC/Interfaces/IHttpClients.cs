@@ -50,7 +50,7 @@ namespace prjLionMVC.Interfaces
         /// <param name="id"></param>
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
-        public Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
+        public Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
 
         /// <summary>
         /// 刪除留言
