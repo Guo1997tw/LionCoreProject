@@ -17,12 +17,14 @@ namespace prjLionMVC.Implements
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserAuthentication _userAuthentication;
+        private readonly IHttpClientFunctions _httpClientFunctions;
         private readonly LionApiSettings _lionApiSettings;
 
-        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings, IUserAuthentication userAuthentication)
+        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings, IUserAuthentication userAuthentication, IHttpClientFunctions httpClientFunctions)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
+            _httpClientFunctions = httpClientFunctions;
             _lionApiSettings = lionApiSettings.Value;
         }
 
@@ -34,27 +36,7 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<string> MsgPageAllPostAsync(int currentShowPage)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            try
-            {
-                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return content;
-                }
-                else
-                {
-                    return "false";
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return "false";
-            }
+            return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
         }
 
         /// <summary>
@@ -66,27 +48,7 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            try
-            {
-                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
-
-                if (respone.IsSuccessStatusCode)
-                {
-                    var content = await respone.Content.ReadAsStringAsync();
-
-                    return content;
-                }
-                else
-                {
-                    return "false";
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return "false";
-            }
+            return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
         }
 
         /// <summary>
@@ -95,24 +57,13 @@ namespace prjLionMVC.Implements
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
 
-        public async Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
+        public async Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
-
             var json = JsonSerializer.Serialize(registerMemberViewModel);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RegisterMember", content);
-
-                return (response.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return "false";
-            }
+            return await _httpClientFunctions.BuilderPostDataListAsync("RegisterMember", content);
         }
 
         /// <summary>
@@ -122,40 +73,27 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
         {
-            // 建立連線
-            var client = _httpClientFactory.CreateClient();
-
-            // 序列化
             var json = JsonSerializer.Serialize(loginMemberViewModel);
 
-            // 指定ContentType
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            try
+            var queryResult = await _httpClientFunctions.BuilderGetAccountAsync("LoginMember", content);
+
+            if(queryResult != "false")
             {
-                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/LoginMember", content);
+                var jsonResult = JsonSerializer.Deserialize<ResultTLoginInfoViewModel<LoginInfoViewModel>>(queryResult);
 
-                if (response.IsSuccessStatusCode)
+                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
                 {
-                    // 讀取資料
-                    var responseContent = await response.Content.ReadAsStringAsync();
-
-                    // 反序列化
-                    var queryResult = JsonSerializer.Deserialize<ResultTLoginInfoViewModel<LoginInfoViewModel>>(responseContent);
-
-                    return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
-                    {
-                        data = queryResult.data,
-                    };
-                }
-                else
-                {
-                    return new ResultTLoginInfoViewModel<LoginInfoViewModel?> { ErrorMessage = "false" };
-                }
+                    data = jsonResult.data
+                };
             }
-            catch(HttpRequestException)
+            else
             {
-                return new ResultTLoginInfoViewModel<LoginInfoViewModel?> { ErrorMessage = "false" };
+                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                {
+                    ErrorMessage = "false"
+                };
             }
         }
 
@@ -164,24 +102,13 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public async Task<string> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
+        public async Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
-
             var json = JsonSerializer.Serialize(insertMsgViewModel);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var respone = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/CreateUserMsg", content);
-
-                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return ("false");
-            }
+            return await _httpClientFunctions.BuilderPostDataListAsync("CreateUserMsg", content);
         }
 
         /// <summary>
@@ -191,24 +118,13 @@ namespace prjLionMVC.Implements
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
+        public async Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
-
             var json = JsonSerializer.Serialize(editMsgViewModel);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var respone = await client.PutAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/UpdateUserMsg/{id}", content);
-
-                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return ("false");
-            }
+            return await _httpClientFunctions.BuilderPutDataListAsync($"UpdateUserMsg/{id}", content);
         }
 
         /// <summary>
@@ -217,22 +133,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> RemoveMsgPostAsync(int id)
+        public async Task<bool> RemoveMsgPostAsync(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            var json = JsonSerializer.Serialize(id);
-
-            try
-            {
-                var respone = await client.DeleteAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{json}");
-
-                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return ("false");
-            }
+            return await _httpClientFunctions.BuilderDeleteDataAsync($"RemoveMemberMsg/{id}");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
-        public Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
+        public Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
 
         /// <summary>
         /// 登入帳號頁面
@@ -41,7 +41,7 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public Task<string> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
+        public Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
 
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace prjLionMVC.Interfaces
         /// <param name="id"></param>
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
-        public Task<string> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
+        public Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
 
         /// <summary>
         /// 刪除留言
@@ -58,6 +58,6 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<string> RemoveMsgPostAsync(int id);
+        public Task<bool> RemoveMsgPostAsync(int id);
     }
 }

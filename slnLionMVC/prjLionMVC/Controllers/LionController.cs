@@ -85,7 +85,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.RegisterPostAsync(registerMemberViewModel);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return (result != false) ? Ok(true) : BadRequest(false);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.UseMsgPostAsync(insertMsgViewModel);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return (result != false) ? Ok(true) : BadRequest(false);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return (result != false) ? Ok(true) : BadRequest(false);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.RemoveMsgPostAsync(id);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return result ? Ok(true) : BadRequest(false);
         }
     }
 }

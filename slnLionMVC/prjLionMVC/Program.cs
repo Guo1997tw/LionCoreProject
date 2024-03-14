@@ -33,6 +33,7 @@ namespace prjLionMVC
             builder.Services.AddScoped<IUserAuthentication, UserAuthentication>();
             builder.Services.AddScoped<IHttpClients, HttpClients>();
             builder.Services.AddScoped<IHttpClientlogics, HttpClientlogics>();
+            builder.Services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
 
             // Authentication DI
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
