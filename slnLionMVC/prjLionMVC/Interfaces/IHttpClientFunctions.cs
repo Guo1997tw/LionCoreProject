@@ -2,11 +2,15 @@
 {
     public interface IHttpClientFunctions
     {
+        /// <summary>
+        /// 取資料動作
+        /// </summary>
+        /// <param name="apiMethod"></param>
+        /// <returns></returns>
         public Task<string> BuilderGetDataListAsync(string apiMethod);
 
         /// <summary>
-        /// 刪除留言
-        /// 指定留言編號 (流水號)
+        /// 刪除動作
         /// </summary>
         /// <param name="apiMethod"></param>
         /// <returns></returns>

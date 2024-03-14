@@ -13,6 +13,11 @@ namespace prjLionMVC.Implements
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly LionApiSettings _lionApiSettings;
 
+        /// <summary>
+        /// 取資料動作
+        /// </summary>
+        /// <param name="httpClientFactory"></param>
+        /// <param name="lionApiSettings"></param>
         public HttpClientFunctions(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings)
         {
             _httpClientFactory = httpClientFactory;
@@ -45,8 +50,7 @@ namespace prjLionMVC.Implements
         }
 
         /// <summary>
-        /// 刪除留言
-        /// 指定留言編號 (流水號)
+        /// 刪除動作
         /// </summary>
         /// <param name="apiMethod"></param>
         /// <returns></returns>
