@@ -27,7 +27,7 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
-        public Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
+        public Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
 
         /// <summary>
         /// 登入帳號頁面

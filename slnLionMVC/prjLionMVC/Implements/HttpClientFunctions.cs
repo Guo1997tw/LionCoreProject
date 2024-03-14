@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.Extensions.Options;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.Infrastructures;
 using System.Net.Http;
 using System.Text;
@@ -46,6 +47,23 @@ namespace prjLionMVC.Implements
             catch(HttpRequestException)
             {
                 return "false";
+            }
+        }
+
+
+        public async Task<bool> BuilderPostDataListAsync(string apiMethod, StringContent content)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            try
+            {
+                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/{apiMethod}", content);
+
+                return (response.IsSuccessStatusCode) ? true : false;
+            }
+            catch (HttpRequestException)
+            {
+                return false;
             }
         }
 

@@ -57,24 +57,13 @@ namespace prjLionMVC.Implements
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
 
-        public async Task<string> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
+        public async Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
         {
-            var client = _httpClientFactory.CreateClient();
-
             var json = JsonSerializer.Serialize(registerMemberViewModel);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var response = await client.PostAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RegisterMember", content);
-
-                return (response.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return "false";
-            }
+            return await _httpClientFunctions.BuilderPostDataListAsync("RegisterMember", content);
         }
 
         /// <summary>
