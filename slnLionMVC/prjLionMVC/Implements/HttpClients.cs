@@ -17,12 +17,14 @@ namespace prjLionMVC.Implements
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserAuthentication _userAuthentication;
+        private readonly IHttpClientFunctions _httpClientFunctions;
         private readonly LionApiSettings _lionApiSettings;
 
-        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings, IUserAuthentication userAuthentication)
+        public HttpClients(IHttpClientFactory httpClientFactory, IOptions<LionApiSettings> lionApiSettings, IUserAuthentication userAuthentication, IHttpClientFunctions httpClientFunctions)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
+            _httpClientFunctions = httpClientFunctions;
             _lionApiSettings = lionApiSettings.Value;
         }
 
@@ -217,22 +219,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<string> RemoveMsgPostAsync(int id)
+        public async Task<bool> RemoveMsgPostAsync(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            var json = JsonSerializer.Serialize(id);
-
-            try
-            {
-                var respone = await client.DeleteAsync($"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{json}");
-
-                return (respone.IsSuccessStatusCode) ? ("true") : ("false");
-            }
-            catch (HttpRequestException)
-            {
-                return ("false");
-            }
+            return await _httpClientFunctions.BuilderDeleteDataAsync($"RemoveMemberMsg/{id}");
         }
     }
 }

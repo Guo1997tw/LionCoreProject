@@ -166,7 +166,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.RemoveMsgPostAsync(id);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return result ? Ok(true) : BadRequest(false);
         }
     }
 }
