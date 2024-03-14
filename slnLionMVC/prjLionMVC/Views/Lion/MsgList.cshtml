@@ -2,14 +2,23 @@
     string loginAccount = ViewBag.LoginAccount;
 }
 
-<body>
-    <div id="MsgList">
-        <input type="text" v-model="searchUserName">
-        <button type="button" @@click="GetNameSearch()">搜尋</button>
-        <button type="button" @@click="GetNameClear()">清除</button>
-        <br>
+@section Styles{
+    <style>
+        .btn-bold-white {
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+}
 
-        <table class="table">
+<div id="MsgList" class="container">
+    <div class="mt-5">
+        <input type="text" v-model="searchUserName" style="margin-right: 10px;" placeholder="請輸入使用者名字">
+        <button type="button" class="btn btn-success" style="margin-right: 10px;" @@click="GetNameSearch()">搜尋</button>
+        <button type="button" class="btn btn-warning btn-bold-white" @@click="GetNameClear()">清除</button>
+    </div>
+    <div class="text-center mt-5">
+        <table class="table" border="1">
             <thead>
                 <tr>
                     <th scope="col">編號</th>
@@ -34,21 +43,21 @@
                     </td>
                     <td>{{GetDateTime(m.messageTime)}}</td>
                     <td>
-                        <button type="button" v-if="accountTemp == m.account && updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
-                        <button type="button" v-if="accountTemp == m.account" @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
-                        <button type="button" v-if="accountTemp == m.account" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
+                        <button class="btn btn-success" style="margin-right: 10px;" type="button" v-if="accountTemp == m.account && updateMsgIdTemp == m.messageBoardId" @@click="SaveUpdateMsgApi(m.messageBoardId)">保存</button>
+                        <button class="btn btn-secondary" style="margin-right: 10px;" type="button" v-if="accountTemp == m.account" @@click="UpdateMsg(m.messageBoardId, m.messageText)">編輯</button>
+                        <button class="btn btn-danger" type="button" v-if="accountTemp == m.account" @@click="RemoveMsgApi(m.messageBoardId)">刪除</button>
                     </td>
                 </tr>
             </tbody>
         </table>
         <br>
-        <button type="button" @@click="isSearchActive ? GetNameSearch(currentShowPage - 1) : PaginationCount(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
+        <button type="button" class="btn btn-primary" @@click="isSearchActive ? GetNameSearch(currentShowPage - 1) : PaginationCount(currentShowPage - 1)" :disabled="currentShowPage === 1">上一頁</button>
         <span v-for="cp in currentPageTotal" :key="cp">
-            <button type="button" @@click="isSearchActive ? GetNameSearch(cp) : PaginationCount(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
+            <button type="button" class="btn btn-light" @@click="isSearchActive ? GetNameSearch(cp) : PaginationCount(cp)" :class="{'active': currentShowPage === cp}">{{cp}}</button>
         </span>
-        <button type="button" @@click="isSearchActive ? GetNameSearch(currentShowPage + 1) : PaginationCount(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
+        <button type="button" class="btn btn-primary" @@click="isSearchActive ? GetNameSearch(currentShowPage + 1) : PaginationCount(currentShowPage + 1)" :disabled="currentShowPage === currentPageTotal">下一頁</button>
     </div>
-</body>
+</div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
