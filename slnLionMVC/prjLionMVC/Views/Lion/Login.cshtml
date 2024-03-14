@@ -1,15 +1,18 @@
-﻿<body>
-	<div id="Login">
-		帳號:<input type="text" placeholder="請輸入帳號" v-model="member.account">
+﻿<div id="Login" class="container">
+	<div class="text-center mt-5">
+		帳號: <input type="text" placeholder="請輸入帳號" v-model="member.account">
 		<br>
-		密碼:<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		<br>
+		密碼: <input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		<br>
 		<br>
 		<input type="checkbox" v-model="logAccount">記住帳號
-		<button type="button" @@click="LoginMemberApi()">登入</button>
 		<br>
-		<a href="Register">註冊</a>
+		<br>
+		<button class="btn btn-success" style="margin-right: 10px;" type="button" @@click="LoginMemberApi()">登入</button>
+		<a class="btn btn-secondary" href="Register">註冊</a>
 	</div>
-</body>
+</div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>

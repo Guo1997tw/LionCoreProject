@@ -1,14 +1,17 @@
-﻿<body>
-	<div id="Register">
-		姓名:<input type="text" placeholder="請輸入姓名" v-model="member.memberName">
+﻿<div id="Register" class="container">
+	<div class="text-center mt-5">
+		姓名: <input type="text" placeholder="請輸入姓名" v-model="member.memberName">
 		<br>
-		帳號:<input type="text" placeholder="請輸入帳號" v-model="member.account">
 		<br>
-		密碼:<input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		帳號: <input type="text" placeholder="請輸入帳號" v-model="member.account">
 		<br>
-		<button type="submit" @@click="InsertMemberApi()">送出</button>
+		<br>
+		密碼: <input type="password" placeholder="請輸入密碼" v-model="member.hashPassword">
+		<br>
+		<br>
+		<button class="btn btn-success" type="submit" @@click="InsertMemberApi()">申請</button>
 	</div>
-</body>
+</div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
@@ -48,7 +51,7 @@
 					body: JSON.stringify(self.member)
 				})
 				.then(r => r.json())
-					.then(d => { if (d == true) { console.log("Success", d); alert("新增成功"); } window.location.href = "/Lion/MsgList" });
+					.then(d => { if (d == true) { console.log("Success", d); alert("申請成功"); } window.location.href = "/Lion/MsgList" });
 			},
 		},
 	}).mount("#Register");
