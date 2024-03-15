@@ -156,11 +156,9 @@ namespace prjLionMVC.Controllers
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<ResultMsgViewModel>>> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
-            var result = await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
         }
 
         /// <summary>

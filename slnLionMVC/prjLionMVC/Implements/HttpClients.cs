@@ -96,12 +96,6 @@ namespace prjLionMVC.Implements
         public async Task<ResultTOutputDataViewModel<ResultMsgViewModel>> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
         {
             return await _httpClientFunctions.RequestMethod<InsertMsgViewModel, ResultTOutputDataViewModel<ResultMsgViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/CreateUserMsg", insertMsgViewModel);
-
-            //var json = JsonSerializer.Serialize(insertMsgViewModel);
-
-            //var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            //return await _httpClientFunctions.BuilderPostDataListAsync("CreateUserMsg", content);
         }
 
         /// <summary>
@@ -111,13 +105,9 @@ namespace prjLionMVC.Implements
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
+        public async Task<ResultTOutputDataViewModel<ResultMsgViewModel>> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
         {
-            var json = JsonSerializer.Serialize(editMsgViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClientFunctions.BuilderPutDataListAsync($"UpdateUserMsg/{id}", content);
+            return await _httpClientFunctions.RequestMethod<EditMsgViewModel, ResultTOutputDataViewModel<ResultMsgViewModel>>(HttpMethod.Put, $"{_lionApiSettings.LionBaseUrl}/api/Lion/UpdateUserMsg/{id}", editMsgViewModel);
         }
 
         /// <summary>

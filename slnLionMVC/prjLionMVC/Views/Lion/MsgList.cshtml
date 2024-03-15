@@ -173,7 +173,7 @@
                 })
                     .then(r => r.json())
                     .then(d => {
-                        if (d == true) {
+                        if (d != null) {
                             console.log("Success", d);
                             alert("修改成功");
                             self.updateMsgIdTemp = "";
