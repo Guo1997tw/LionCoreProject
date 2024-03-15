@@ -36,7 +36,9 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<string> MsgPageAllPostAsync(int currentShowPage)
         {
-            return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
+            return await _httpClientFunctions.RequestMethod<string, string>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
+            
+            // return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
         }
 
         /// <summary>
@@ -48,7 +50,9 @@ namespace prjLionMVC.Implements
         /// <returns></returns>
         public async Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage)
         {
-            return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
+            return await _httpClientFunctions.RequestMethod<string, string>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
+
+            // return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
         }
 
         /// <summary>

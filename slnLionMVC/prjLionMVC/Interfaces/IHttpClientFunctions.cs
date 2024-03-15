@@ -39,5 +39,8 @@
         /// <param name="apiMethod"></param>
         /// <returns></returns>
         public Task<bool> BuilderDeleteDataAsync(string apiMethod);
+
+
+        public Task<OutputDataModel> RequestMethod<InputDataModel, OutputDataModel>(HttpMethod httpMethod, string apiUrl, InputDataModel data);
     }
 }
