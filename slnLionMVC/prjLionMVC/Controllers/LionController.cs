@@ -55,7 +55,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.MsgPageAllPostAsync(currentShowPage);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return true ? Content("", "application/json") : Json(false);
         }
 
         /// <summary>

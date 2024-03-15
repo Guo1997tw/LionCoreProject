@@ -7,7 +7,7 @@ namespace prjLion.WebAPI.Models
         /// <summary>
         /// 裝分頁好的資料
         /// </summary>
-        public IEnumerable<MessageListViewModel> ItemData { get; set; } = null!;
+        public List<MessageListViewModel> ItemData { get; set; } = null!;
 
         /// <summary>
         /// 裝留言版資料總筆數

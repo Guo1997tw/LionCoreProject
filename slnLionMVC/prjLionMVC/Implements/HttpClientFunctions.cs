@@ -163,7 +163,7 @@ namespace prjLionMVC.Implements
                 {
                     var contentResult = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    return (OutputDataModel)(object)contentResult;
+                    return JsonSerializer.Deserialize<OutputDataModel>(contentResult);
                 }
                 else
                 {

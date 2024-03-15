@@ -10,6 +10,7 @@ using System.Security.Claims;
 using prjLionMVC.Models.HttpClients.Out;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using prjLionMVC.Models.HttpClients;
 
 namespace prjLionMVC.Implements
 {
@@ -34,9 +35,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public async Task<string> MsgPageAllPostAsync(int currentShowPage)
+        public async Task<ResultTOutputDataModel<PaginationCountDataModel>> MsgPageAllPostAsync(int currentShowPage)
         {
-            return await _httpClientFunctions.RequestMethod<string, string>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataModel<PaginationCountDataModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
             
             // return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
         }

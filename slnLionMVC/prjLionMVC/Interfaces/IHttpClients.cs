@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using prjLionMVC.Models.HttpClients;
 using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.HttpClients.Out;
 
@@ -11,7 +12,7 @@ namespace prjLionMVC.Interfaces
         /// 指定頁數
         /// </summary>
         /// <returns></returns>
-        public Task<string> MsgPageAllPostAsync(int currentShowPage);
+        public Task<ResultTOutputDataModel<PaginationCountDataModel>> MsgPageAllPostAsync(int currentShowPage);
 
         /// <summary>
         /// 同時取得資料分頁與總筆數、搜尋單一使用者留言
