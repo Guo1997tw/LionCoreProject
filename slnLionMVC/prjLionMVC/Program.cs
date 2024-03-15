@@ -34,6 +34,7 @@ namespace prjLionMVC
             builder.Services.AddScoped<IHttpClients, HttpClients>();
             builder.Services.AddScoped<IHttpClientlogics, HttpClientlogics>();
             builder.Services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
+            builder.Services.AddScoped<IUserSession, UserSession>();
 
             // Authentication DI
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -41,6 +42,15 @@ namespace prjLionMVC
                 option.LoginPath = "/Lion/Login";
                 option.LogoutPath = "/Lion/Login";
                 option.AccessDeniedPath = "/Lion/Error";
+            });
+
+            // Session DI
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromMinutes(60);
+                option.Cookie.HttpOnly = true;
+                option.Cookie.IsEssential = true;
             });
 
             var app = builder.Build();
@@ -56,6 +66,9 @@ namespace prjLionMVC
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            // Use Session
+            app.UseSession();
 
             app.UseRouting();
 

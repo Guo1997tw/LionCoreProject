@@ -45,6 +45,9 @@ namespace prjLionMVC.Implements
                 await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     principal, new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60) });
 
+                _httpContextAccessor.HttpContext.Session.SetString("MemberId", result.data.memberId.ToString());
+                _httpContextAccessor.HttpContext.Session.SetString("Account", result.data.account.ToString());
+
                 return ("true");
             }
         }
