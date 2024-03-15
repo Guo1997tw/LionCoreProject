@@ -116,9 +116,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> RemoveMsgPostAsync(int id)
+        public async Task<ResultTOutputDataViewModel<int>> RemoveMsgPostAsync(int id)
         {
-            return await _httpClientFunctions.BuilderDeleteDataAsync($"RemoveMemberMsg/{id}");
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<int>>(HttpMethod.Delete, $"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{id}", null);
         }
     }
 }

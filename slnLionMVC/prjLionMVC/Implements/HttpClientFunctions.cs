@@ -161,6 +161,10 @@ namespace prjLionMVC.Implements
                     case HttpMethod when httpMethod == HttpMethod.Put:
                         httpResponseMessage = await client.PutAsync(apiUrl, content);
                         break;
+
+                    case HttpMethod when httpMethod == HttpMethod.Delete:
+                        httpResponseMessage = await client.DeleteAsync(apiUrl);
+                        break;
                 }
 
                 if(httpResponseMessage.IsSuccessStatusCode)

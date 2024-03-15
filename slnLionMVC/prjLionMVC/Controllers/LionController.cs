@@ -167,11 +167,9 @@ namespace prjLionMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<IActionResult> RemoveMsgPost(int id)
+        public async Task<ActionResult<ResultTOutputDataViewModel<int>>> RemoveMsgPost(int id)
         {
-            var result = await _httpClients.RemoveMsgPostAsync(id);
-
-            return result ? Ok(true) : BadRequest(false);
+            return await _httpClients.RemoveMsgPostAsync(id);
         }
     }
 }

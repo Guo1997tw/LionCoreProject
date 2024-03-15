@@ -59,6 +59,6 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<bool> RemoveMsgPostAsync(int id);
+        public Task<ResultTOutputDataViewModel<int>> RemoveMsgPostAsync(int id);
     }
 }
