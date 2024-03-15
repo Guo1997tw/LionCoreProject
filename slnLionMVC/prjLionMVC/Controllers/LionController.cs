@@ -23,13 +23,27 @@ namespace prjLionMVC.Controllers
         private readonly IUserAuthentication _userAuthentication;
         private readonly IHttpClients _httpClients;
         private readonly IHttpClientlogics _httpClientlogics;
+		private readonly IUserSession _userSession;
 
-        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1, IHttpClientlogics httpClientlogics)
+		public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1, IHttpClientlogics httpClientlogics, IUserSession userSession)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
             _httpClients = httpClients;
             _httpClientlogics = httpClientlogics;
+			_userSession = userSession;
+		}
+
+        /// <summary>
+        /// 測試Session取值
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult TestSession()
+        {
+            ViewBag.MemberId = _userSession.GetSessionCertificate();
+            ViewBag.Account = _userSession.GetSessionUserName();
+
+            return View();
         }
 
         /// <summary>

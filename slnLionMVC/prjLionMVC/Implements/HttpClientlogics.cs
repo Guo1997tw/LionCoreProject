@@ -48,6 +48,10 @@ namespace prjLionMVC.Implements
                 _httpContextAccessor.HttpContext.Session.SetString("MemberId", result.data.memberId.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("Account", result.data.account.ToString());
 
+                var r = _httpContextAccessor.HttpContext.Session.Id;
+
+                Console.WriteLine(r);
+
                 return ("true");
             }
         }
