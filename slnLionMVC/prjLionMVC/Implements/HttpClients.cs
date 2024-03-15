@@ -93,13 +93,15 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public async Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
+        public async Task<ResultTOutputDataViewModel<ResultMsgViewModel>> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
         {
-            var json = JsonSerializer.Serialize(insertMsgViewModel);
+            return await _httpClientFunctions.RequestMethod<InsertMsgViewModel, ResultTOutputDataViewModel<ResultMsgViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/CreateUserMsg", insertMsgViewModel);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //var json = JsonSerializer.Serialize(insertMsgViewModel);
 
-            return await _httpClientFunctions.BuilderPostDataListAsync("CreateUserMsg", content);
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //return await _httpClientFunctions.BuilderPostDataListAsync("CreateUserMsg", content);
         }
 
         /// <summary>

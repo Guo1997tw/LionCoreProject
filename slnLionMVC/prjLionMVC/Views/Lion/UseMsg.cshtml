@@ -45,7 +45,7 @@
 				})
 					.then(r => r.json())
 					.then(d => {
-						if (d == true) {
+						if (d != null) {
 							console.log("Success", d);
 							alert("新增成功");
 

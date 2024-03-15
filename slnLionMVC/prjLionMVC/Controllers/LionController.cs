@@ -144,11 +144,9 @@ namespace prjLionMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<ResultMsgViewModel>>> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
         {
-            var result = await _httpClients.UseMsgPostAsync(insertMsgViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.UseMsgPostAsync(insertMsgViewModel);
         }
 
         /// <summary>
