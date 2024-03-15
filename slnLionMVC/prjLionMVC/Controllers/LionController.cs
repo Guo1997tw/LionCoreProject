@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Win32;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models.HttpClients;
 using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.HttpClients.Out;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,11 +52,16 @@ namespace prjLionMVC.Controllers
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> GetDataCountAll([FromForm] int currentShowPage)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> GetDataCountAll([FromForm] int currentShowPage)
         {
             var result = await _httpClients.MsgPageAllPostAsync(currentShowPage);
 
-            return true ? Content("", "application/json") : Json(false);
+            return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+			{
+                success = true,
+                message = "載入成功",
+                data = result.data,
+            };
         }
 
         /// <summary>

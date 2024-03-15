@@ -1,6 +1,6 @@
 ﻿namespace prjLionMVC.Models.HttpClients
 {
-    public class ResultTOutputDataModel<T>
+    public class ResultTOutputDataViewModel<T>
     {
         public bool success { get; set; }
 

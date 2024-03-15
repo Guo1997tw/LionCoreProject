@@ -35,9 +35,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public async Task<ResultTOutputDataModel<PaginationCountDataModel>> MsgPageAllPostAsync(int currentShowPage)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> MsgPageAllPostAsync(int currentShowPage)
         {
-            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataModel<PaginationCountDataModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
             
             // return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
         }

@@ -1,6 +1,6 @@
 ﻿namespace prjLionMVC.Models.HttpClients.Out
 {
-    public class PaginationCountDataModel
+    public class PaginationCountDataViewModel
     {
         /// <summary>
         /// 裝分頁好的資料

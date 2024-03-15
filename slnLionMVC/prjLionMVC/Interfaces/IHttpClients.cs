@@ -12,7 +12,7 @@ namespace prjLionMVC.Interfaces
         /// 指定頁數
         /// </summary>
         /// <returns></returns>
-        public Task<ResultTOutputDataModel<PaginationCountDataModel>> MsgPageAllPostAsync(int currentShowPage);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> MsgPageAllPostAsync(int currentShowPage);
 
         /// <summary>
         /// 同時取得資料分頁與總筆數、搜尋單一使用者留言
