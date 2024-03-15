@@ -21,14 +21,14 @@ namespace prjLionMVC.Interfaces
         /// <param name="userName"></param>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> SearchMsgUserPostAsync(string userName, int currentShowPage);
 
         /// <summary>
         /// 註冊帳號頁面
         /// </summary>
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
-        public Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
 
         /// <summary>
         /// 登入帳號頁面

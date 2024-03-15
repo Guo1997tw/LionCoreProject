@@ -71,12 +71,17 @@ namespace prjLionMVC.Controllers
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
         {
             var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
-        }
+			return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+			{
+				success = true,
+				message = "載入成功",
+				data = result.data,
+			};
+		}
 
         /// <summary>
         /// 註冊帳號頁面
@@ -87,11 +92,9 @@ namespace prjLionMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
         {
-            var result = await _httpClients.RegisterPostAsync(registerMemberViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.RegisterPostAsync(registerMemberViewModel);
         }
 
         /// <summary>

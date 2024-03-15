@@ -38,8 +38,6 @@ namespace prjLionMVC.Implements
         public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> MsgPageAllPostAsync(int currentShowPage)
         {
             return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
-            
-            // return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
         }
 
         /// <summary>
@@ -49,11 +47,9 @@ namespace prjLionMVC.Implements
         /// <param name="userName"></param>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public async Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> SearchMsgUserPostAsync(string userName, int currentShowPage)
         {
-            return await _httpClientFunctions.RequestMethod<string, string>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
-
-            // return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
         }
 
         /// <summary>
@@ -62,13 +58,9 @@ namespace prjLionMVC.Implements
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
 
-        public async Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
         {
-            var json = JsonSerializer.Serialize(registerMemberViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClientFunctions.BuilderPostDataListAsync("RegisterMember", content);
+            return await _httpClientFunctions.RequestMethod<RegisterMemberViewModel, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/RegisterMember", registerMemberViewModel);
         }
 
         /// <summary>
