@@ -68,28 +68,22 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        public async Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
+        public async Task<ResultTOutputDataViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
         {
-            var json = JsonSerializer.Serialize(loginMemberViewModel);
+            var result = await _httpClientFunctions.RequestMethod<LoginMemberViewModel, ResultTOutputDataViewModel<LoginInfoViewModel?>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/LoginMember", loginMemberViewModel);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var queryResult = await _httpClientFunctions.BuilderGetAccountAsync("LoginMember", content);
-
-            if(queryResult != "false")
+            if(result != null)
             {
-                var jsonResult = JsonSerializer.Deserialize<ResultTLoginInfoViewModel<LoginInfoViewModel>>(queryResult);
-
-                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                return new ResultTOutputDataViewModel<LoginInfoViewModel?>
                 {
-                    data = jsonResult.data
+                    data = result.data,
                 };
-            }
+			}
             else
             {
-                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                return new ResultTOutputDataViewModel<LoginInfoViewModel?>
                 {
-                    ErrorMessage = "false"
+                    message = "false"
                 };
             }
         }
