@@ -75,10 +75,21 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
 
+			if (result == null || result.data == null)
+			{
+                return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+                {
+                    success = false,
+                    message = "載入失敗",
+                    data = null
+				};
+			}
+
 			return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
 			{
 				success = true,
 				message = "載入成功",
+                data = result.data
 			};
 		}
 
