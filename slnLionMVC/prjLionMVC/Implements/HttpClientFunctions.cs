@@ -67,7 +67,8 @@ namespace prjLionMVC.Implements
                 }
                 else
                 {
-					throw new ApplicationException($"對 {apiUrl} 失敗，狀態碼為: {httpResponseMessage.StatusCode}。");
+                    return default;
+					// throw new ApplicationException($"對 {apiUrl} 失敗，狀態碼為: {httpResponseMessage.StatusCode}。");
 				}
                 
             }

@@ -79,7 +79,6 @@ namespace prjLionMVC.Controllers
 			{
 				success = true,
 				message = "載入成功",
-				data = result.data,
 			};
 		}
 
@@ -110,7 +109,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClientlogics.IsIdentityCheckAsync(loginMemberInputViewModel);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return (result != "false") ? Content(result, "application/json") : Json("false");
         }
 
         /// <summary>
