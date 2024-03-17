@@ -51,7 +51,7 @@
 					body: JSON.stringify(self.member)
 				})
 				.then(r => r.json())
-					.then(d => { if (d == true) { console.log("Success", d); alert("申請成功"); } window.location.href = "/Lion/MsgList" });
+					.then(d => { if (d.success) { console.log("Success", d); alert("申請成功"); } window.location.href = "/Lion/MsgList" });
 			},
 		},
 	}).mount("#Register");
