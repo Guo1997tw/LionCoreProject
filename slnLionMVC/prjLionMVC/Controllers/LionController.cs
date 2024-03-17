@@ -133,11 +133,12 @@ namespace prjLionMVC.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 新增留言頁面
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult UseMsg()
+		/// <summary>
+		/// 新增留言頁面
+		/// </summary>
+		/// <returns></returns>
+		[Authorize]
+		public IActionResult UseMsg()
         {
             ViewBag.MemberId = _userAuthentication.GetUserCertificate();
 

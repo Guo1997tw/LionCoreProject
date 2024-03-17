@@ -1,14 +1,13 @@
-﻿<body>
-	<div id="UseMsg">
-		<input type="hidden" id="memberId" value="@ViewBag.MemberId">
-		<br>
-		留言
-		<br>
-		<input type="text" v-model="messageBoard.messageText">
-		<br>
-		<button type="button" @@click="InsertMsgApi">送出</button>
+﻿<div id="UseMsg" class="container">
+	<div class="text-center mt-5">
+		<input type="hidden" id="memberId" value="@ViewBag.MemberId" disabled>
+		<div>
+			留言板: <input type="text" v-model="messageBoard.messageText" style="margin-right: 10px;" placeholder="請輸入留言">
+			<button class="btn btn-success" type="button" style="margin-right: 10px;" @@click="InsertMsgApi">送出</button>
+			<a href="/Lion/MsgList" class="btn btn-secondary">返回</a>
+		</div>
 	</div>
-</body>
+</div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
@@ -47,13 +46,13 @@
 					.then(d => {
 						if (d != null) {
 							console.log("Success", d);
-							alert("新增成功");
+							alert("建立成功");
 
 							window.location.href = "/Lion/MsgList";
 						}
 						else {
 							console.log("Fail", d);
-							alert("新增失敗");
+							alert("建立失敗");
 						}
 					}).catch(error => console.error('Error:', error));;
 			},
