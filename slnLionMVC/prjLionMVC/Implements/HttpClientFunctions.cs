@@ -30,7 +30,12 @@ namespace prjLionMVC.Implements
 		/// <returns></returns>
 		public async Task<OutputDataModel> RequestMethod<InputDataModel, OutputDataModel>(HttpMethod httpMethod, string apiUrl, InputDataModel inputDataModel)
         {
-            var client = _httpClientFactory.CreateClient();
+			var jsonAutoConvert = new JsonSerializerOptions
+			{
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+			};
+
+			var client = _httpClientFactory.CreateClient();
 
             var json = JsonSerializer.Serialize(inputDataModel);
 
@@ -58,7 +63,7 @@ namespace prjLionMVC.Implements
                 {
                     var contentResult = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    return JsonSerializer.Deserialize<OutputDataModel>(contentResult);
+                    return JsonSerializer.Deserialize<OutputDataModel>(contentResult, jsonAutoConvert);
                 }
                 else
                 {

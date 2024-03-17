@@ -6,27 +6,27 @@
 		/// 留言編號
 		/// 流水號
 		/// </summary>
-		public int messageBoardId { get; set; }
+		public int MessageBoardId { get; set; }
 
         /// <summary>
         /// 會員姓名
         /// </summary>
-        public string memberName { get; set; } = null!;
+        public string MemberName { get; set; } = null!;
 
         /// <summary>
         /// 會員帳號
         /// </summary>
-        public string account { get; set; } = null!;
+        public string Account { get; set; } = null!;
 
         /// <summary>
         /// 留言內容
         /// </summary>
-        public string messageText { get; set; } = null!;
+        public string MessageText { get; set; } = null!;
 
         /// <summary>
         /// 留言時間
         /// 時間戳
         /// </summary>
-        public DateTime messageTime { get; set; }
+        public DateTime MessageTime { get; set; }
     }
 }
