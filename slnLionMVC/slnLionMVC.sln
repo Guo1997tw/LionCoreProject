@@ -5,13 +5,15 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjLionMVC", "prjLionMVC\prjLionMVC.csproj", "{F2D5F4E9-872F-4C64-944F-4382AD32D896}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjLion.WebAPI", "prjLion.WebAPI\prjLion.WebAPI.csproj", "{DF0D765B-7323-4206-9711-3C50C5CAEE0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjLion.WebAPI", "prjLion.WebAPI\prjLion.WebAPI.csproj", "{DF0D765B-7323-4206-9711-3C50C5CAEE0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjLion.Repository", "prjLion.Repository\prjLion.Repository.csproj", "{AAA35CB1-9531-40EB-BA7D-1FB03580A9DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjLion.Repository", "prjLion.Repository\prjLion.Repository.csproj", "{AAA35CB1-9531-40EB-BA7D-1FB03580A9DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjLion.Service", "prjLion.Service\prjLion.Service.csproj", "{D6A7ED04-0EE5-4EAE-B5AC-ED6018DDF8D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjLion.Service", "prjLion.Service\prjLion.Service.csproj", "{D6A7ED04-0EE5-4EAE-B5AC-ED6018DDF8D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjLion.Common", "prjLion.Common\prjLion.Common.csproj", "{9AB4122A-162A-43EB-8E50-7B5843E113B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjLion.Common", "prjLion.Common\prjLion.Common.csproj", "{9AB4122A-162A-43EB-8E50-7B5843E113B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjLionMVC.Second", "prjLionMVC.Second\prjLionMVC.Second.csproj", "{E6E8BD8C-A466-4729-A5B2-09953431A099}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{9AB4122A-162A-43EB-8E50-7B5843E113B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AB4122A-162A-43EB-8E50-7B5843E113B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AB4122A-162A-43EB-8E50-7B5843E113B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6E8BD8C-A466-4729-A5B2-09953431A099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E8BD8C-A466-4729-A5B2-09953431A099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E8BD8C-A466-4729-A5B2-09953431A099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E8BD8C-A466-4729-A5B2-09953431A099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
