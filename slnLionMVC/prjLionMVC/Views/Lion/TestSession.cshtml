@@ -1,13 +1,13 @@
 ﻿@{
-    var userId = ViewBag.MemberId;
-    var account = ViewBag.Account;
+    var tempMemberId = ViewBag.MemberId;
+    var tempAccount = ViewBag.Account;
 }
 
 <h2>登入訊息</h2>
-@if (account != null && userId > 0)
+@if (tempAccount != null && tempMemberId != null)
 {
-    <p>使用者編號: @userId</p>
-    <p>使用者帳號: @account</p>
+    <p>使用者編號: @tempMemberId</p>
+    <p>使用者帳號: @tempAccount</p>
 }
 else
 {

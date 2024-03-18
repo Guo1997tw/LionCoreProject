@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Win32;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models.HttpClients.Inp;
@@ -24,15 +25,17 @@ namespace prjLionMVC.Controllers
         private readonly IHttpClients _httpClients;
         private readonly IHttpClientlogics _httpClientlogics;
 		private readonly IUserSession _userSession;
+        private readonly IDistributedCache _distributedCache;
 
-		public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1, IHttpClientlogics httpClientlogics, IUserSession userSession)
+        public LionController(IHttpClientFactory httpClientFactory, IUserAuthentication userAuthentication, IHttpClients httpClients, IHttpClients _httpClients1, IHttpClientlogics httpClientlogics, IUserSession userSession, IDistributedCache distributedCache)
         {
             _httpClientFactory = httpClientFactory;
             _userAuthentication = userAuthentication;
             _httpClients = httpClients;
             _httpClientlogics = httpClientlogics;
 			_userSession = userSession;
-		}
+            _distributedCache = distributedCache;
+        }
 
         /// <summary>
         /// 測試Session取值
@@ -40,8 +43,17 @@ namespace prjLionMVC.Controllers
         /// <returns></returns>
         public IActionResult TestSession()
         {
-            ViewBag.MemberId = _userSession.GetSessionCertificate();
-            ViewBag.Account = _userSession.GetSessionUserName();
+            var sessionMemberId = _userSession.GetSessionCertificate();
+            var sessionAccount = _userSession.GetSessionUserName();
+
+            var cacheMemberId = $"MemberId_{sessionMemberId}";
+            var cacheAccount = $"Account_{sessionAccount}";
+
+            var memberId = _distributedCache.GetStringAsync(cacheMemberId);
+            var account = _distributedCache.GetStringAsync(cacheAccount);
+
+            ViewBag.MemberId = memberId.Result;
+            ViewBag.Account = account.Result;
 
             return View();
         }

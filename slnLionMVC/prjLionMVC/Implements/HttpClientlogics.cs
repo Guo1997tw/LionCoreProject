@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using prjLionMVC.Interfaces;
 using prjLionMVC.Models.HttpClients.Inp;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace prjLionMVC.Implements
 {
@@ -10,11 +11,13 @@ namespace prjLionMVC.Implements
     {
         private readonly IHttpClients _httpClients;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IDistributedCache _distributedCache;
 
-        public HttpClientlogics(IHttpClients httpClients, IHttpContextAccessor httpContextAccessor)
+        public HttpClientlogics(IHttpClients httpClients, IHttpContextAccessor httpContextAccessor, IDistributedCache distributedCache)
         {
             _httpClients = httpClients;
             _httpContextAccessor = httpContextAccessor;
+            _distributedCache = distributedCache;
         }
 
         /// <summary>
@@ -48,9 +51,22 @@ namespace prjLionMVC.Implements
                 _httpContextAccessor.HttpContext.Session.SetString("MemberId", result.data.memberId.ToString());
                 _httpContextAccessor.HttpContext.Session.SetString("Account", result.data.account.ToString());
 
-                var r = _httpContextAccessor.HttpContext.Session.Id;
+                var cacheMemberId = $"MemberId_{result.data.memberId}";
+                var cacheAccount = $"Account_{result.data.account}";
 
-                Console.WriteLine(r);
+                await _distributedCache.SetStringAsync(cacheMemberId, result.data.memberId.ToString(), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
+                });
+
+                Console.WriteLine(cacheMemberId);
+
+                await _distributedCache.SetStringAsync(cacheAccount, result.data.account.ToString(), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
+                });
+
+                Console.WriteLine(cacheAccount);
 
                 return ("true");
             }
