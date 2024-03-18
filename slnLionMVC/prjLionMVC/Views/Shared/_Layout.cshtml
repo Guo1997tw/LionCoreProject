@@ -4,8 +4,8 @@
 
 	var encodedMemberId = WebUtility.UrlEncode(tempMemberId?.ToString() ?? string.Empty);
 	var encodedAccount = WebUtility.UrlEncode(tempAccount?.ToString() ?? string.Empty);
-	var isKeyValue = $"memberId={encodedMemberId}&account={encodedAccount}";
-	var myLink = $"https://localhost:7184/LionSecond/CheckSession?{isKeyValue}";
+	var isKeyValue = $"MemberId={encodedMemberId}&Account={encodedAccount}";
+	var myLink = $"https://localhost:7119/LionSecond/CheckSession?{isKeyValue}";
 }
 
 <!DOCTYPE html>

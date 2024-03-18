@@ -9,7 +9,18 @@ namespace prjLionMVC.Second
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
 
-			var app = builder.Build();
+			// Cache SQL Server
+			builder.Services.AddDistributedSqlServerCache(option =>
+			{
+				option.ConnectionString = builder.Configuration.GetConnectionString("LionHW");
+				option.SchemaName = "dbo";
+				option.TableName = "CacheTable";
+			});
+
+            // Add DI
+            builder.Services.AddHttpContextAccessor();
+
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
