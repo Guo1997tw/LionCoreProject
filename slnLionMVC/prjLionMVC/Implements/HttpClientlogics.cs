@@ -59,14 +59,10 @@ namespace prjLionMVC.Implements
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
                 });
 
-                Console.WriteLine(cacheMemberId);
-
                 await _distributedCache.SetStringAsync(cacheAccount, result.data.account.ToString(), new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
                 });
-
-                Console.WriteLine(cacheAccount);
 
                 return ("true");
             }
