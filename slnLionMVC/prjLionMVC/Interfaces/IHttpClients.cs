@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using prjLionMVC.Models.HttpClients;
 using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.HttpClients.Out;
 
@@ -11,7 +12,7 @@ namespace prjLionMVC.Interfaces
         /// 指定頁數
         /// </summary>
         /// <returns></returns>
-        public Task<string> MsgPageAllPostAsync(int currentShowPage);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> MsgPageAllPostAsync(int currentShowPage);
 
         /// <summary>
         /// 同時取得資料分頁與總筆數、搜尋單一使用者留言
@@ -20,28 +21,28 @@ namespace prjLionMVC.Interfaces
         /// <param name="userName"></param>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> SearchMsgUserPostAsync(string userName, int currentShowPage);
 
         /// <summary>
         /// 註冊帳號頁面
         /// </summary>
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
-        public Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
+        public Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel);
 
         /// <summary>
         /// 登入帳號頁面
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        public Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel);
+        public Task<ResultTOutputDataViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel);
 
         /// <summary>
         /// 新增留言頁面
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
+        public Task<ResultTOutputDataViewModel<ResultMsgViewModel>> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel);
 
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace prjLionMVC.Interfaces
         /// <param name="id"></param>
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
-        public Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
+        public Task<ResultTOutputDataViewModel<ResultMsgViewModel>> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel);
 
         /// <summary>
         /// 刪除留言
@@ -58,6 +59,6 @@ namespace prjLionMVC.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<bool> RemoveMsgPostAsync(int id);
+        public Task<ResultTOutputDataViewModel<int>> RemoveMsgPostAsync(int id);
     }
 }

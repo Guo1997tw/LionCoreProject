@@ -30,7 +30,7 @@ namespace prjLionMVC.Implements
         {
             var result = await _httpClients.LoginPostAsync(loginMemberViewModel);
 
-            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            if (!string.IsNullOrEmpty(result.message))
             {
                 return ("false");
             }

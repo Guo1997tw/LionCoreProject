@@ -10,6 +10,7 @@ using System.Security.Claims;
 using prjLionMVC.Models.HttpClients.Out;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using prjLionMVC.Models.HttpClients;
 
 namespace prjLionMVC.Implements
 {
@@ -34,9 +35,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public async Task<string> MsgPageAllPostAsync(int currentShowPage)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> MsgPageAllPostAsync(int currentShowPage)
         {
-            return await _httpClientFunctions.BuilderGetDataListAsync($"GetPaginationCountDataAll/{currentShowPage}");
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetPaginationCountDataAll/{currentShowPage}", null);
         }
 
         /// <summary>
@@ -46,9 +47,9 @@ namespace prjLionMVC.Implements
         /// <param name="userName"></param>
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
-        public async Task<string> SearchMsgUserPostAsync(string userName, int currentShowPage)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> SearchMsgUserPostAsync(string userName, int currentShowPage)
         {
-            return await _httpClientFunctions.BuilderGetDataListAsync($"GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}");
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/GetMsgByUserNamePaginationCountDataAll/{userName}/{currentShowPage}", null);
         }
 
         /// <summary>
@@ -57,13 +58,9 @@ namespace prjLionMVC.Implements
         /// <param name="registerMemberViewModel"></param>
         /// <returns></returns>
 
-        public async Task<bool> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
+        public async Task<ResultTOutputDataViewModel<PaginationCountDataViewModel>> RegisterPostAsync(RegisterMemberViewModel registerMemberViewModel)
         {
-            var json = JsonSerializer.Serialize(registerMemberViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClientFunctions.BuilderPostDataListAsync("RegisterMember", content);
+            return await _httpClientFunctions.RequestMethod<RegisterMemberViewModel, ResultTOutputDataViewModel<PaginationCountDataViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/RegisterMember", registerMemberViewModel);
         }
 
         /// <summary>
@@ -71,28 +68,22 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="loginMemberViewModel"></param>
         /// <returns></returns>
-        public async Task<ResultTLoginInfoViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
+        public async Task<ResultTOutputDataViewModel<LoginInfoViewModel?>> LoginPostAsync(LoginMemberViewModel loginMemberViewModel)
         {
-            var json = JsonSerializer.Serialize(loginMemberViewModel);
+            var result = await _httpClientFunctions.RequestMethod<LoginMemberViewModel, ResultTOutputDataViewModel<LoginInfoViewModel?>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/LoginMember", loginMemberViewModel);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var queryResult = await _httpClientFunctions.BuilderGetAccountAsync("LoginMember", content);
-
-            if(queryResult != "false")
+            if(result != null)
             {
-                var jsonResult = JsonSerializer.Deserialize<ResultTLoginInfoViewModel<LoginInfoViewModel>>(queryResult);
-
-                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                return new ResultTOutputDataViewModel<LoginInfoViewModel?>
                 {
-                    data = jsonResult.data
+                    data = result.data,
                 };
-            }
+			}
             else
             {
-                return new ResultTLoginInfoViewModel<LoginInfoViewModel?>
+                return new ResultTOutputDataViewModel<LoginInfoViewModel?>
                 {
-                    ErrorMessage = "false"
+                    message = "false"
                 };
             }
         }
@@ -102,13 +93,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="insertMsgViewModel"></param>
         /// <returns></returns>
-        public async Task<bool> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
+        public async Task<ResultTOutputDataViewModel<ResultMsgViewModel>> UseMsgPostAsync(InsertMsgViewModel insertMsgViewModel)
         {
-            var json = JsonSerializer.Serialize(insertMsgViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClientFunctions.BuilderPostDataListAsync("CreateUserMsg", content);
+            return await _httpClientFunctions.RequestMethod<InsertMsgViewModel, ResultTOutputDataViewModel<ResultMsgViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/CreateUserMsg", insertMsgViewModel);
         }
 
         /// <summary>
@@ -118,13 +105,9 @@ namespace prjLionMVC.Implements
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<bool> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
+        public async Task<ResultTOutputDataViewModel<ResultMsgViewModel>> EditMsgPostAsync(int id, EditMsgViewModel editMsgViewModel)
         {
-            var json = JsonSerializer.Serialize(editMsgViewModel);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClientFunctions.BuilderPutDataListAsync($"UpdateUserMsg/{id}", content);
+            return await _httpClientFunctions.RequestMethod<EditMsgViewModel, ResultTOutputDataViewModel<ResultMsgViewModel>>(HttpMethod.Put, $"{_lionApiSettings.LionBaseUrl}/api/Lion/UpdateUserMsg/{id}", editMsgViewModel);
         }
 
         /// <summary>
@@ -133,9 +116,9 @@ namespace prjLionMVC.Implements
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> RemoveMsgPostAsync(int id)
+        public async Task<ResultTOutputDataViewModel<int>> RemoveMsgPostAsync(int id)
         {
-            return await _httpClientFunctions.BuilderDeleteDataAsync($"RemoveMemberMsg/{id}");
+            return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<int>>(HttpMethod.Delete, $"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{id}", null);
         }
     }
 }

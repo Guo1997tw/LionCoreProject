@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Win32;
 using prjLionMVC.Interfaces;
+using prjLionMVC.Models.HttpClients;
 using prjLionMVC.Models.HttpClients.Inp;
 using prjLionMVC.Models.HttpClients.Out;
 using System.IdentityModel.Tokens.Jwt;
@@ -77,11 +78,16 @@ namespace prjLionMVC.Controllers
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> GetDataCountAll([FromForm] int currentShowPage)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> GetDataCountAll([FromForm] int currentShowPage)
         {
             var result = await _httpClients.MsgPageAllPostAsync(currentShowPage);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+			{
+                success = true,
+                message = "載入成功",
+                data = result.data,
+            };
         }
 
         /// <summary>
@@ -91,12 +97,27 @@ namespace prjLionMVC.Controllers
         /// <param name="currentShowPage"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> SearchMsgUserNameDataCountAll([FromForm] string userName, int currentShowPage)
         {
             var result = await _httpClients.SearchMsgUserPostAsync(userName, currentShowPage);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
-        }
+			if (result == null || result.data == null)
+			{
+                return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+                {
+                    success = false,
+                    message = "載入失敗",
+                    data = null
+				};
+			}
+
+			return new ResultTOutputDataViewModel<PaginationCountDataViewModel>
+			{
+				success = true,
+				message = "載入成功",
+                data = result.data
+			};
+		}
 
         /// <summary>
         /// 註冊帳號頁面
@@ -107,11 +128,9 @@ namespace prjLionMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<PaginationCountDataViewModel>>> RegisterPost([FromBody] RegisterMemberViewModel registerMemberViewModel)
         {
-            var result = await _httpClients.RegisterPostAsync(registerMemberViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.RegisterPostAsync(registerMemberViewModel);
         }
 
         /// <summary>
@@ -127,7 +146,7 @@ namespace prjLionMVC.Controllers
         {
             var result = await _httpClientlogics.IsIdentityCheckAsync(loginMemberInputViewModel);
 
-            return (result != "false") ? Content(result, "application/json") : Json(false);
+            return (result != "false") ? Content(result, "application/json") : Json("false");
         }
 
         /// <summary>
@@ -162,11 +181,9 @@ namespace prjLionMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<ResultMsgViewModel>>> UseMsgPost([FromBody] InsertMsgViewModel insertMsgViewModel)
         {
-            var result = await _httpClients.UseMsgPostAsync(insertMsgViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.UseMsgPostAsync(insertMsgViewModel);
         }
 
         /// <summary>
@@ -176,11 +193,9 @@ namespace prjLionMVC.Controllers
         /// <param name="editMsgViewModel"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
+        public async Task<ActionResult<ResultTOutputDataViewModel<ResultMsgViewModel>>> EditMsgPost(int id, [FromBody] EditMsgViewModel editMsgViewModel)
         {
-            var result = await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
-
-            return (result != false) ? Ok(true) : BadRequest(false);
+            return await _httpClients.EditMsgPostAsync(id, editMsgViewModel);
         }
 
         /// <summary>
@@ -189,11 +204,9 @@ namespace prjLionMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<IActionResult> RemoveMsgPost(int id)
+        public async Task<ActionResult<ResultTOutputDataViewModel<int>>> RemoveMsgPost(int id)
         {
-            var result = await _httpClients.RemoveMsgPostAsync(id);
-
-            return result ? Ok(true) : BadRequest(false);
+            return await _httpClients.RemoveMsgPostAsync(id);
         }
     }
 }
