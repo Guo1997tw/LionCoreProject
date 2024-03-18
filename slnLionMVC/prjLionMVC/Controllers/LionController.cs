@@ -41,7 +41,7 @@ namespace prjLionMVC.Controllers
         /// 測試Session取值
         /// </summary>
         /// <returns></returns>
-        public IActionResult TestSession()
+        public async Task<IActionResult> TestSession()
         {
             var sessionMemberId = _userSession.GetSessionCertificate();
             var sessionAccount = _userSession.GetSessionUserName();
@@ -49,11 +49,11 @@ namespace prjLionMVC.Controllers
             var cacheMemberId = $"MemberId_{sessionMemberId}";
             var cacheAccount = $"Account_{sessionAccount}";
 
-            var memberId = _distributedCache.GetStringAsync(cacheMemberId);
-            var account = _distributedCache.GetStringAsync(cacheAccount);
+            var memberId = await _distributedCache.GetStringAsync(cacheMemberId);
+            var account = await _distributedCache.GetStringAsync(cacheAccount);
 
-            ViewBag.MemberId = memberId.Result;
-            ViewBag.Account = account.Result;
+            ViewBag.MemberId = memberId;
+            ViewBag.Account = account;
 
             return View();
         }
@@ -120,7 +120,7 @@ namespace prjLionMVC.Controllers
         /// <returns></returns>
         public IActionResult Login()
         {
-            return View();
+			return View();
         }
         [HttpPost]
         public async Task<IActionResult> LoginPost([FromBody] LoginMemberViewModel loginMemberInputViewModel)

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using prjLionMVC.CustomizeFilters;
 using prjLionMVC.Implements;
 using prjLionMVC.Interfaces;
 using prjLionMVC.LogExceptions;
@@ -15,7 +16,11 @@ namespace prjLionMVC
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            // Add Filter DI
+            builder.Services.AddControllersWithViews(option =>
+			{
+				option.Filters.Add<SessionToViewBagFilter>();
+			});
 
             // Add LionHW Connection String
             builder.Services.AddDbContext<LionHwContext>(option =>
@@ -51,6 +56,14 @@ namespace prjLionMVC
                 option.IdleTimeout = TimeSpan.FromMinutes(60);
                 option.Cookie.HttpOnly = true;
                 option.Cookie.IsEssential = true;
+            });
+
+            // Cache SQL Server
+            builder.Services.AddDistributedSqlServerCache(option =>
+            {
+                option.ConnectionString = builder.Configuration.GetConnectionString("LionHW");
+                option.SchemaName = "dbo";
+                option.TableName = "CacheTable";
             });
 
             var app = builder.Build();
