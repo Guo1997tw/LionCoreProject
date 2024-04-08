@@ -16,12 +16,14 @@ namespace prjLion.WebAPI.Controllers
         private readonly ILionGetServices _lionGetServices;
         private readonly ILionPostServices _lionPostServices;
         private readonly IMapper _mapper;
+        private string _rootPath;
 
-        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, IMapper mapper)
+        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _lionGetServices = lionGetServices;
             _lionPostServices = lionPostServices;
             _mapper = mapper;
+            _rootPath = $@"{webHostEnvironment.WebRootPath}\Images\";
         }
 
         /// <summary>
@@ -180,5 +182,38 @@ namespace prjLion.WebAPI.Controllers
                 Data = id
             });
         }
-	}
+
+        /// <summary>
+        /// 上傳圖片
+        /// </summary>
+        /// <param name="createImgViewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ResultTViewModel<CreateImgBo>>> UploadPicture([FromBody] CreateImgViewModel createImgViewModel)
+        {
+            if (createImgViewModel.formFile == null) return BadRequest("圖片未上傳");
+
+            if (createImgViewModel.formFile.Length > 0)
+            {
+                string fileNameTemp = $"{createImgViewModel.formFile.FileName}";
+                string savePath = $@"{_rootPath}{fileNameTemp}";
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    createImgViewModel.formFile.CopyTo(stream);
+                }
+            }
+
+            var mapper = _mapper.Map<CreateImgBo>(createImgViewModel);
+
+            await _lionPostServices.CreatePicture(mapper);
+
+            return Ok(new ResultTViewModel<CreateImgBo>
+            {
+                Success = true,
+                Message = "上傳成功",
+                Data = mapper
+            });
+        }
+    }
 }

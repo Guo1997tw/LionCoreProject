@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,10 @@
     <ProjectReference Include="..\prjLion.Common\prjLion.Common.csproj" />
     <ProjectReference Include="..\prjLion.Repository\prjLion.Repository.csproj" />
     <ProjectReference Include="..\prjLion.Service\prjLion.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
 </Project>
