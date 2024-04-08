@@ -16,12 +16,14 @@ namespace prjLion.WebAPI.Controllers
         private readonly ILionGetServices _lionGetServices;
         private readonly ILionPostServices _lionPostServices;
         private readonly IMapper _mapper;
+        private string _rootPath;
 
-        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, IMapper mapper)
+        public LionController(ILionGetServices lionGetServices, ILionPostServices lionPostServices, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _lionGetServices = lionGetServices;
             _lionPostServices = lionPostServices;
             _mapper = mapper;
+            _rootPath = $@"{webHostEnvironment.WebRootPath}\Images\";
         }
 
         /// <summary>
@@ -180,5 +182,21 @@ namespace prjLion.WebAPI.Controllers
                 Data = id
             });
         }
-	}
+
+        [HttpPost]
+        public bool UploadPicture(IFormFile formFiles)
+        {
+            if(formFiles.Length > 0)
+            {
+                string fileNameTemp = $"{formFiles.FileName}";
+                string savePath = $@"{_rootPath}{fileNameTemp}";
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    formFiles.CopyTo(stream);
+                }
+            }
+            return true;
+        }
+    }
 }
