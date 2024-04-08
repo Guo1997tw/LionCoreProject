@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 using prjLion.Repository.Helpers;
 using prjLion.Repository.Implements;
 using prjLion.Repository.Interfaces;
@@ -7,6 +8,7 @@ using prjLion.Service.Implements;
 using prjLion.Service.Interfaces;
 using prjLion.Service.Mapping;
 using prjLion.WebAPI.Mapping;
+using System.Reflection;
 
 namespace prjLion.WebAPI
 {
@@ -21,7 +23,15 @@ namespace prjLion.WebAPI
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Lion Pool API", Version = "v1" } );
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                option.IncludeXmlComments(xmlPath);
+            });
 
             // Add Options Pattern Connection String for DB
             builder.Services.Configure<ConnectionStringOptionsModel>(builder.Configuration.GetSection("LionOptions"));
@@ -56,7 +66,10 @@ namespace prjLion.WebAPI
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(s =>
+                {
+                    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Lion Pool API v1");
+                });
             }
 
             app.UseHttpsRedirection();
