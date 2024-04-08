@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using prjLion.Repository.Helpers;
@@ -58,6 +59,12 @@ namespace prjLion.WebAPI
                 {
                     builder.WithOrigins("https://localhost:7073").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
+            });
+
+            // Add Upload Picture Size
+            builder.Services.Configure<KestrelServerOptions>(option =>
+            {
+                option.Limits.MaxRequestBodySize = 52428800;
             });
 
             var app = builder.Build();
