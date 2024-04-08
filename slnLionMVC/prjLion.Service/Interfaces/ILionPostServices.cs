@@ -46,5 +46,13 @@ namespace prjLion.Service.Interfaces
 		/// <param name="id"></param>
 		/// <returns></returns>
 		public Task<bool> DeleteMemberMsg(int id);
-	}
+
+        /// <summary>
+        /// 上傳圖片
+        /// </summary>
+        /// <param name="createImgBo"></param>
+        /// <returns></returns>
+        public Task<bool> CreatePicture(CreateImgBo createImgBo);
+
+    }
 }

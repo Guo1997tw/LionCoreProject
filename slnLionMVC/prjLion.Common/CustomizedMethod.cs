@@ -86,6 +86,13 @@ namespace prjLion.Common
             }
 		}
 
+        /// <summary>
+        /// 檢核正則表示邏輯
+        /// 輸入內容判斷是否符合規則
+        /// </summary>
+        /// <param name="messageText"></param>
+        /// <exception cref="Exception"></exception>
+
         public void isVerifyRuleMsg(string messageText)
         {
             var textRule = new Regex(@"^[0-9a-zA-Z\u4e00-\u9fa5]+$");
@@ -95,5 +102,20 @@ namespace prjLion.Common
                 throw new Exception("留言欄位只允許中文、英文、數字");
             }
         }
-	}
+
+        /// <summary>
+        /// 輸入圖片名稱判斷是否符合規則
+        /// </summary>
+        /// <param name="pictureName"></param>
+        /// <exception cref="Exception"></exception>
+        public void isVerifyPictureContent(string pictureName)
+        {
+            var textRule = new Regex(@"^[^\W_]+$");
+
+            if(!textRule.IsMatch(pictureName))
+            {
+                throw new Exception("圖片名稱只允許中文、英文、數字");
+            }
+        }
+    }
 }

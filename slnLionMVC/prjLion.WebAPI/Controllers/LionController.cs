@@ -184,19 +184,31 @@ namespace prjLion.WebAPI.Controllers
         }
 
         [HttpPost]
-        public bool UploadPicture(IFormFile formFiles)
+        public async Task<ActionResult<ResultTViewModel<CreateImgBo>>> UploadPicture([FromForm] CreateImgViewModel createImgViewModel)
         {
-            if(formFiles.Length > 0)
+            if (createImgViewModel.formFile == null) return BadRequest("圖片未上傳");
+
+            if (createImgViewModel.formFile.Length > 0)
             {
-                string fileNameTemp = $"{formFiles.FileName}";
+                string fileNameTemp = $"{createImgViewModel.formFile.FileName}";
                 string savePath = $@"{_rootPath}{fileNameTemp}";
 
                 using (var stream = new FileStream(savePath, FileMode.Create))
                 {
-                    formFiles.CopyTo(stream);
+                    createImgViewModel.formFile.CopyTo(stream);
                 }
             }
-            return true;
+
+            var mapper = _mapper.Map<CreateImgBo>(createImgViewModel);
+
+            await _lionPostServices.CreatePicture(mapper);
+
+            return Ok(new ResultTViewModel<CreateImgBo>
+            {
+                Success = true,
+                Message = "上傳成功",
+                Data = mapper
+            });
         }
     }
 }

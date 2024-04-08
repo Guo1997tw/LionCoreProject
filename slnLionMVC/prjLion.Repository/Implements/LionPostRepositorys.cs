@@ -123,5 +123,24 @@ namespace prjLion.Repository.Implements
 				return true;
             }
         }
+
+        public async Task<bool> InsertPicture(CreateImgDto createImgDto)
+        {
+			using (var use = _lionConnection.GetLionDb())
+			{
+				var actionSQL = @"insert into [dbo].[PictureTable] ([MemberId] ,[PictureName] ,[CreateTime])
+								  values (@MemberId, @PictureName, @CreateTime);";
+
+				var parameters = new DynamicParameters();
+
+                parameters.Add("MemberId", createImgDto.MemberId, DbType.Int32);
+                parameters.Add("PictureName", createImgDto.PictureName, DbType.String);
+                parameters.Add("CreateTime", createImgDto.CreateTime, DbType.DateTime);
+
+				await use.ExecuteAsync(actionSQL, parameters);
+
+				return true;
+            }
+        }
     }
 }

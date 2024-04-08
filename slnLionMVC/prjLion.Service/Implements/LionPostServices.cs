@@ -139,5 +139,21 @@ namespace prjLion.Service.Implements
             
             return await _lionPostRepositorys.DeleteMsg(id);
         }
+
+        /// <summary>
+        /// 上傳圖片
+        /// </summary>
+        /// <param name="createImgBo"></param>
+        /// <returns></returns>
+        public async Task<bool> CreatePicture(CreateImgBo createImgBo)
+        {
+            CustomizedMethod customizedMethod = new CustomizedMethod();
+
+            customizedMethod.isVerifyPictureContent(createImgBo.PictureName);
+
+            var mapper = _mapper.Map<CreateImgDto>(createImgBo);
+
+            return await _lionPostRepositorys.InsertPicture(mapper);
+        }
     }
 }
