@@ -208,5 +208,10 @@ namespace prjLionMVC.Controllers
         {
             return await _httpClients.RemoveMsgPostAsync(id);
         }
+
+        public ActionResult UsePicture()
+        {
+            return View();
+        }
     }
 }
