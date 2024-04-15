@@ -213,5 +213,10 @@ namespace prjLionMVC.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<ActionResult<ResultTOutputDataViewModel<ResultImageViewModel>>> UsePicturePost([FromForm] CreateImgViewModel createImgViewModel)
+        {
+            return await _httpClients.InsertImagePostAsync(createImgViewModel);
+        }
     }
 }

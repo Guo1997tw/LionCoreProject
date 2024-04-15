@@ -1,1 +1,58 @@
-﻿
+﻿<div id="UploadImage">
+    會員編號: <input type="text" v-model="imageData.memberId">
+    <br>
+    圖片名稱: <input type="text" v-model="imageData.pictureName">
+    <br>
+    圖片上傳: <input type="file" v-on:change="UploadImageView">
+    <br>
+    <button type="submit" @@click="UploadImageApi()">新增</button>
+    <button type="button">返回</button>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                imageData: {
+                    memberId: "1",
+                    pictureName: "測試上傳",
+                },
+                formFile: null
+            }
+        },
+
+        methods: {
+            UploadImageView(value) {
+                console.log(URL.createObjectURL(value.target.files[0]));
+
+                this.formFile = value.target.files[0];
+            },
+
+            UploadImageApi() {
+                let self = this;
+                var formData = new FormData();
+                
+                if (this.formFile) formData.append('file', self.formFile);
+                formData.append('memberId', self.imageData.memberId);
+                formData.append('pictureName', self.imageData.pictureName);
+                
+                fetch("/Lion/UsePicturePost", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(r => {
+                        if (!r.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return r.json();
+                    })
+                    .then(d => {
+                        if (d != null) {
+                            console.log("新增成功");
+                        }
+                    });
+            },
+        },
+    }).mount("#UploadImage");
+</script>

@@ -60,5 +60,12 @@ namespace prjLionMVC.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         public Task<ResultTOutputDataViewModel<int>> RemoveMsgPostAsync(int id);
+
+        /// <summary>
+        /// 上傳圖片
+        /// </summary>
+        /// <param name="createImgViewModel"></param>
+        /// <returns></returns>
+        public Task<ResultTOutputDataViewModel<ResultImageViewModel>> InsertImagePostAsync(CreateImgViewModel createImgViewModel);
     }
 }

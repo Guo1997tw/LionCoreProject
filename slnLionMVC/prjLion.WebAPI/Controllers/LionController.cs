@@ -189,7 +189,7 @@ namespace prjLion.WebAPI.Controllers
         /// <param name="createImgViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<ResultTViewModel<CreateImgBo>>> UploadPicture([FromBody] CreateImgViewModel createImgViewModel)
+        public async Task<ActionResult<ResultTViewModel<CreateImgBo>>> UploadPicture([FromForm] CreateImgViewModel createImgViewModel)
         {
             if (createImgViewModel.formFile == null) return BadRequest("圖片未上傳");
 

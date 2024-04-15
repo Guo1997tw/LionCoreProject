@@ -120,5 +120,15 @@ namespace prjLionMVC.Implements
         {
             return await _httpClientFunctions.RequestMethod<string, ResultTOutputDataViewModel<int>>(HttpMethod.Delete, $"{_lionApiSettings.LionBaseUrl}/api/Lion/RemoveMemberMsg/{id}", null);
         }
+
+        /// <summary>
+        /// 上傳圖片
+        /// </summary>
+        /// <param name="createImgViewModel"></param>
+        /// <returns></returns>
+        public async Task<ResultTOutputDataViewModel<ResultImageViewModel>> InsertImagePostAsync(CreateImgViewModel createImgViewModel)
+        {
+            return await _httpClientFunctions.RequestMethod<CreateImgViewModel, ResultTOutputDataViewModel<ResultImageViewModel>>(HttpMethod.Post, $"{_lionApiSettings.LionBaseUrl}/api/Lion/UploadPicture", createImgViewModel);
+        }
     }
 }
