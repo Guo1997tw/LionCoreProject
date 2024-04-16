@@ -191,16 +191,16 @@ namespace prjLion.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ResultTViewModel<CreateImgBo>>> UploadPicture([FromForm] CreateImgViewModel createImgViewModel)
         {
-            if (createImgViewModel.formFile == null) return BadRequest("圖片未上傳");
+            if (createImgViewModel.ImageTemp == null) return BadRequest("圖片未上傳");
 
-            if (createImgViewModel.formFile.Length > 0)
+            if (createImgViewModel.ImageTemp.Length > 0)
             {
-                string fileNameTemp = $"{createImgViewModel.formFile.FileName}";
+                string fileNameTemp = $"{createImgViewModel.ImageTemp.FileName}";
                 string savePath = $@"{_rootPath}{fileNameTemp}";
 
                 using (var stream = new FileStream(savePath, FileMode.Create))
                 {
-                    createImgViewModel.formFile.CopyTo(stream);
+                    createImgViewModel.ImageTemp.CopyTo(stream);
                 }
             }
 

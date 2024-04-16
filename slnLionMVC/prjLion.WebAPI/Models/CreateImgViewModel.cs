@@ -15,6 +15,6 @@
         /// <summary>
         /// 實體圖片
         /// </summary>
-        public IFormFile? formFile { get; set; }
+        public IFormFile? ImageTemp { get; set; }
     }
 }
