@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
@@ -67,6 +68,13 @@ namespace prjLion.WebAPI
                 option.Limits.MaxRequestBodySize = 52428800;
             });
 
+            // Add Hangfire DI
+            builder.Services.AddHangfire(option =>
+            option.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseSqlServerStorage(builder.Configuration.GetConnectionString("LionHW")));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -85,6 +93,9 @@ namespace prjLion.WebAPI
             app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthorization();
+
+            // Use HangFire
+            app.UseHangfireDashboard("/LionFire");
 
             app.MapControllers();
 
